@@ -1,0 +1,39 @@
+{
+  "accent": "ko",
+  "ar": true,
+  "auto": "word",
+  "av": 1,
+  "dir": "jk",
+  "from": 1,
+  "kv": 1,
+  "lv3": true,
+  "mode": "g",
+  "order": "seq",
+  "posw": [],
+  "rate": 1,
+  "rg": "g:10",
+  "rgw": "all",
+  "rnd": [],
+  "round": 25,
+  "rs": {
+    "n": 1,
+    "on": true,
+    "w": [
+      "0024",
+      "0101"
+    ]
+  },
+  "seed": 123716074,
+  "sf": [
+    "0"
+  ],
+  "showEx": true,
+  "sp": "0101",
+  "spg": "0023",
+  "spw": "0001",
+  "stf": [],
+  "tm": {},
+  "typ": true,
+  "v3": true,
+  "voice": ""
+}

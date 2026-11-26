@@ -1,0 +1,1552 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Korean Sentences</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one centered study column; a ring-bound sentence card with an opaque red sheet over the answer. */
+:root{
+  --bg:#ecf3ee; --surface:#ffffff; --ink:#18291f; --muted:#56695d; --line:#d0ded5;
+  --accent:#23664a; --accent-ink:#ffffff; --sheet:#ffffff; --sheet-ink:#56695d; --red:#c62828;
+  --again:#b3261e; --hard:#a1620a; --good:#1f6b4a; --easy:#23664a;
+  --chip:#dce9e1; --hole:#ecf3ee; --tint:#f4f9f5;
+  --f-en:"Gowun Batang","Apple SD Gothic Neo","Malgun Gothic","Noto Serif KR",serif;
+  --f-ui:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1712; --surface:#18221c; --ink:#e2ece5; --muted:#91a698; --line:#2a3a30;
+  --accent:#7fcca3; --accent-ink:#0c1610; --sheet:#ffffff; --sheet-ink:#56695d; --red:#ff7a70;
+  --again:#ff8a80; --hard:#e8b35a; --good:#6fcf9f; --easy:#7fcca3;
+  --chip:#22302a; --hole:#0f1712; --tint:#1c2821; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1712; --surface:#18221c; --ink:#e2ece5; --muted:#91a698; --line:#2a3a30;
+  --accent:#7fcca3; --accent-ink:#0c1610; --sheet:#ffffff; --sheet-ink:#56695d; --red:#ff7a70;
+  --again:#ff8a80; --hard:#e8b35a; --good:#6fcf9f; --easy:#7fcca3;
+  --chip:#22302a; --hole:#0f1712; --tint:#1c2821; color-scheme:dark}
+html,body{background:var(--bg);max-width:100%}html{overflow-x:hidden}body{overflow-x:clip}
+.card{overflow:hidden}
+body{color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.7;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 40px}
+.wrap{max-width:720px;margin:0 auto}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:18px 10px}
+.brand b{font-family:var(--f-en);font-size:22px;letter-spacing:.01em}
+.hrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.studybtn{display:inline-flex;align-items:center;gap:6px;border:0;background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:15px;padding:9px 20px;border-radius:999px;box-shadow:0 2px 6px rgba(35,102,74,.3)}
+.studybtn svg{width:16px;height:16px}
+.studybtn[aria-current="page"]{outline:3px solid var(--chip);outline-offset:2px}
+.studybtn:hover{filter:brightness(1.08)}
+nav{display:flex;gap:4px;background:var(--chip);padding:4px;border-radius:10px}
+nav button{border:0;background:none;padding:6px 12px;border-radius:7px;font-size:14px;color:var(--muted)}
+nav button[aria-current="page"]{background:var(--surface);color:var(--ink);font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.sync{font-size:12px;color:var(--muted)}
+
+[hidden]{display:none!important}
+section{display:flex;flex-direction:column;gap:18px;padding-top:8px}
+h2{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
+
+/* home */
+.today{display:grid;grid-template-columns:repeat(2,1fr);border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.today div{padding:16px 18px;display:flex;flex-direction:column;gap:2px}
+.today div+div{border-left:1px solid var(--line)}
+.today small{color:var(--muted);font-size:12px}
+.today strong{font-family:var(--f-mono);font-size:30px;font-weight:500;line-height:1.2}
+.start{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--surface);padding:10px 18px;border-radius:9px;font-weight:700}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);padding:12px 26px;font-size:16px}
+.btn:disabled{opacity:.45;cursor:default}
+.hint{color:var(--muted);font-size:13px}
+
+/* study */
+#stf{flex-wrap:nowrap;gap:3px;overflow-x:auto;scrollbar-width:none}
+#stf button{padding:3px 9px;font-size:12px;white-space:nowrap;flex:none}
+.tools{flex-wrap:nowrap}
+.tools input[type=search]{min-width:0}
+.tools select{flex:none;max-width:42%}
+.listbar{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.btn.sm{padding:5px 12px;font-size:12px}
+.stf .num{font-weight:400;opacity:.8;font-size:11px}
+#sf{flex-wrap:nowrap;gap:3px;overflow-x:auto;width:100%;scrollbar-width:none}
+#sf button{padding:3px 7px;font-size:12px;white-space:nowrap;flex:none;min-height:0}
+@media (hover:none){.keys{display:none}}
+.askhd{margin-left:14px;border:1px solid var(--line);background:var(--surface);color:var(--accent);border-radius:999px;padding:4px 12px;font-size:12px;font-weight:700}
+@media (max-width:560px){.askhd{margin-left:8px;padding:4px 9px;font-size:11px}.hrow{flex-wrap:nowrap}}
+.askhd[aria-current="page"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.aiview{min-height:50vh}
+.aiview .asklog{max-height:none}
+.aiview .asklog:empty{display:flex}
+.aihint{color:var(--muted);font-size:13px;margin:0}
+.askhead{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;color:var(--muted)}
+.askhead b{color:var(--ink);font-family:var(--f-en);font-size:15px}
+.askx{border:0;background:none;font-size:20px;line-height:1;color:var(--muted);padding:2px 6px}
+.ask{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.askbtn{align-self:center;border:1px solid var(--accent);color:var(--accent);background:var(--surface);border-radius:999px;padding:6px 16px;font-size:13px;font-weight:700}
+.detail .askbtn{align-self:flex-start}
+.askp{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px;display:flex;flex-direction:column;gap:10px}
+.askq{display:flex;gap:6px;flex-wrap:wrap}
+.askq button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:4px 10px;font-size:12px}
+.askin{display:flex;gap:6px}
+.askin input{flex:1;min-width:0;font:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink)}
+.askin button{border:0;background:var(--accent);color:var(--accent-ink);border-radius:9px;padding:0 14px;font-weight:700}
+.asklog{display:flex;flex-direction:column;gap:8px;max-height:360px;overflow-y:auto}
+.asklog:empty{display:none}
+.msg{white-space:pre-wrap;font-size:14px;line-height:1.65;padding:8px 10px;border-radius:10px}
+.msg.u{align-self:flex-end;background:var(--chip);max-width:85%}
+.msg.a{background:var(--bg)}
+.msg.a.wait{color:var(--muted)}
+.asknote{font-size:12px;color:var(--muted);margin:0}
+.progress{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);gap:10px;flex-wrap:wrap}
+.counts{display:flex;gap:14px}
+.counts b{font-family:var(--f-mono);font-weight:500}
+.c-new{color:var(--accent)} .c-learn{color:var(--again)} .c-rev{color:var(--good)}
+.card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:30px 26px 24px 54px;box-shadow:0 2px 0 var(--line);min-height:320px;display:flex;flex-direction:column;gap:16px}
+.card::before{content:"";position:absolute;left:18px;top:26px;width:16px;height:16px;border-radius:50%;background:var(--hole);border:1px solid var(--line)}
+.card .meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.tag{background:var(--chip);padding:1px 9px;border-radius:999px;font-size:12px;color:var(--ink)}
+.tag.status{background:none;border:1px solid var(--line)}
+/* part-of-speech colours: verb red, noun blue, adjective yellow, adverb green, conjunction purple, phrase grey */
+.tag.pos{font-weight:700}
+.pos-v{background:#fde3e1;color:#a3191b}
+.pos-n{background:#dce8fb;color:#1d4f91}
+.pos-adj{background:#fbefb5;color:#735400}
+.pos-adv{background:#daf1e3;color:#17663f}
+.pos-conj{background:#ece1fa;color:#5a2f90}
+.pos-phr{background:var(--chip);color:var(--ink)}
+.pos-prep{background:var(--chip);color:var(--ink)}
+.pos-cx{background:#dff1f1;color:#1d5e5e}
+.sn{display:inline-block;min-width:1.4em;margin-right:2px;color:var(--accent);font-weight:700;font-family:var(--f-ui);font-size:.82em}
+:root[data-theme="dark"] .pos-cx{background:#163a3a;color:#9fdcdc}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pos-cx{background:#163a3a;color:#9fdcdc}}
+.tag.vt{background:none;border:1px solid var(--again);color:var(--again);font-weight:500}
+.tag.vt-I{border-style:dashed}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pos-v{background:#4a1f1f;color:#ffb3ad}:root:not([data-theme="light"]) .pos-n{background:#1d3150;color:#a9c8f5}:root:not([data-theme="light"]) .pos-adj{background:#463a12;color:#f3d77a}:root:not([data-theme="light"]) .pos-adv{background:#173d2a;color:#93dcb3}:root:not([data-theme="light"]) .pos-conj{background:#352450;color:#cdb2f2}}
+:root[data-theme="dark"] .pos-v{background:#4a1f1f;color:#ffb3ad}:root[data-theme="dark"] .pos-n{background:#1d3150;color:#a9c8f5}:root[data-theme="dark"] .pos-adj{background:#463a12;color:#f3d77a}:root[data-theme="dark"] .pos-adv{background:#173d2a;color:#93dcb3}:root[data-theme="dark"] .pos-conj{background:#352450;color:#cdb2f2}
+
+.word{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.swhint{display:none;font-size:12px;color:var(--muted)}
+@media (hover:none){.swhint{display:block}}
+.swflash{position:fixed;left:50%;top:42%;transform:translate(-50%,-50%);z-index:60;padding:10px 20px;border-radius:999px;font-weight:700;font-size:16px;color:#fff;pointer-events:none;animation:swf .65s ease forwards;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.swflash.l1{background:var(--again)} .swflash.l2{background:var(--hard)} .swflash.l3{background:var(--good)}
+@keyframes swf{0%{opacity:0;transform:translate(-50%,-40%)}20%{opacity:1;transform:translate(-50%,-50%)}80%{opacity:1}100%{opacity:0}}
+#stage .card{will-change:transform}
+html{overscroll-behavior-y:none}
+.setbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}.setsum{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:6px 0 0}
+.sessrow{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%}
+.sessrow .hint{flex:1;min-width:0}
+#spos{flex-wrap:nowrap;gap:3px;overflow-x:auto;width:100%;scrollbar-width:none}
+#spos button{padding:2px 7px;font-size:11.5px;white-space:nowrap;flex:none;min-height:0;font-weight:600}
+#spos button .num{opacity:.6;font-weight:500;margin-left:2px}
+#againre[aria-pressed="false"]{opacity:.6}
+.modesw{display:flex;border:1px solid var(--accent);border-radius:999px;overflow:hidden;flex:none;margin-left:10px;vertical-align:middle}
+.modesw button{border:0;background:var(--surface);color:var(--accent);padding:4px 13px;font-size:13px;font-weight:700;font-family:var(--f-ui)}
+.modesw button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.brand{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.exw{display:flex;gap:10px;align-items:flex-start}
+.exw .t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.exw .k{font-family:var(--f-en);font-size:17px;font-weight:700;line-height:1.5;overflow-wrap:anywhere}
+.exw .j{font-size:14px;color:var(--muted)}
+.heyo{font-size:13px;color:var(--muted)}
+.heyo b{font-family:var(--f-en);color:var(--ink);font-size:15px}
+.body .eh,.deepout .eh{color:var(--accent);font-weight:700}
+.deep{display:flex;flex-direction:column;gap:8px}
+.deepbtn{align-self:flex-start;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:7px 16px;font-size:13px;font-weight:700;font-family:var(--f-ui)}
+.deepbtn.ghost{background:var(--surface);color:var(--accent)}
+.deepout{border:1px solid var(--line);border-radius:10px;background:var(--tint);padding:12px 14px;font-size:14px;line-height:1.8;white-space:pre-line;overflow-wrap:anywhere}
+.deepout.wait{color:var(--muted)}
+.deepnote{font-size:11.5px;color:var(--muted);margin:0}
+.dirrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dirsw{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;flex:none}
+.dirsw button{border:0;background:none;color:var(--muted);padding:4px 10px;font-size:12px;font-weight:700;font-family:var(--f-ui);min-height:0;line-height:1.5}
+.dirsw button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.dirrow small{font-size:12px;color:var(--muted)}
+.swflash.l0{background:var(--accent);color:var(--accent-ink)}
+.tag.lvchip{font-weight:700;color:#fff;background:var(--muted)}
+.tag.lvchip.l1{background:var(--again)} .tag.lvchip.l2{background:var(--hard)} .tag.lvchip.l3{background:var(--good)}
+#stage .card .meta{padding-right:68px}
+.askcard{position:absolute;top:12px;right:12px;z-index:3;border:1px solid var(--accent);background:var(--surface);color:var(--accent);border-radius:999px;padding:3px 11px;font-size:12px;font-weight:700;line-height:1.5}
+.askcard:hover{background:var(--accent);color:var(--accent-ink)}
+.askcard.in{position:static;align-self:flex-end;margin-bottom:-4px}
+.word h3{font-family:var(--f-en);font-size:clamp(24px,6vw,34px);font-weight:700;margin:0;line-height:1.35;overflow-wrap:anywhere;word-break:keep-all;flex:1 1 auto;min-width:0}
+.card>.word{padding-right:64px}
+.word h3.jaf{font-family:var(--f-ui);font-size:clamp(20px,5vw,26px);line-height:1.5}
+.rom{font-family:var(--f-mono);font-size:13px;color:var(--muted);margin:-6px 0 0;overflow-wrap:anywhere}
+.answer .rom{margin:-4px 0 0}
+.ako{font-family:var(--f-en);font-size:clamp(20px,5vw,26px);font-weight:700;color:var(--red);margin:0;line-height:1.4;word-break:keep-all;overflow-wrap:anywhere;flex:1 1 auto;min-width:0}
+.gram{margin:0;font-size:14px;line-height:1.65}
+.gram b{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;font-weight:700}
+.gram .pt{font-family:var(--f-en);font-weight:700;font-size:16px;margin-right:6px}
+.struct{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.struct li{display:flex;flex-direction:column;align-items:flex-start;background:var(--tint);border:1px solid var(--line);border-radius:8px;padding:4px 9px;line-height:1.35;min-width:0}
+.struct li b{font-family:var(--f-en);font-size:15px;font-weight:700;color:var(--ink);overflow-wrap:anywhere}
+.struct li span{font-size:11.5px;color:var(--muted)}
+.sublab{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 -6px}
+details.gexp{border:1px solid var(--line);border-radius:10px;background:var(--tint);padding:0}
+details.gexp summary{cursor:pointer;padding:9px 12px;font-size:13px;font-weight:700;color:var(--accent);list-style:none}
+details.gexp summary::-webkit-details-marker{display:none}
+details.gexp summary::before{content:"▸ ";color:var(--muted)}
+details.gexp[open] summary::before{content:"▾ "}
+details.gexp .body{padding:0 14px 12px;font-size:14px;line-height:1.75;white-space:pre-line;overflow-wrap:anywhere}
+.typebox{display:flex;flex-direction:column;gap:6px}
+.typebox textarea{font:inherit;font-family:var(--f-en);font-size:18px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--tint);color:var(--ink);resize:vertical;min-height:52px;width:100%;box-sizing:border-box}
+.typebox textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
+.typebox small{font-size:12px;color:var(--muted)}
+.yours{margin:0;font-size:14px;display:flex;flex-direction:column;gap:2px}
+.yours b{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.yours .ya{font-family:var(--f-en);font-size:18px;font-weight:700;overflow-wrap:anywhere}
+.yours .ya i{font-style:normal;background:#fde3e1;color:#a3191b;border-radius:3px}
+.yours .ok{color:var(--good);font-weight:700}
+.yours .ng{color:var(--again);font-weight:700}
+.rangebar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rangebar label{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.rangebar select{font:inherit;font-size:14px;padding:7px 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);min-width:0;flex:1 1 200px;max-width:100%}
+.speak{border:1px solid var(--line);background:var(--surface);border-radius:50%;width:36px;height:36px;display:grid;place-items:center;color:var(--muted);flex:none;padding:0}
+.speak.sm{width:30px;height:30px}
+.speak svg{width:18px;height:18px}
+.speak.sm svg{width:15px;height:15px}
+.speak:hover{color:var(--accent);border-color:var(--accent)}
+.acc{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;flex:none}
+.acc button{border:0;background:none;padding:4px 10px;font-size:12px;font-weight:700;color:var(--muted);font-family:var(--f-mono)}
+.acc button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.exrow{display:flex;gap:10px;align-items:flex-start}
+.exrow .ex{flex:1;min-width:0}
+.ex{font-family:var(--f-en);font-size:17px;line-height:1.55;margin:0}
+.ex mark{background:none;color:inherit;border-bottom:2px solid var(--accent);padding-bottom:1px}
+.answer{position:relative;display:flex;flex-direction:column;gap:12px;border-top:1px dashed var(--line);padding-top:16px}
+.ja{font-size:22px;font-weight:700;color:var(--red);margin:0;line-height:1.5}
+.core{margin:0;font-size:14px}
+.ety{font-family:var(--f-ui)}
+.core b{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;font-weight:700}
+.exja{margin:0;font-size:14px;color:var(--muted)}
+.def{margin:0;font-family:var(--f-en);font-size:16px;font-weight:500;line-height:1.55}
+.answer .ja,.detail .ja{font-size:16px}
+.answer .core,.detail .core{font-size:16px;line-height:1.6}
+.def b{font-family:var(--f-ui);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;font-weight:700}
+.sheet{position:absolute;inset:6px -12px -10px -12px;z-index:2;background:var(--sheet);color:var(--sheet-ink);border:0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;font-weight:700;font-size:15px;box-shadow:0 2px 6px rgba(0,0,0,.18);transition:transform .28s ease,opacity .28s ease,top .25s ease}
+.sheet small{font-weight:400;opacity:.9;font-size:12px}
+.sheet{border:1px solid #d0ded5;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.answer.open .sheet{transform:translateX(70%);opacity:0;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.sheet{transition:none}}
+.grades{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.lvp{display:flex;flex-direction:column;gap:10px}
+.undorow{display:flex;justify-content:center}
+#undo{font-size:13px}
+.tmrow{display:flex;justify-content:center;margin-top:12px}
+.detail .tmrow{justify-content:flex-start;margin:8px 0 0}
+.tmb kbd{margin-left:8px;font-size:10px;opacity:.6;font-family:var(--f-mono)}
+@media (hover:none){.tmb kbd{display:none}}
+.tmb{border:1px dashed var(--good);color:var(--good)!important;background:var(--surface);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700;color:var(--muted);min-height:34px;font-family:var(--f-ui)}
+.tmb[aria-pressed="true"]{border-style:solid;border-color:var(--good);background:var(--good);color:#fff!important}
+.tmmark{margin-left:4px;color:var(--accent);font-weight:700}
+.tmdot{width:12px;text-align:center;color:var(--accent);font-weight:700;font-size:14px;line-height:1}
+.lvrow{display:grid;grid-template-columns:12px 1fr auto auto;gap:12px;align-items:center}
+.lvdot{width:10px;height:10px;border-radius:50%}
+.lvdot.l0{background:none;box-shadow:inset 0 0 0 1.5px var(--line)}
+.lvdot.l1{background:var(--again)} .lvdot.l2{background:var(--hard)} .lvdot.l3{background:var(--good)}
+.lvrow strong{font-family:var(--f-mono);font-weight:500;font-size:20px;min-width:3ch;text-align:right}
+.lvp p{margin:0}
+.stf{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.stf .hint{margin-right:2px}
+.stf button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;color:var(--muted)}
+.stf button.l1{color:var(--again)} .stf button.l2{color:var(--hard)} .stf button.l3{color:var(--good)}
+.stf button[aria-pressed="true"]{background:var(--muted);border-color:var(--muted);color:#fff}
+.stf button.l1[aria-pressed="true"]{background:var(--again);border-color:var(--again)}
+.stf button.l2[aria-pressed="true"]{background:var(--hard);border-color:var(--hard)}
+.stf button.l3[aria-pressed="true"]{background:var(--good);border-color:var(--good)}
+td.st .lvdot{display:inline-block;width:8px;height:8px;margin-right:6px;vertical-align:1px}
+.lvset{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0}
+.lvset button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 4px;font-size:13px;font-weight:700;color:var(--muted);min-height:36px}
+.lvset button.l1{color:var(--again)} .lvset button.l2{color:var(--hard)} .lvset button.l3{color:var(--good)}
+.lvset button.l1[aria-pressed="true"]{background:var(--again);border-color:var(--again);color:#fff}
+.lvset button.l2[aria-pressed="true"]{background:var(--hard);border-color:var(--hard);color:#fff}
+.lvset button.l3[aria-pressed="true"]{background:var(--good);border-color:var(--good);color:#fff}
+.grades button{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;font-weight:700}
+.grades button small{font-family:var(--f-mono);font-weight:400;font-size:12px;color:var(--muted)}
+.grades button kbd{font-family:var(--f-mono);font-size:10px;color:var(--muted);font-weight:400}
+.g1{color:var(--again)} .g2{color:var(--hard)} .g3{color:var(--good)}
+.grades button:hover{border-color:currentColor}
+.done{text-align:center;padding:40px 20px}
+.done h3{font-family:var(--f-en);font-size:28px;margin:0 0 6px}
+#p-end{align-self:center}
+
+/* list */
+.tools{display:flex;gap:10px;flex-wrap:wrap}
+.tools input,.tools select,.field select,.field input{font:inherit;padding:8px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink)}
+.tools input[type=search]{flex:1;min-width:160px}
+.table{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--muted);font-weight:700;background:var(--surface)}
+td.en{font-family:var(--f-en);font-weight:700;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.st{font-size:12px;white-space:nowrap}
+tr.w{cursor:pointer}
+tr.w:hover td,tr.w[aria-expanded="true"] td{background:var(--chip)}
+tr.w td.en::after{content:" ▸";font-family:var(--f-ui);font-weight:400;color:var(--muted);font-size:11px}
+tr.w[aria-expanded="true"] td.en::after{content:" ▾"}
+tr.det td{background:var(--surface);padding:4px 12px 16px}
+.detail{display:flex;flex-direction:column;gap:10px;padding:10px 0 0 6px;border-left:3px solid var(--accent);padding-left:14px;white-space:normal}
+.detail .word h3{font-size:26px}
+.detail .ja{font-size:18px}
+.detail .ex{font-size:16px}
+.detail{box-sizing:border-box;min-width:0}
+table{table-layout:fixed}
+thead th:nth-child(1){width:60px} thead th:nth-child(3){width:90px} thead th:nth-child(4){width:130px}
+td.en{white-space:normal}
+td.en.cut{text-overflow:ellipsis}
+@media (max-width:560px){th,td{padding:8px 8px} thead th:nth-child(3){width:38px;padding-left:2px;padding-right:2px} tr.w td.en::after{content:none} thead th:nth-child(4){width:96px;padding-left:4px;padding-right:6px} td.st{padding-left:4px;padding-right:6px} td.st{font-size:11px} td.pcell{padding-left:2px;padding-right:2px}}
+tr.det td{overflow-wrap:anywhere}
+.pmini{display:flex;gap:3px;flex-wrap:wrap}
+td.pcell{padding-left:4px;padding-right:4px}
+.pmini .tag{white-space:nowrap;font-size:10px;padding:0 6px;line-height:16px;font-family:var(--f-mono);font-weight:500}
+tr.grp{cursor:pointer}
+tr.grp td{background:var(--chip);padding:12px;border-bottom:1px solid var(--line)}
+tr.grp td b{font-weight:500;margin-right:8px;font-size:10px;color:var(--muted)}
+tr.grp:hover td{filter:brightness(0.97)}
+.gchev{display:inline-block;width:16px;color:var(--muted)}
+/* the word list scrolls inside its own frame; the column headings sit above it, outside the scrolling part */
+#v-list .tframe{height:max(360px,calc(100dvh - 120px));border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden;display:flex;flex-direction:column}
+#v-list .thead{flex:none;border-bottom:1px solid var(--line);background:var(--surface)}
+#v-list .table{border:0;border-radius:0;flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:var(--surface)}
+#v-list .thead th{border-bottom:0}
+#v-list col.c1{width:13%} #v-list col.c2{width:39%} #v-list col.c3{width:20%} #v-list col.c4{width:28%}
+@media (max-width:560px){ #v-list col.c1{width:11%} #v-list col.c2{width:67%} #v-list col.c3{width:14%} #v-list col.c4{width:8%} #v-list .stl{display:none} #v-list .thead th:last-child{font-size:0} #v-list tr.w td.st{padding-left:4px;padding-right:4px;text-align:center} }
+#v-list .listbar{gap:8px} #v-list .listbar .stf{min-width:0;flex:1}
+#list-count{font-weight:400;font-size:12px}
+#v-list #stf button{padding:3px 7px}
+#g-all{flex:none;padding:4px 9px;font-size:11.5px}
+@media (max-width:380px){#v-list #stf button{padding:3px 5px;font-size:11px}#g-all{padding:4px 7px;font-size:11px}}
+/* word table: one rhythm for every column */
+#v-list th,#v-list tr.w td{vertical-align:middle;padding:10px 12px;font-size:13px;line-height:1.4}
+#v-list thead th:nth-child(3),#v-list td.pcell{text-align:center}
+#v-list td.pcell .pmini{justify-content:center}
+#v-list tr.w td.en{font-size:17px;white-space:normal;overflow:visible;word-break:keep-all;overflow-wrap:anywhere}
+tr.grp td .gname{font-weight:700;margin-right:8px}
+tr.grp td .gname .ko{font-family:var(--f-en)}
+#v-list tr.w td:first-child{padding-right:0}
+#v-list tr.w td.en,#v-list .thead th:nth-child(2){padding-left:10px}
+#v-list tr.w td.en::after{content:none}
+#v-list tr.w td.st{font-size:13px;padding-left:12px;padding-right:12px}
+#v-list tr.w td.num{color:var(--muted);font-size:12px;opacity:.8;padding-left:14px}
+@media (max-width:560px){#v-list .thead th:first-child{padding-left:8px;font-size:10px} #v-list tr.w td.num{font-size:10px;padding-left:8px} #v-list tr.w td.en,#v-list .thead th:nth-child(2){padding-left:4px!important}}
+@media (max-width:560px){
+  #v-list th,#v-list tr.w td{padding:10px 8px}
+  #v-list tr.w td.st{font-size:12px;padding-left:8px;padding-right:8px}
+}
+
+/* settings */
+.field{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-block:12px;border-bottom:1px solid var(--line)}
+.field:last-child{border-bottom:0}
+.field label{font-weight:700}
+.field p{margin:0;color:var(--muted);font-size:13px}
+.danger{color:var(--again);border-color:var(--again)}
+.btn.danger:disabled{opacity:.4}
+.modal-bg{position:fixed;inset:0;z-index:50;background:rgba(10,15,22,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:22px;max-width:420px;width:100%;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.modal h3{margin:0;font-size:18px;color:var(--again)}
+.modal p{margin:0;font-size:14px}
+.modal label{font-size:13px;color:var(--muted)}
+.modal input{font:inherit;font-family:var(--f-mono);padding:8px 12px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);letter-spacing:.1em}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+@media (max-width:560px){
+  .card{padding:24px 18px 20px 44px}
+  .card::before{left:14px}
+  .today strong{font-size:24px}
+  .today div{padding:12px}
+  nav button{padding:6px 9px}
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand"><b id="brandname">Korean</b><div class="modesw" role="group" aria-label="学習モード"><button type="button" data-mode="w">単語</button><button type="button" data-mode="g">文法</button></div></div>
+    <div class="hrow">
+    <nav aria-label="Views">
+      <button data-view="home" aria-current="page">Home</button>
+      <button data-view="study">Study</button>
+      <button data-view="list">Sentences</button>
+      <button data-view="settings">Settings</button>
+    </nav>
+    <button class="askhd" id="askhd" type="button" hidden>Ask AI</button>
+    </div>
+  </header>
+  <div class="sync" id="sync">Loading words…</div>
+
+  <!-- HOME -->
+  <section id="v-home">
+    <div class="rangebar"><label for="rg-home">Range</label><select id="rg-home" class="rgsel"></select></div>
+    <div class="today">
+      <div><small>Not completed</small><strong id="t-seen">–</strong></div>
+      <div><small>Completed</small><strong id="t-new" style="color:var(--good)">–</strong></div>
+    </div>
+    <div class="start" hidden>
+      <button class="btn primary" id="go" disabled>Start</button>
+      <span class="hint" id="go-hint"></span>
+    </div>
+    <div class="panel lvp">
+      <h2>Review by level</h2>
+      <div class="lvrow"><span class="lvdot l1"></span><b>Again</b><strong id="lv-n1">0</strong><button class="btn" data-lv="1" disabled>Review</button></div>
+      <div class="lvrow"><span class="lvdot l2"></span><b>To review</b><strong id="lv-n2">0</strong><button class="btn" data-lv="2" disabled>Review</button></div>
+      <div class="lvrow"><span class="lvdot l3"></span><b>Completed</b><strong id="lv-n3">0</strong><button class="btn" data-lv="3" disabled>Review</button></div>
+      <p class="hint">Grouped by your latest rating. Review opens Study with just that level.</p>
+    </div>
+  </section>
+
+  <!-- STUDY -->
+  <section id="v-study" hidden>
+    <div class="rangebar"><label for="rg-study">Range</label><select id="rg-study" class="rgsel"></select></div>
+    <div class="dirrow"><div class="dirsw" role="group" aria-label="出題の向き"><button type="button" data-dir="jk">日→韓</button><button type="button" data-dir="kj">韓→日</button></div></div>
+    <div class="progress">
+      <div class="stf" id="sf" role="group" aria-label="Levels to study"><button data-sf="0" aria-pressed="false">New <span class="num"></span></button><button data-sf="1" class="l1" aria-pressed="false">Again <span class="num"></span></button><button data-sf="2" class="l2" aria-pressed="false">To review <span class="num"></span></button><button data-sf="3" class="l3" aria-pressed="false">Completed <span class="num"></span></button></div>
+      <div class="stf" id="spos" role="group" aria-label="Parts of speech"></div>
+      <div class="sessrow"><span class="hint" id="sess"></span><button class="btn sm" id="reshuffle" type="button">⇄ Shuffle</button><button class="btn sm" id="againre" type="button" aria-pressed="true" title="Show cards rated Again again after 5 cards">↻ Retry Loop: ON</button></div>
+      <span class="keys">Enter/Space: show answer · 1–3 or ← ↓ →: rate · ⌫: undo</span>
+      <span class="swhint">Swipe the card: ← Again · ↓ To review · → Completed</span>
+    </div>
+    <div id="stage"></div>
+    <div class="undorow"><button class="btn" id="undo" hidden>↶ Undo last rating</button></div>
+    <div class="undorow"><button class="btn" id="p-end" hidden>End practice</button></div>
+  </section>
+
+  <!-- LIST -->
+  <section id="v-list" hidden>
+    <div class="tools">
+      <input id="search" type="search" placeholder="韓国語・日本語で検索" autocomplete="off">
+      <select id="pos" aria-label="Filter by group"><option value="all">All groups</option></select>
+    </div>
+    <div class="listbar"><div class="stf" id="stf" role="group" aria-label="Filter by status"><button data-st="0" aria-pressed="false">New</button><button data-st="1" class="l1" aria-pressed="false">Again</button><button data-st="2" class="l2" aria-pressed="false">To review</button><button data-st="3" class="l3" aria-pressed="false">Completed</button></div><button class="btn sm" id="g-all" type="button">Expand all</button></div>
+    <div class="tframe">
+      <div class="thead"><table><colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"></colgroup><thead><tr><th class="num">No.</th><th>Sentence <span class="hint" id="list-count"></span></th><th>Type</th><th>Status</th></tr></thead></table></div>
+      <div class="table"><table><colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"></colgroup><tbody id="rows"></tbody></table></div>
+    </div>
+  </section>
+
+  <!-- AI -->
+  <section id="v-ai" hidden>
+    <div class="askp aiview">
+      <div class="askhead" id="ai-head"></div>
+      <div class="asklog" id="ai-log"></div>
+      <form class="askin" id="ai-form"><input type="text" id="ai-in" placeholder="Ask me anything" aria-label="Question" autocomplete="off"><button type="submit" id="ai-send">Send</button></form>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section id="v-settings" hidden>
+    <div class="panel">
+      <div class="field"><div><label for="s-round">Cards per set</label><p>Number of cards in one Study set.</p></div>
+        <select id="s-round"><option value="5">5</option><option value="10">10</option><option value="15">15</option><option value="20">20</option><option value="25">25</option></select></div>
+      <div class="field"><div><label for="s-order">Order</label><p>Order of the cards in Study.</p></div>
+        <select id="s-order"><option value="seq">By number</option><option value="rand">Random</option></select></div>
+      <div class="field"><div><label for="s-from">Start from No.</label><p>Used when order is “By number”.</p></div>
+        <input id="s-from" type="number" min="1" max="2000" value="1" style="width:110px"></div>
+      <div class="field"><div><label for="s-dir">Front of the card</label><p>Japanese front trains Japanese → Korean translation. Korean front checks that you understand.</p></div>
+        <select id="s-dir"><option value="jk">Japanese (Japanese → Korean)</option><option value="kj">Korean (Korean → Japanese)</option></select></div>
+      <div class="field"><div><label for="s-ex">Romanization</label><p>Shows how the sentence sounds (liaison and nasal changes included, as a guide).</p></div>
+        <select id="s-ex"><option value="1">Show</option><option value="0">Hide</option></select></div>
+      <div class="field"><div><label for="s-auto">Auto-play audio</label><p>Plays when you reveal the answer.</p></div>
+        <select id="s-auto"><option value="word">On</option><option value="off">Off</option></select></div>
+      <div class="field"><div><label for="s-voice">Voice</label><p id="voice-msg">録音した自然な音声で再生します。</p></div>
+        <div class="row"><button class="btn" id="s-test">Test</button></div></div>
+      <div class="field"><div><label for="s-rate">Speed</label></div>
+        <select id="s-rate"><option value="0.8">Slow</option><option value="1">Normal</option><option value="1.15">Fast</option></select></div>
+      <div class="field"><div><label>Export progress</label><p>Download an Excel file of every sentence with their level, review counts and next review date.</p><p id="exp-msg" role="status"></p></div>
+        <button class="btn" id="exp-btn">Export (.xlsx)</button></div>
+      <div class="field"><div><label>Reset progress</label><p>All sentences go back to New. This can’t be undone.</p></div>
+        <div class="row" id="reset-box"></div></div>
+    </div>
+  </section>
+</div>
+
+<script>
+(()=>{
+"use strict";
+const MIN=60e3, DAY=864e5;
+const STEPS=[1*MIN,10*MIN];
+const POS_EN={"動詞":"verb","名詞":"noun","形容詞":"adjective","副詞":"adverb","熟語":"phrase","接続詞":"conjunction"};
+const POS_CLS={"動詞":"v","名詞":"n","形容詞":"adj","副詞":"adv","接続詞":"conj","熟語":"phr"};
+const POS_ABBR={"動詞":"v","名詞":"n","形容詞":"adj","副詞":"adv","接続詞":"conj","熟語":"phr"};
+const PP={"動詞句":["v","verb phrase","v"],"名詞句":["n","noun phrase","n"],"形容詞句":["adj","adjective phrase","adj"],"副詞句":["adv","adverb phrase","adv"],"前置詞句":["prep","preposition phrase","prep"],"接続詞句":["conj","conjunction phrase","conj"],"構文":["str","structure","cx"],"会話表現":["conv","conversation","cx"]};
+const KCLS={"会話":"n","文法":"cx","数字":"adj"};
+const posMini=w=>w[2]==="単語"?`<span class="tag pos pos-${PCLS[(G[w[6]]||[])[2]]||"phr"}" title="${esc(w[5])}">${esc(((G[w[6]]||[])[2]||"").slice(0,2))}</span>`:`<span class="tag pos pos-${KCLS[w[2]]||"phr"}" title="${esc(w[5])}">${w[2]}</span>`;
+const VT_LABEL={T:"vt 他動詞",I:"vi 自動詞",TI:"vt/vi 自他両用"};
+const posTag=w=>w[2]==="単語"?`<span class="tag pos pos-${PCLS[(G[w[6]]||[])[2]]||"phr"}">${esc((G[w[6]]||[])[2]||"")} · ${esc(w[5])}</span>`:`<span class="tag pos pos-${KCLS[w[2]]||"phr"}">${w[2]} · ${esc(w[5])}</span>`;
+const SN="①②③④⑤";
+const nl=a=>a.length>1?a.map((t,i)=>`<span class="sn">${SN[i]}</span>${esc(t)}`).join("<br>"):esc(a[0]||"");
+const flat=a=>a.length>1?a.map((t,i)=>SN[i]+t).join(" "):(a[0]||"");
+const exLines=w=>"";
+const I="ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ".split("");
+const IR=["g","kk","n","d","tt","r","m","b","pp","s","ss","","j","jj","ch","k","t","p","h"];
+const VR=["a","ae","ya","yae","eo","e","yeo","ye","o","wa","wae","oe","yo","u","wo","we","wi","yu","eu","ui","i"];
+const F=["","ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ","ㄻ","ㄼ","ㄽ","ㄾ","ㄿ","ㅀ","ㅁ","ㅂ","ㅄ","ㅅ","ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+const REP={"ㄱ":"k","ㄲ":"k","ㅋ":"k","ㄳ":"k","ㄺ":"k","ㄴ":"n","ㄵ":"n","ㄶ":"n","ㄷ":"t","ㅅ":"t","ㅆ":"t","ㅈ":"t","ㅊ":"t","ㅌ":"t","ㅎ":"t","ㄹ":"l","ㄼ":"l","ㄽ":"l","ㄾ":"l","ㅀ":"l","ㅁ":"m","ㄻ":"m","ㅂ":"p","ㅍ":"p","ㅄ":"p","ㄿ":"p","ㅇ":"ng"};
+const DBL={"ㄳ":["ㄱ","ㅅ"],"ㄵ":["ㄴ","ㅈ"],"ㄶ":["ㄴ",""],"ㄺ":["ㄹ","ㄱ"],"ㄻ":["ㄹ","ㅁ"],"ㄼ":["ㄹ","ㅂ"],"ㄽ":["ㄹ","ㅅ"],"ㄾ":["ㄹ","ㅌ"],"ㄿ":["ㄹ","ㅍ"],"ㅀ":["ㄹ",""],"ㅄ":["ㅂ","ㅅ"]};
+const ASP={"ㄱ":"ㅋ","ㄷ":"ㅌ","ㅈ":"ㅊ","ㅂ":"ㅍ"};
+function romanize(s){
+  const out=[]; let run=[];
+  const flushRun=()=>{ if(!run.length) return;
+    for(let k=0;k<run.length-1;k++){const a=run[k],b=run[k+1]; if(!a.f) continue;
+      if(b.i==="ㅇ"){
+        if(a.f==="ㅇ") continue;
+        if(a.f==="ㅎ"){a.f="";continue;}
+        if(DBL[a.f]){const [s1,m]=DBL[a.f];if(m){a.f=s1;b.i=m;}else{a.f="";b.i=s1;}continue;}
+        b.i=a.f;a.f="";continue;
+      }
+      if(b.i==="ㅎ"){const r=REP[a.f];
+        if(r==="k"||r==="t"||r==="p"){b.i={k:"ㅋ",t:"ㅌ",p:"ㅍ"}[r];a.f=DBL[a.f]?DBL[a.f][0]:"";if(a.f&&REP[a.f]===r)a.f="";}
+        continue;}
+      if((a.f==="ㅎ"||a.f==="ㄶ"||a.f==="ㅀ")&&ASP[b.i]){b.i=ASP[b.i];a.f=a.f==="ㅎ"?"":DBL[a.f][0];continue;}
+      if(b.i==="ㄴ"||b.i==="ㅁ"){const r=REP[a.f]; if(r==="k")a.f="ㅇ"; else if(r==="t")a.f="ㄴ"; else if(r==="p")a.f="ㅁ"; else if(r==="l"&&b.i==="ㄴ"){a.f="ㄹ";b.i="ㄹ";}}
+      else if(b.i==="ㄹ"&&REP[a.f]==="n"){a.f="ㄹ";}
+    }
+    run.forEach((x,k)=>{const prevL=k>0&&REP[run[k-1].f]==="l";
+      let ini=x.i==="ㄹ"&&prevL?"l":IR[I.indexOf(x.i)];
+      out.push(ini+VR[x.v]+(x.f?REP[x.f]:""));});
+    run=[]; };
+  for(const ch of s){const c=ch.charCodeAt(0);
+    if(c>=0xAC00&&c<=0xD7A3){const o=c-0xAC00;run.push({i:I[Math.floor(o/588)],v:Math.floor((o%588)/28),f:F[o%28]});}
+    else{flushRun(); out.push(ch);} }
+  flushRun();
+  return out.join("").replace(/\s+/g," ").trim();
+}
+
+
+let W=[], byNo=new Map(), GN=[];  // sentences: [no,ko,kind,[ja],[point],group,groupIdx,meaning,explanation]
+let C={};                          // card states by no
+let S={order:"seq",from:1,showEx:true,auto:"word",voice:"",rate:1,av:1,dir:"jk",typ:true,rg:"all",mode:"w",rgw:"all",seed:Math.floor(Math.random()*1e9)};
+let G=[];  // groups: [kind,name,meaning,explanation]
+let store=null, dirty=new Set(), settingsDirty=false, flushing=false;
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const dayStart=t=>{const d=new Date(t);d.setHours(0,0,0,0);return d.getTime()};
+const dayKey=t=>{const d=new Date(t);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const chunkOf=no=>"p"+String(Math.floor((parseInt(no,10)-1)/100)).padStart(2,"0");
+
+/* ---------- scheduling (SM-2 based) ---------- */
+function preview(c,g,now){
+  c=c?{...c}:{q:0,st:0,i:0,e:250,r:0,l:0};
+  if(c.q===2){
+    if(g===1){c.l++;c.e=Math.max(130,c.e-20);c.li=Math.max(1,Math.round(c.i*0.3));c.q=1;c.st=0;c.d=now+STEPS[0];}
+    else{
+      let i;
+      if(g===2){i=Math.max(c.i+1,c.i*1.2);c.e=Math.max(130,c.e-15);}
+      else if(g===3){i=Math.max(c.i+1,c.i*c.e/100);}
+      else {i=Math.max(c.i+2,c.i*c.e/100*1.3);c.e+=15;}
+      c.i=Math.min(3650,Math.round(i));c.d=dayStart(now)+c.i*DAY;
+    }
+  }else{
+    const grad=(c.li||1);
+    if(g===1){c.st=0;c.d=now+STEPS[0];c.q=1;}
+    else if(g===2){c.q=1;c.d=now+(c.st===0?6*MIN:STEPS[c.st]);}
+    else if(g===3){
+      if(c.st+1>=STEPS.length || c.li){c.q=2;c.i=grad;c.d=dayStart(now)+c.i*DAY;delete c.li;c.st=0;}
+      else {c.st++;c.q=1;c.d=now+STEPS[c.st];}
+    } else {c.q=2;c.i=c.li?Math.max(grad+1,2):4;delete c.li;c.st=0;c.d=dayStart(now)+c.i*DAY;}
+  }
+  c.r++;
+  return c;
+}
+function fmtGap(c,now){
+  if(c.q!==2) return Math.max(1,Math.round((c.d-now)/MIN))+"m";
+  const d=c.i;
+  if(d<30) return d+"d";
+  if(d<365) return (d/30).toFixed(d<90?1:0)+"mo";
+  return (d/365).toFixed(1)+"y";
+}
+function stage(c){ if(!c||!c.q) return "new"; if(c.q===1) return "learn"; return c.i>=21?"mature":"young"; }
+const STAGE_LABEL={new:"New",learn:"Learning",young:"Young",mature:"Mature"};
+
+/* ---------- queues ---------- */
+function newOrder(){
+  const pool=W.filter(w=>!C[w[0]]);
+  if(S.order==="rand"){
+    const hash=s=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}h^=h>>>13;h=Math.imul(h,0x5bd1e995);h^=h>>>15;return h>>>0;};
+    const key=new Map(pool.map(w=>[w[0],hash(w[0]+":"+S.seed)]));
+    pool.sort((a,b)=>key.get(a[0])-key.get(b[0]));
+    return pool;
+  }
+  const from=Math.max(1,Math.min(W.length||1,S.from|0||1));
+  return pool.filter(w=>+w[0]>=from).concat(pool.filter(w=>+w[0]<from));
+}
+function queues(now){
+  const end=dayStart(now)+DAY;
+  const learn=[],rev=[];
+  for(const no in C){const c=C[no];
+    if(level(c)===3) continue;            // Completed words stay out of rounds
+    if(c.q===1) learn.push(no);
+    else if(c.q===2 && c.d<end) rev.push(no);}
+  learn.sort((a,b)=>C[a].d-C[b].d);
+  if(S.order==="rand"){ const k=dayKey(now)+S.seed; const h=no=>{let x=0;const s=no+k;for(let i=0;i<s.length;i++)x=(x*31+s.charCodeAt(i))|0;return x;}; rev.sort((a,b)=>h(a)-h(b)); }
+  else rev.sort((a,b)=>a-b);
+  const left=Infinity;
+  return {learn,rev,newLeft:left};
+}
+function nextCard(now){
+  const {learn,rev,newLeft}=queues(now);
+  const dueLearn=learn.filter(no=>C[no].d<=now);
+  if(S.order!=="rand" && dueLearn.length) return dueLearn[0];
+  if(S.order==="rand"){
+    const inRound=new Set(S.rnd||[]);
+    if(randPick && !inRound.has(randPick) && randPick!==lastNo && level(C[randPick])!==3) return randPick;
+    const pool=W.filter(w=>!inRound.has(w[0]) && w[0]!==lastNo && level(C[w[0]])!==3);
+    if(!pool.length) return null;
+    randPick=pool[Math.floor(Math.random()*pool.length)][0];
+    return randPick;
+  }
+  if(rev.length) return rev[0];
+  if(newLeft>0){const w=newOrder()[0]; if(w) return w[0];}
+  if(force && C[force] && C[force].q===1){ const f=force; force=null; return f; }
+  const other=learn.find(n=>n!==lastNo);
+  if(other) return other;
+  return null;
+}
+let lastNo=null, force=null, waitTimer=null, randPick=null;
+
+/* ---------- persistence ---------- */
+function setSync(t){$("#sync").textContent=t;}
+function lsSave(){try{localStorage.setItem("korean-sentences-v3",JSON.stringify({C,S}));}catch(e){}}
+function lsLoad(){try{const v=JSON.parse(localStorage.getItem("korean-sentences-v3")||"null");if(v){C=v.C||{};Object.assign(S,v.S||{});}}catch(e){}}
+let flushTimer=null;
+function markDirty(no){ if(no) dirty.add(chunkOf(no)); settingsDirty=true; lsSave(); clearTimeout(flushTimer); flushTimer=setTimeout(flush,1200); }
+async function flush(){
+  if(!store||flushing) return; flushing=true;
+  try{
+    while(dirty.size||settingsDirty){
+      if(settingsDirty){settingsDirty=false; await store.col.doc("settings").set(prunedSettings());}
+      const id=[...dirty][0]; if(!id) continue; dirty.delete(id);
+      const body={}; const lo=parseInt(id.slice(1),10)*100;
+      for(let k=lo+1;k<=lo+100;k++){const no=String(k).padStart(4,"0"); if(C[no]) body[no]=C[no];}
+      await store.col.doc(id).set({c:body});
+    }
+    setSync("Saved to your account");
+  }catch(e){
+    setSync(e&&e.code==="quota_exceeded"?"Account storage is full. Progress is saved on this device only.":"Couldn’t sync. Progress is saved on this device.");
+  }finally{flushing=false;}
+}
+function prunedSettings(){
+  return {stf:Array.isArray(S.stf)?S.stf:[],round:roundSize(),rnd:(S.rnd||[]).slice(0,200),order:S.order,from:S.from,showEx:S.showEx,dir:S.dir==="kj"?"kj":"jk",typ:S.typ!==false,rg:S.rg||"all",mode:S.mode==="g"?"g":"w",rgw:S.rgw||"all",spw:S.spw||null,spg:S.spg||null,v3:!!S.v3,kv:S.kv||0,ar:S.ar!==false,rs:S.rs||null,posw:posSel(),auto:S.auto,accent:accent(),voice:S.voice||"",rate:S.rate||1,av:S.av||1,seed:S.seed,tm:S.tm||{},sf:sfList(),sp:S.sp||null,lv3:!!S.lv3};
+}
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"){clearTimeout(flushTimer);flush();}});
+
+async function connect(){
+  let db=null,user=null;
+  try{[db,user]=await Promise.all([claude.use("db"),claude.use("user")]);}catch(e){}
+  const uid=user?await user.id().catch(()=>null):null;
+  if(!db||!uid){setSync("Saving on this device (sign in to sync across devices)"); return;}
+  const col=db.collection("data/users/"+uid); const ai=db.collection("data/users/"+uid+"/ai/items");
+  try{
+    const snap=await col.get();
+    if(snap.empty){
+      store={col,ai};
+      if(Object.keys(C).length){ for(const no in C) dirty.add(chunkOf(no)); settingsDirty=true; flush(); }
+      setSync("Saving to your account");
+      return;
+    }
+    const nc={}; let ns=null;
+    snap.docs.forEach(d=>{let v=null; try{v=JSON.parse(JSON.stringify(d.data()));}catch(e){} if(d.id==="settings") ns=v; else if(v&&v.c) Object.assign(nc,v.c);});
+    C=nc; if(ns) Object.assign(S,ns); S.lv3=!!(ns&&ns.lv3);
+    migrate();
+    store={col,ai}; lsSave(); if(dirty.size||settingsDirty) flush();
+    setSync("Progress loaded from your account");
+    refreshAll();
+  }catch(e){ setSync("Couldn’t load your account progress. Using this device’s copy."); }
+}
+
+/* ---------- audio ---------- */
+let VOICES=[];
+const VOICE_RANK=[/natural|neural|online/i,/premium|프리미엄|プレミアム/i,/enhanced|향상|拡張|高品質/i,/google/i,/sunhi|injoon|yuna|유나|sora|heami/i];
+const voiceQ=v=>/natural|neural|online|premium|프리미엄|プレミアム/i.test(v.name)?2:/enhanced|향상|拡張|高品質|google/i.test(v.name)?1:0;
+function scoreVoice(v){let s=0;VOICE_RANK.forEach((r,k)=>{if(r.test(v.name))s+=(VOICE_RANK.length-k)*10;});if(/ko[-_]KR/i.test(v.lang))s+=5;if(!v.localService)s+=2;return s;}
+function loadVoices(){try{VOICES=speechSynthesis.getVoices().filter(v=>/^ko([-_]|$)/i.test(v.lang)).sort((a,b)=>scoreVoice(b)-scoreVoice(a));}catch(e){VOICES=[];} fillVoiceSelect();}
+function pickVoice(){if(!VOICES.length)loadVoices();return VOICES.find(v=>v.voiceURI===S.voice)||VOICES[0]||null;}
+function utter(t,vo){
+  const u=new SpeechSynthesisUtterance(t.replace(/[~〜]/g," ").replace(/\s+/g," ").trim());
+  const v=vo||pickVoice(); if(v){u.voice=v;u.lang=v.lang;}else u.lang="ko-KR";
+  u.rate=(S.rate||1)*0.9; return u;
+}
+function deviceSpeak(texts,vo){try{
+  speechSynthesis.cancel();
+  setTimeout(()=>texts.forEach(t=>speechSynthesis.speak(utter(t,vo))),60);
+}catch(e){}}
+
+/* recorded neural-voice audio, one folder per accent: <dir>/index.json maps No. -> [chunk, wordOff, wordLen, exOff, exLen] */
+const ADIR={ko:"ko"};
+const AV="20261102ko1"; // bump when audio files change so old cached chunks aren't reused
+const AIDX={}, AIDXP={}, CHUNKS=new Map(), URLS=new Map();
+const player=new Audio(); player.preload="auto";
+let playToken=0;
+const accent=()=>"ko";
+const clipAcc=()=>accent();
+function loadIndex(acc){ if(!AIDXP[acc]) AIDXP[acc]=fetch(ADIR[acc]+"/index.json?v="+AV).then(r=>{if(!r.ok)throw 0;return r.json();}).then(j=>AIDX[acc]=j).catch(()=>{AIDX[acc]=null;}); return AIDXP[acc]; }
+function loadChunk(acc,c){
+  const k=acc+c;
+  if(!CHUNKS.has(k)) CHUNKS.set(k,fetch(ADIR[acc]+"/c"+String(c).padStart(2,"0")+".mp3?v="+AV).then(r=>{if(!r.ok)throw 0;return r.arrayBuffer();}).catch(e=>{CHUNKS.delete(k);throw e;}));
+  return CHUNKS.get(k);
+}
+async function clipFrom(acc,no,kind){
+  await loadIndex(acc); const ix=AIDX[acc]; if(!ix||!ix[no]) return null;
+  const key=acc+no+kind; if(URLS.has(key)) return URLS.get(key);
+  const [c,wo,wl,eo,el]=ix[no]; const buf=await loadChunk(acc,c);
+  const [o,l]=kind==="w"?[wo,wl]:[eo,el];
+  const u=URL.createObjectURL(new Blob([buf.slice(o,o+l)],{type:"audio/mpeg"}));
+  URLS.set(key,u); return u;
+}
+// the chosen accent first; if that clip isn't ready, the other accent's recording
+async function clipUrl(no,kind){
+  return await clipFrom("ko",no,kind).catch(()=>null);
+}
+function prefetchAudio(no){ loadIndex("ko").then(()=>{ const ix=AIDX.ko; if(ix&&ix[no]) loadChunk("ko",ix[no][0]).catch(()=>{}); }); }
+function playUrl(u,token){return new Promise(res=>{
+  if(token!==playToken) return res(false);
+  player.src=u; player.playbackRate=S.rate||1;
+  player.onended=()=>res(true); player.onerror=()=>res(false);
+  const p=player.play(); if(p&&p.catch) p.catch(()=>res(false));
+});}
+async function speakClips(items){ // items: [{no,kind,text}]
+  const token=++playToken;
+  try{speechSynthesis.cancel();}catch(e){}
+  player.pause();
+  for(let k=0;k<items.length;k++){
+    const it=items[k]; let u=null;
+    try{u=await clipUrl(it.no,it.kind);}catch(e){u=null;}
+    if(token!==playToken) return;
+    if(!u){ deviceSpeak(items.slice(k).map(x=>x.text)); return; }
+    const ok=await playUrl(u,token);
+    if(token!==playToken) return;
+    if(!ok){ deviceSpeak(items.slice(k).map(x=>x.text)); return; }
+    if(k<items.length-1) await new Promise(r=>setTimeout(r,250));
+  }
+}
+function stopAudio(){playToken++;player.pause();try{speechSynthesis.cancel();}catch(e){}}
+// say(no, kinds) plays a card's word / example
+function say(no,kinds){
+  const w=byNo.get(no); if(!w) return;
+  const items=(kinds||["w"]).map(k=>k==="e"&&w[10]?{no,kind:"e",text:w[10][0]}:{no,kind:"w",text:w[1]});
+  if(S.voice){ stopAudio(); deviceSpeak(items.map(i=>i.text)); } else speakClips(items);
+}
+function fillVoiceSelect(){const sel=document.getElementById("s-voice");if(!sel)return;
+  const cur=S.voice?pickVoice():null;
+  sel.innerHTML=`<option value="">Natural voice (recorded)</option>`+VOICES.map(v=>`<option value="${esc(v.voiceURI)}">${["","★ ","★★ "][voiceQ(v)]}${esc(v.name)}</option>`).join("");
+  sel.value=cur?cur.voiceURI:"";
+  const m=document.getElementById("voice-msg"); if(m) m.textContent=S.voice?"端末の音声で読み上げます。":"録音した自然な音声で再生します。どの端末でも同じ声です。"; }
+try{speechSynthesis.addEventListener("voiceschanged",loadVoices);loadVoices();}catch(e){}
+
+
+/* ---------- Ask AI about the current word ---------- */
+let samplerP=null; const sampler=()=>samplerP||(samplerP=(window.claude&&claude.use?claude.use("sample"):Promise.resolve(null)).catch(()=>null));
+let askOff=false, askCtl=null;
+const ASKQ=["文法を詳しく","単語ごとの意味は？","似た表現は？","パンマルにすると？"];
+function askBlock(no){ return ""; }
+function wireAsk(){}
+function askRules(w){
+  const head="あなたは韓国語を学び始めた日本人学習者の先生です。学習者の質問に日本語でやさしく簡潔に答えてください。韓国語には必要に応じて日本語訳を添えてください。マークダウン記号（#、**、表）は使わず、箇条書きは「・」で書いてください。";
+  if(!w) return head;
+  return head+`\n\n学習者が今見ている例文:\n韓国語: ${w[1]}\n日本語: ${flat(w[3])}\n種類: ${w[2]}（${w[5]}）\n構造: ${w[9]||""}`+(w[2]!=="会話"&&G[w[6]]?`\n項目の意味: ${G[w[6]][2]}\n解説: ${G[w[6]][3]}`:`\nポイント: ${flat(w[4])}`);
+}
+let askFor=undefined, askTurns=[], aiBack="home";
+// opens the AI tab about the word on screen (Study card or the opened word in Words); same word keeps the chat
+function openAI(){
+  if(view==="ai") return;
+  aiBack=view;
+  const no=view==="study"?(cur||null):view==="list"?([...OPEN][0]||null):askFor===undefined?null:askFor;
+  if(no!==askFor){ askFor=no; askTurns=[]; $("#ai-log").innerHTML=""; }
+  const w=no?byNo.get(no):null;
+  $("#ai-head").innerHTML=(w?`<span>About <b>${esc(w[1])}</b> · ${esc(flat(w[3]))}</span>`:`<span>Ask anything about Korean</span>`)+`<button class="askx" type="button" id="ai-x" aria-label="Close">×</button>`;
+  $("#ai-x").onclick=()=>show(aiBack);
+  if(askOff){ $("#ai-log").innerHTML=`<p class="aihint">AIへの質問はこの画面では使えません。</p>`; }
+  show("ai");
+  setTimeout(()=>$("#ai-in").focus({preventScroll:true}),0);
+}
+async function askAI(q){
+  q=q.trim(); if(!q||askOff) return;
+  if(askCtl) askCtl.abort();
+  const log=$("#ai-log"), sendB=$("#ai-send"), w=askFor?byNo.get(askFor):null;
+  const sample=await sampler();
+  if(!sample){ askOff=true; log.innerHTML=`<p class="aihint">AIへの質問はこの画面では使えません。</p>`; return; }
+  log.insertAdjacentHTML("beforeend",`<div class="msg u"></div><div class="msg a wait">Thinking…</div>`);
+  log.children[log.children.length-2].textContent=q;
+  const out=log.lastElementChild; out.scrollIntoView({block:"nearest"});
+  askTurns.push({role:"user",content:q});
+  const ctl=askCtl=new AbortController(); sendB.textContent="Stop"; sendB.type="button"; sendB.onclick=()=>ctl.abort();
+  try{
+    const {text}=await sample([{role:"user",content:askRules(w)},...askTurns.slice(-8)],{cache:false,signal:ctl.signal,onText:({text})=>{out.classList.remove("wait");out.textContent=text;}});
+    out.classList.remove("wait"); out.textContent=text; askTurns.push({role:"assistant",content:text});
+  }catch(e){
+    askTurns.pop(); out.classList.remove("wait");
+    if(e&&e.code==="cancelled"){ out.textContent=e.text?e.text+"\n（停止しました）":"停止しました"; }
+    else if(e&&["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(e.code)){ askOff=true; out.textContent="AIへの質問が許可されていないため使えません。"; }
+    else if(e&&e.code==="rate_limited"){ out.textContent="今は質問が多すぎます。少し時間をおいてからもう一度どうぞ。"; }
+    else if(e&&e.code==="refused"){ out.textContent="この質問には答えられませんでした。聞き方を変えてみてください。"; }
+    else { out.textContent=(e&&e.text?e.text+"\n":"")+"うまく回答を受け取れませんでした。もう一度送ってください。"; }
+  }finally{
+    if(askCtl===ctl) askCtl=null;
+    sendB.textContent="Send"; sendB.type="submit"; sendB.onclick=null;
+  }
+}
+$("#ai-form").onsubmit=e=>{e.preventDefault(); const q=$("#ai-in").value; $("#ai-in").value=""; askAI(q);};
+$("#askhd").onclick=openAI;
+/* 徹底解説: Claude writes an exhaustive breakdown of one sentence/word; saved per user so it opens instantly next time */
+const DEEP={};
+function deepPrompt(w){
+  const g=G[w[6]]||[];
+  if(w[2]==="単語") return `あなたは日本人に韓国語を教えるベテラン講師です。次の韓国語の単語を、初級学習者向けに「これでもか」というほど詳しく、日本語で解説してください。
+
+単語: ${w[1]}
+意味: ${flat(w[3])}
+品詞: ${g[2]||""}
+${w[11]?"ヘヨ形: "+w[11]+"\n":""}例文: ${w[10]?w[10][0]+"（"+w[10][1]+"）":""}
+
+次の見出しを【】で囲んで、この順に書いてください。
+【意味とニュアンス】日本語訳だけでなく、使われる場面や微妙なニュアンス、日本語の訳語とずれる点
+【発音】ハングルの読み方、カタカナの目安、連音・鼻音化・濃音化など音の変化（例文の中での変化も）
+【成り立ち・漢字語】漢字語なら漢字と日本語の対応、固有語なら語の成り立ち
+【活用・形】${g[2]==="動詞"||g[2]==="形容詞"?"現在（ヘヨ体・ハムニダ体・パンマル）、過去、否定、尊敬、連体形（現在・過去・未来）、-고、-아/어서、-(으)면 などを一覧で。変則活用があれば手順を説明":"よく一緒に使う助詞の形（パッチムの有無による違い）、よく使う組み合わせ"}
+【例文の分解】上の例文を単語ごとに分け、それぞれの意味と文法的な役割、活用の手順を説明
+【よく使う表現・コロケーション】一緒によく使う語句を5つ以上、韓国語と日本語訳で
+【似た単語との違い】紛らわしい類義語・反対語を挙げて違いを説明
+【よくある間違い】×と○で示す
+【追加の例文】やさしい例文を3つ（韓国語・日本語訳）
+
+マークダウン記号（#、**、表）は使わず、箇条書きは「・」を使ってください。`;
+  return `あなたは日本人に韓国語を教えるベテラン講師です。次の韓国語の文を、初級学習者向けに「これでもか」というほど詳しく、日本語で解説してください。
+
+韓国語: ${w[1]}
+日本語訳: ${flat(w[3])}
+種類: ${w[2]}（${g[1]||""}${g[2]?"：" + g[2]:""}）
+構造メモ: ${w[9]||""}
+
+次の見出しを【】で囲んで、この順に書いてください。
+【文全体の構造】主語・目的語・述語などの骨組みと、日本語の語順との比較
+【単語・助詞ごとの分解】文を1語ずつ（助詞・語尾も分けて）取り上げ、意味・品詞・役割を説明。辞書形も示す
+【活用の手順】述語や語尾がどう変化してこの形になったか、辞書形から1ステップずつ（母音の縮約・変則活用・パッチムによる形の選択を含めて）
+【この文のポイントの文法】この文で学ぶべき文法項目の意味・接続ルール・ニュアンス
+【発音】文全体の読み方、カタカナの目安、連音・鼻音化・濃音化・激音化・ㅎの弱化など、この文で起きる音の変化をすべて
+【丁寧さの言い換え】同じ内容をハムニダ体・ヘヨ体・パンマルで
+【言い換え・関連表現】意味の近い別の言い方と、その違い
+【よくある間違い】日本人がやりがちな誤りを×と○で
+【応用の例文】同じ文法を使った例文を3つ（韓国語・日本語訳）
+
+マークダウン記号（#、**、表）は使わず、箇条書きは「・」を使ってください。`;
+}
+function showDeep(box,text,saved){
+  if(!box) return; const o=box.querySelector(".deepout"), n=box.querySelector(".deepnote"), b=box.querySelector("[data-deep]");
+  o.hidden=false; o.classList.remove("wait"); o.innerHTML=fmtExp(text);
+  if(n){ n.hidden=false; n.textContent=saved?"保存済みの解説です。":"AIによる解説です。内容に誤りがある場合もあります。"; }
+  if(b){ b.textContent="もう一度解説を作る"; b.classList.add("ghost"); b.dataset.redo="1"; }
+}
+function autoDeep(scope,no){ deepLoad(no).then(t=>{ if(!t) return; const box=scope&&scope.querySelector(`[data-deepbox="${no}"]`); if(box&&box.querySelector(".deepout").hidden) showDeep(box,t,true); }); }
+async function deepLoad(no){
+  if(DEEP[no]) return DEEP[no];
+  try{ const v=localStorage.getItem("ko-deep-"+no); if(v){ DEEP[no]=v; return v; } }catch(e){}
+  if(store&&store.ai){ try{ const s=await store.ai.doc("d"+no).get(); if(s.exists){ const t=(s.data()||{}).t; if(t){ DEEP[no]=t; return t; } } }catch(e){} }
+  return null;
+}
+async function deepSave(no,t){ DEEP[no]=t; try{ localStorage.setItem("ko-deep-"+no,t); }catch(e){} if(store&&store.ai){ try{ await store.ai.doc("d"+no).set({t}); }catch(e){} } }
+let deepCtl=null;
+async function runDeep(btn,redo){
+  const no=btn.dataset.deep, w=byNo.get(no), box=btn.closest(".deep"); if(!w||!box) return;
+  const o=box.querySelector(".deepout");
+  if(!redo){ const t=await deepLoad(no); if(t){ showDeep(box,t,true); return; } }
+  const sample=await sampler();
+  if(!sample){ o.hidden=false; o.textContent="この画面ではAIの解説を使えません。"; return; }
+  if(deepCtl) deepCtl.abort(); const ctl=deepCtl=new AbortController();
+  o.hidden=false; o.classList.add("wait"); o.textContent="解説を書いています…（30秒ほどかかります）";
+  btn.disabled=true;
+  try{
+    const {text}=await sample(deepPrompt(w),{cache:false,signal:ctl.signal,modelTier:"complex",onText:({text})=>{ o.classList.remove("wait"); o.innerHTML=fmtExp(text); }});
+    await deepSave(no,text); showDeep(box,text,false);
+  }catch(e){
+    o.classList.remove("wait");
+    o.textContent=e&&e.code==="rate_limited"?"今はリクエストが多すぎます。少し時間をおいてもう一度どうぞ。":e&&["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(e.code)?"AIの解説が許可されていないため使えません。":e&&e.code==="cancelled"?"止めました。":"解説を受け取れませんでした。もう一度押してください。";
+  }finally{ btn.disabled=false; if(deepCtl===ctl) deepCtl=null; }
+}
+document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest("[data-deep]"); if(b){ e.preventDefault(); e.stopPropagation(); runDeep(b,b.dataset.redo==="1"); } },true);
+document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest("[data-askai]"); if(b){ e.preventDefault(); e.stopPropagation(); openAI(); } },true);
+/* ---------- views ---------- */
+let view="home";
+function show(v){
+  if(v!=="study"&&view==="study"&&cur&&!P){ undoNo=cur; curFromAgainU=curFromAgain; }  // come back to the same card
+  if(view==="ai"&&v!=="ai"&&askCtl){ askCtl.abort(); askCtl=null; }
+  view=v;
+  document.querySelectorAll("header [data-view]").forEach(b=>{ if(b.dataset.view===v) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
+  ["home","study","list","settings","ai"].forEach(x=>$("#v-"+x).hidden=x!==v);
+  $("#askhd").toggleAttribute("aria-current",v==="ai"); if(v==="ai") $("#askhd").setAttribute("aria-current","page");
+  if(v!=="study"){ stopAudio(); P=null; }
+  if(v==="home") renderHome();
+  if(v==="study"){ syncDir(); renderCard(); }
+  if(v==="list"){ renderList(true); fitTable(); }
+  if(v==="settings") renderSettings();
+}
+document.querySelectorAll("header [data-view]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
+function refreshAll(){ try{arUI()}catch(e){} syncDir(); syncMode(); if(G.length) fillRange(); if(view==="home")renderHome(); else if(view==="list")renderList(true); else if(view==="settings")renderSettings(); else if(view==="study")renderCard(); }
+
+function renderHome(){
+  const now=Date.now(); const {learn,rev,newLeft}=queues(now);
+  const nNew=Math.min(newLeft,W.length-Object.keys(C).length);
+  { const rw=RW(); const done=rw.filter(w=>level(C[w[0]])===3).length; $("#t-new").textContent=done; $("#t-seen").textContent=rw.length-done; }
+  $("#go").disabled=!W.length;
+  $("#go").textContent="Study";
+  const unseen=W.length-Object.keys(C).length;
+  $("#go-hint").textContent="";
+  for(const k of [1,2,3]){ const n=levelList(k).length; $("#lv-n"+k).textContent=n; document.querySelector(`[data-lv="${k}"]`).disabled=!n; }
+
+
+}
+
+/* ---------- study card ---------- */
+let cur=null, opened=false, stageR=0;
+function highlight(ex,word,spans){
+  if(Array.isArray(spans)&&spans.length){ let out="",p=0; for(const [a,b] of spans){ if(a<p||b>ex.length) continue; out+=esc(ex.slice(p,a))+"<mark>"+esc(ex.slice(a,b))+"</mark>"; p=b; } return out+esc(ex.slice(p)); }
+  const head=word.replace(/[~〜].*$/,"").trim().split(/\s+/)[0]||word;
+  const stem=head.length>4?head.slice(0,-1):head;
+  const re=new RegExp("\\b("+stem.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"[a-z]*)","i");
+  const e=esc(ex); return re.test(ex)?e.replace(re,"<mark>$1</mark>"):e;
+}
+const SPK=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>`;
+function exBlock(w){return S.showEx?`<p class="rom">${esc(romanize(w[1]))}</p>`:"";}
+function structBlock(w){ if(!w[9]) return ""; return `<p class="sublab">Structure</p><ul class="struct">${w[9].split("|").map(seg=>{const k=seg.indexOf("="); const a=k<0?seg:seg.slice(0,k), b=k<0?"":seg.slice(k+1); return `<li><b>${esc(a)}</b><span>${esc(b)}</span></li>`;}).join("")}</ul>`; }
+const fmtExp=t=>esc(t).replace(/^【([^】]+)】(.*)$/gm,(m,a,b)=>`<span class="eh">【${a}】</span>${b}`);
+const PCLS={"名詞":"n","動詞":"v","形容詞":"adj","副詞":"adv","その他":"phr"};
+function wordInfo(w){ const g=G[w[6]]||[];
+  return `${w[11]?`<p class="heyo">ヘヨ形 <b>${esc(w[11])}</b></p>`:""}`+
+    (w[10]?`<p class="sublab">Example</p><div class="exw"><div class="t"><span class="k">${esc(w[10][0])}</span><span class="j">${esc(w[10][1])}</span></div><button class="speak sm" data-say="ex" aria-label="Play example">${SPK}</button></div>`:"")+
+    (g[3]?`<details class="gexp"><summary>${esc(g[2])}の使い方</summary><div class="body">${fmtExp(g[3])}</div></details>`:"");
+}
+function deepBlock(w){ return `<div class="deep" data-deepbox="${w[0]}"><button class="deepbtn" type="button" data-deep="${w[0]}">${w[2]==="単語"?"この単語を徹底解説":"この文を徹底解説"}</button><div class="deepout" hidden></div><p class="deepnote" hidden></p></div>`; }
+function gramBlock(w,open){
+  if(w[2]==="単語") return wordInfo(w)+deepBlock(w);
+  const g=G[w[6]]||[];
+  const pt=w[4]&&w[4].length?`<p class="core"><b>Point</b>${nl(w[4])}</p>`:"";
+  if(w[2]==="会話") return pt+(g[3]?`<details class="gexp"${open?" open":""}><summary>この場面の文法・表現の解説</summary><div class="body">${fmtExp(g[3])}</div></details>`:"")+deepBlock(w);
+  return pt+`<p class="gram"><b>${w[2]==="文法"?"Grammar":"Numbers"}</b><span class="pt">${esc(g[1]||"")}</span>${esc(g[2]||"")}</p>`+(g[3]?`<details class="gexp"${open?" open":""}><summary>${w[2]==="文法"?"文法の解説を読む":"解説を読む"}</summary><div class="body">${fmtExp(g[3])}</div></details>`:"")+deepBlock(w);
+}
+// answer check: compare ignoring spaces and punctuation; mark the typed characters that don't match
+const norm=s=>s.replace(/[\s.,!?、。！？~…·'"“”‘’]/g,"");
+function diffMark(you,ans){
+  const a=[...norm(you)], b=[...norm(ans)], n=a.length, m=b.length;
+  const L=Array.from({length:n+1},()=>new Int16Array(m+1));
+  for(let i=n-1;i>=0;i--) for(let j=m-1;j>=0;j--) L[i][j]=a[i]===b[j]?L[i+1][j+1]+1:Math.max(L[i+1][j],L[i][j+1]);
+  const keep=new Set(); let i=0,j=0; while(i<n&&j<m){ if(a[i]===b[j]){keep.add(i);i++;j++;} else if(L[i+1][j]>=L[i][j+1]) i++; else j++; }
+  let k=0, out=""; for(const ch of you){ if(/[\s.,!?、。！？~…·'"“”‘’]/.test(ch)){ out+=esc(ch); continue; } out+=keep.has(k)?esc(ch):`<i>${esc(ch)}</i>`; k++; }
+  return {html:out, ok:norm(you)===norm(ans), score:m?Math.round(L[0][0]/Math.max(m,n)*100):0};
+}
+function yoursBlock(w){
+  const t=(typed||"").trim(); if(!t) return "";
+  const d=diffMark(t,w[1]);
+  return `<div class="yours"><b>Your answer</b><span class="ya">${d.html}</span>${d.ok?`<span class="ok">✓ Perfect</span>`:`<span class="ng">${d.score}% match · red = different from the model</span>`}</div>`;
+}
+let typed="";
+// front: Japanese (say it in Korean) or Korean (understand it); the sheet covers the other side
+function cardBody(w){
+  if(S.dir!=="kj") return `<div class="word"><h3 class="jaf">${nl(w[3])}</h3></div>
+    ${false?`<div class="typebox"><textarea id="typein" rows="2" placeholder="韓国語で書いてみる" lang="ko" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Your Korean answer"></textarea><small>Enter: check · Shift+Enter: new line</small></div>`:""}
+    <div class="answer" id="ans">
+      <div class="word"><p class="ako">${esc(w[1])}</p><button class="speak sm" data-say="word" aria-label="Play Korean">${SPK}</button></div>
+      ${exBlock(w)}<div id="yours"></div>${structBlock(w)}${gramBlock(w)}
+      <button class="sheet" id="sheet">Show Korean<small>Tap or press Space</small></button>
+    </div>`;
+  return `<div class="word"><h3>${esc(w[1])}</h3><button class="speak" data-say="word" aria-label="Play Korean">${SPK}</button></div>
+    ${exBlock(w)}
+    <div class="answer" id="ans">
+      <p class="ja">${nl(w[3])}</p>
+      ${structBlock(w)}${gramBlock(w)}
+      <button class="sheet" id="sheet">Show Japanese<small>Tap or press Space</small></button>
+    </div>`;
+}
+function wireType(){ typed=""; const ta=document.getElementById("typein"); if(!ta) return;
+  ta.addEventListener("input",()=>{typed=ta.value;});
+  ta.addEventListener("keydown",e=>{ if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing&&e.keyCode!==229){ e.preventDefault(); typed=ta.value; reveal(); } });
+  if(matchMedia("(hover:hover)").matches) setTimeout(()=>{ try{ta.focus({preventScroll:true});}catch(e){} },30);
+}
+
+function roundSize(){ return [5,10,15,20,25].includes(+S.round)?+S.round:25; }
+/* Study: endless cards from the chosen levels. S.sf = levels ("0" New … "3" Completed, "tm" Review again) */
+const SF_ALL=["0","1","2","3"];
+function sfList(){ const f=(Array.isArray(S.sf)?S.sf:[]).filter(x=>SF_ALL.includes(String(x))).map(String); return f.length?f:["0","1","2"]; }
+const isW=()=>S.mode!=="g";
+const inMode=w=>isW()?w[2]==="単語":w[2]!=="単語";
+const rgKey=()=>isW()?"rgw":"rg";
+function inRange(w){ if(!w||!inMode(w)) return false; const r=S[rgKey()]||"all"; if(r==="all") return true; if(r.startsWith("k:")) return w[2]===r.slice(2); if(r.startsWith("g:")) return String(w[6])===r.slice(2); return true; }
+const RW=()=>W.filter(inRange);
+const posOf=w=>w&&w[2]==="単語"?((G[w[6]]||[])[2]||""):"";
+const posSel=()=>Array.isArray(S.posw)?S.posw:[];
+const posOk=no=>{ if(!isW()) return true; const f=posSel(); if(!f.length) return true; return f.includes(posOf(byNo.get(no))); };
+function inPool(no){ return inRange(byNo.get(no)) && posOk(no) && sfList().includes(String(level(C[no]))); }
+const POS_CHIP={"名詞":"Noun","動詞":"Verb","形容詞":"Adjective","副詞":"Adverb","その他":"Other"};
+function fillPosSel(){ const box=document.getElementById("spos"); if(!box||!W.length) return;
+  if(!isW()){ box.hidden=true; return; } box.hidden=false;
+  const cnt=new Map(); for(const w of W) if(inRange(w)){ const p=posOf(w); cnt.set(p,(cnt.get(p)||0)+1); }
+  let f=posSel().filter(x=>cnt.has(x)); if(f.length&&f.length===cnt.size) f=[]; S.posw=f;
+  box.innerHTML=`<button data-pos="" aria-pressed="${!f.length}">All POS</button>`+[...cnt].sort((a,b)=>b[1]-a[1]).map(([x,n])=>`<button data-pos="${esc(x)}" aria-pressed="${f.includes(x)}">${esc(POS_CHIP[x]||x)}<span class="num">${n}</span></button>`).join("");
+  box.querySelectorAll("[data-pos]").forEach(b=>b.onclick=()=>{ const v=b.dataset.pos; let g=posSel();
+    g=!v?[]:(g.includes(v)?g.filter(x=>x!==v):[...g,v]);
+    S.posw=g; deck=[]; used.clear(); undoNo=null; markDirty(null); if(!opened) renderCard(); else renderCounts(); }); }
+function fillRange(){
+  const kinds=isW()?[["単語","単語"]]:[["会話","日常会話 100"],["文法","文法（項目別）"],["数字","数字・曜日・助数詞"]];
+  const tot=W.filter(inMode).length;
+  let h=`<option value="all">${isW()?"All words":"All sentences"} (${tot})</option>`;
+  for(const [k,lab] of kinds){ const n=W.filter(w=>w[2]===k).length; h+=(isW()?"":`<option value="k:${k}">${lab}（${n}）</option>`)+`<optgroup label="${lab}">`+G.map((g,i)=>g&&g[0]===k?`<option value="g:${i}">${esc(g[1])}${k==="文法"?"　"+esc(g[2]):k==="単語"?"（"+esc(g[2])+"・"+W.filter(w=>w[6]===i).length+"）":""}</option>`:"").join("")+`</optgroup>`; }
+  const cur=S[rgKey()]||"all";
+  document.querySelectorAll(".rgsel").forEach(s=>{ s.innerHTML=h; s.value=cur; if(s.value!==cur){ S[rgKey()]="all"; s.value="all"; } });
+  // list filter follows the mode too
+  const ps=document.getElementById("pos"); if(ps){ const pv=ps.value; ps.innerHTML=`<option value="all">All groups</option>`+(isW()?[["単語","単語"]]:[["会話","会話（場面）"],["文法","文法"],["数字","数字・曜日・助数詞"]]).map(([k,lab])=>`<optgroup label="${lab}">`+GN.map((g,i)=>g&&g.kind===k?`<option value="${i}">${esc(g.name)}</option>`:"").join("")+`</optgroup>`).join(""); ps.value=pv; if(ps.value!==pv) ps.value="all"; }
+}
+document.querySelectorAll(".rgsel").forEach(s=>s.addEventListener("change",()=>{ S[rgKey()]=s.value; document.querySelectorAll(".rgsel").forEach(x=>x.value=S[rgKey()]); markDirty(null); undoNo=null; if(view==="study"){ if(!opened||P) { P=null; renderCard(); } else renderCounts(); } else renderHome(); }));
+let againQ=[], sess=0, recent=[], curFromAgain=false, curFromAgainU=false;
+let deck=[], used=new Set();
+const shuffled=a=>{ a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+function nextStudy(){
+  curFromAgain=false;
+  if(S.rs&&S.rs.on&&S.rs.w.length>=roundSize()){ if(againQ.length){ curFromAgain=true; return againQ.shift().no; } return null; }
+  // a word rated "Again" comes back after 5 other cards
+  const k=againQ.findIndex(a=>a.at<=sess && a.no!==lastNo);
+  if(k>=0){ curFromAgain=true; return againQ.splice(k,1)[0].no; }
+  const wait=new Set(againQ.map(a=>a.no));
+  const pool=W.filter(w=>w[0]!==lastNo && !wait.has(w[0]) && inPool(w[0])).map(w=>w[0]);
+  if(!pool.length){ if(againQ.length){ curFromAgain=true; return againQ.shift().no; } return (lastNo&&inPool(lastNo))?lastNo:null; }
+  if(S.order==="rand"){
+    // card-deck shuffle: every sentence in the chosen levels comes up once per round, in shuffled order
+    deck=deck.filter(n=>inPool(n)&&!wait.has(n));
+    const inDeck=new Set(deck);
+    for(const n of pool) if(!inDeck.has(n)&&!used.has(n)){ deck.splice(Math.floor(Math.random()*(deck.length+1)),0,n); }
+    if(!deck.length){ used.clear(); deck=shuffled(pool); }
+    return deck[0];
+  }
+  const p=S.sp||String(Math.max(1,S.from|0||1)-1).padStart(4,"0");
+  return pool.find(no=>no>p)||pool[0];
+}
+function renderCounts(){
+  const f=sfList(), cnt={"0":0,"1":0,"2":0,"3":0};
+  fillPosSel();
+  for(const w of RW()){ if(posOk(w[0])) cnt[level(C[w[0]])]++; }
+  document.querySelectorAll("#sf [data-sf]").forEach(b=>{ b.setAttribute("aria-pressed",String(f.includes(b.dataset.sf))); b.querySelector(".num").textContent=cnt[b.dataset.sf]; });
+  const n=W.filter(w=>inPool(w[0])).length;
+  $("#sess").textContent=(S.rs&&S.rs.on)?`${Math.min(S.rs.w.length,roundSize())}/${roundSize()}`+(S.rs.w.length>=roundSize()&&againQ.length?` · retry ${againQ.length}`:""):`${n} ${isW()?"word":"sentence"}${n===1?"":"s"}`;
+}
+document.querySelectorAll("#sf [data-sf]").forEach(b=>b.onclick=()=>{
+  const v=b.dataset.sf; let f=sfList();
+  f=f.includes(v)?f.filter(x=>x!==v):[...f,v];
+  if(!f.length) return;           // keep at least one level selected
+  S.sf=f; markDirty(null); if(!opened) renderCard(); else renderCounts();
+});
+function studyLevels(list){ P=null; S.sf=list; markDirty(null); show("study"); }
+const LV=["","Again","To review","Completed"];
+// the same label and colour as the level buttons above the card
+function lvChip(c){ const k=level(c); return `<span class="tag lvchip l${k}">${k?LV[k]:"New"}</span>`; }
+/* "review again tomorrow": S.tm maps No. -> the day (YYYY-MM-DD) it should come back, even if Completed */
+const tmToday=()=>dayKey(Date.now()), tmTomorrow=()=>dayKey(Date.now()+DAY);
+const tmOf=no=>(S.tm&&S.tm[no])||"";
+function tmDue(){const t=tmToday();return W.filter(w=>{const d=tmOf(w[0]);return d&&d<=t;}).map(w=>w[0]);}
+function tmAll(){const t=tmToday();const d=W.filter(w=>{const x=tmOf(w[0]);return x&&x<=t;}).map(w=>w[0]);return d.concat(W.filter(w=>tmOf(w[0])>t).map(w=>w[0]));}
+function tmLater(){const t=tmToday();return W.filter(w=>tmOf(w[0])>t).length;}
+function tmBtn(no){return "";}
+function tmClear(no){ if(S.tm&&S.tm[no]&&S.tm[no]<=tmToday()){ S.tm={...S.tm}; delete S.tm[no]; markDirty(null); } }
+// sets the level to Completed AND brings the word back tomorrow; tapping again cancels tomorrow's review
+function toggleTm(no){
+  const on=tmOf(no)>tmToday();
+  if(!on&&view==="study"&&cur===no) tmBefore=clone(S.tm||{});
+  S.tm={...(S.tm||{})};
+  if(on) delete S.tm[no]; else S.tm[no]=tmTomorrow();
+  markDirty(null);
+  if(!on){
+    if(view==="study"&&cur===no){ if(P) practiceGrade(3); else grade(3); return; }
+    setLevel(no,3);
+  }
+  document.querySelectorAll(`[data-tm="${no}"]`).forEach(b=>b.outerHTML=tmBtn(no));
+  const tr=document.querySelector(`tr.w[data-no="${no}"]`); if(tr){const td=tr.querySelector("td.st"); if(td) td.outerHTML=statusTd(C[no],no);}
+}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-tm]"); if(b){e.preventDefault();e.stopPropagation();toggleTm(b.dataset.tm);}},true);
+function level(c){ if(!c||!c.q) return 0; if(c.g) return Math.min(3,c.g); return c.q===1?1:3; }
+function levelList(k){return RW().filter(w=>level(C[w[0]])===k).map(w=>w[0]);}
+let P=null;
+function startPractice(k){
+  const q=levelList(k); if(!q.length) return;
+  if(S.order==="rand") for(let i=q.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[q[i],q[j]]=[q[j],q[i]];}
+  P={q,total:q.length,done:0,lv:k}; show("study");
+}
+function startTm(){
+  const q=tmAll(); if(!q.length) return;
+  if(S.order==="rand") for(let i=q.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[q[i],q[j]]=[q[j],q[i]];}
+  P={q,total:q.length,done:0,lv:"tm"}; show("study");
+}
+/* undo: each rating saves what it changed, so a mistaken tap can be taken back */
+const H=[]; let tmBefore=null, undoNo=null;
+const clone=o=>o===undefined?undefined:JSON.parse(JSON.stringify(o));
+function pushH(e){ e.tm=clone(tmBefore||S.tm||{}); tmBefore=null; H.push(e); if(H.length>30) H.shift(); }
+function updateUndo(){ const b=$("#undo"); if(b) b.hidden=!H.length; }
+function undo(){
+  const h=H.pop(); if(!h) return;
+  if(h.c===undefined) delete C[h.no]; else C[h.no]=h.c;
+  S.tm=h.tm;
+  if(h.kind==="practice"){ P=h.P; }
+  else { P=null; if(h.rs!==undefined) S.rs=h.rs; lastNo=h.lastNo; againQ=h.aq||[]; sess=h.sess||0; S.sp=h.sp; recent=h.recent||[]; if(h.deck){ deck=h.deck; used=new Set(h.used||[]); } undoNo=h.no; curFromAgainU=!!h.cfa; }
+  markDirty(h.no);
+  if(view!=="study") show("study"); else renderCard();
+}
+function practiceGrade(g){
+  if(!P||!P.q.length) return;
+  pushH({kind:"practice",no:P.q[0],c:clone(C[P.q[0]]),P:clone(P)});
+  const no=P.q.shift();
+  if(C[no]){ C[no].g=g; markDirty(no); }
+  if(g!==1) tmClear(no);
+  if(g===1) P.q.splice(Math.min(P.q.length,3),0,no); else P.done++;
+  renderPractice();
+}
+function renderPractice(){
+  updateUndo();
+  if(!P.q.length){ const n=P.total; P=null; cur=null;
+    $("#stage").innerHTML=`<div class="panel done"><h3>Practice done.</h3><p>You went through ${n} sentence${n>1?"s":""}.</p><button class="btn" id="back">Back to Home</button></div>`;
+    $("#back").onclick=()=>show("home"); return; }
+  const no=P.q[0]; cur=no; opened=false; stageR=0; const w=byNo.get(no), c=C[no];
+  $("#stage").innerHTML=`
+  <article class="card"><button class="askcard" type="button" data-askai>Ask AI</button>
+    <div class="meta"><span class="tag status">Review: ${P.lv==="tm"?"Again":LV[P.lv]} · ${P.done}/${P.total}</span><span class="num">No.${no}</span>${posTag(w)}${c&&c.l?`<span class="tag status">forgotten ${c.l}×</span>`:""}</div>
+    ${cardBody(w)}
+  </article>
+  <div class="grades" id="grades">${[1,2,3].map(k=>`<button class="g${k}" data-p="${k}">${LV[k]}<small>${k===1?"see again soon":"next"}</small><kbd>${k}</kbd></button>`).join("")}</div>
+  ${askBlock(no)}`;
+  $("#p-end").hidden=false;
+  $("#stage").querySelectorAll("[data-say]").forEach(b=>b.onclick=()=>say(no,[b.dataset.say==="ex"?"e":"w"]));
+  $("#stage").querySelectorAll("[data-acc]").forEach(b=>b.onclick=()=>{
+    S.accent=b.dataset.acc; markDirty(null);
+    $("#stage").querySelectorAll("[data-acc]").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.acc===S.accent)));
+    say(no,["w"]); });
+  $("#grades").querySelectorAll("button").forEach(b=>b.onclick=()=>practiceGrade(+b.dataset.p));
+  $("#sheet").onclick=reveal; wireAsk($("#stage")); wireType();
+  prefetchAudio(no);
+}
+/* sets: Start → N cards (plus their Retry Loop cards) → summary → Next N */
+function setPanel(){
+  cur=null; opened=false;
+  const r=S.rs, done=r&&r.n&&!r.on;
+  const pool=W.filter(w=>inPool(w[0])).length, unit=isW()?"words":"sentences";
+  let body;
+  if(done){
+    const k=[0,0,0,0]; for(const no of r.w) k[level(C[no])]++;
+    body=`<p>${r.w.length} ${unit} done.</p>
+      <div class="setsum"><span class="tag lvchip l1">Again ${k[1]}</span><span class="tag lvchip l2">To review ${k[2]}</span><span class="tag lvchip l3">Completed ${k[3]}</span></div>
+      <div class="setbtns"><button class="btn primary" id="set-go" ${pool?"":"disabled"}>Next ${roundSize()} →</button></div>`;
+  } else {
+    body=`<div class="setbtns" style="margin:0"><button class="btn primary" id="set-go" ${pool?"":"disabled"}>▶ Start</button></div>`;
+  }
+  $("#stage").innerHTML=`<div class="panel done">${body}${pool?"":`<p class="hint">No ${unit} in the levels you picked. Choose other levels above.</p>`}</div>`;
+  $("#set-go").onclick=startSet;
+  $("#set-go").focus({preventScroll:true});
+}
+function startSet(){
+  S.rs={n:((S.rs&&S.rs.n)||0)+1,w:[],on:true}; againQ=[]; undoNo=null; markDirty(null); renderCard();
+}
+function renderCard(){
+  updateUndo(); $("#p-end").hidden=true;
+  $("#v-study .progress").hidden=!!P;
+  if(P) return renderPractice();
+  renderCounts();
+  if(!S.rs||!S.rs.on) return setPanel();
+  if(!undoNo&&S.rs.w.length>=roundSize()&&!againQ.length){ S.rs={...S.rs,on:false}; markDirty(null); renderCounts(); return setPanel(); }
+  const now=Date.now(); let no; if(undoNo){ no=undoNo; curFromAgain=curFromAgainU; } else no=nextStudy(); undoNo=null;
+  clearTimeout(waitTimer);
+  if(!no){cur=null; $("#stage").innerHTML=`<div class="panel done"><h3>No sentences here.</h3><p>There are no sentences in the levels you picked. Choose other levels above.</p><button class="btn" id="back">Back to Home</button></div>`;
+    $("#back").onclick=()=>show("home"); return;}
+  cur=no; opened=false; stageR=0;
+  const w=byNo.get(no), c=C[no], st=stage(c);
+  const late=c&&c.q===2?Math.floor((dayStart(now)-c.d)/DAY):0;
+  $("#stage").innerHTML=`
+  <article class="card"><button class="askcard" type="button" data-askai>Ask AI</button>
+    <div class="meta"><span class="num">No.${no}</span>${posTag(w)}${lvChip(c)}</div>
+    ${cardBody(w)}
+  </article>
+  <div class="grades" id="grades" hidden></div>
+  ${askBlock(no)}`;
+  $("#stage").querySelectorAll("[data-say]").forEach(b=>b.onclick=()=>say(no,[b.dataset.say==="ex"?"e":"w"]));
+  $("#stage").querySelectorAll("[data-acc]").forEach(b=>b.onclick=()=>{
+    S.accent=b.dataset.acc; markDirty(null);
+    $("#stage").querySelectorAll("[data-acc]").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.acc===S.accent)));
+    say(no,["w"]);
+  });
+  prefetchAudio(no);
+  $("#sheet").onclick=reveal; wireAsk($("#stage")); wireType();
+  const lab=LV.slice(1);
+  $("#grades").innerHTML=lab.map((l,k)=>`<button class="g${k+1}" data-g="${k+1}">${l}<kbd>${k+1}</kbd></button>`).join("");
+  $("#grades").hidden=false;
+  $("#grades").querySelectorAll("button").forEach(b=>b.onclick=()=>grade(+b.dataset.g));
+}
+function autoPlay(){ if(S.auto==="word") say(cur,["w"]); else if(S.auto==="both") say(cur,["w","e"]); }
+// 1st tap: English definition. 2nd tap: Japanese meaning and the rest.
+function reveal(){
+  if(!cur||opened) return;
+  const sh=$("#sheet"), d=$("#ans .def");
+  if(stageR===0 && d){
+    stageR=1;
+    sh.style.top=(d.offsetTop+d.offsetHeight+8)+"px";
+    sh.innerHTML="Show Japanese<small>Tap or press Space</small>";
+    autoPlay(); return;
+  }
+  opened=true;
+  { const ta=document.getElementById("typein"); if(ta){ typed=ta.value; ta.readOnly=true; const y=document.getElementById("yours"); if(y) y.innerHTML=yoursBlock(byNo.get(cur)); } }
+  $("#ans").classList.add("open");
+  autoDeep(document.getElementById("stage"),cur);
+  $("#grades button.g3").focus({preventScroll:true});
+  if(stageR===0) autoPlay();
+}
+function grade(g){
+  if(!cur||P) return;
+  const now=Date.now(), c=C[cur];
+  pushH({kind:"round",rs:clone(S.rs),no:cur,c:clone(c),lastNo,aq:clone(againQ),sess,sp:S.sp||null,recent:[...recent],cfa:curFromAgain,deck:[...deck],used:[...used]});
+  deck=deck.filter(n=>n!==cur); used.add(cur);
+  C[cur]=preview(c,g,now); C[cur].g=g; lastNo=cur; tmClear(cur);
+  if(!curFromAgain && S.order!=="rand") S.sp=cur;
+  recent.push(cur); if(recent.length>30) recent.shift();
+  sess++; againQ=againQ.filter(a=>a.no!==cur);
+  if(S.rs&&S.rs.on&&!S.rs.w.includes(cur)) S.rs={...S.rs,w:[...S.rs.w,cur]};
+  if(g===1 && S.ar!==false) againQ.push({no:cur,at:sess+5});
+  markDirty(cur);
+  renderCard();
+}
+document.addEventListener("keydown",e=>{
+  if(view!=="study"||e.target.closest("input,select,textarea")) return;
+  if(e.code==="Space"||e.key==="Enter"){ if(!opened){e.preventDefault();reveal();} }
+  else if(/^[1-3]$/.test(e.key)){e.preventDefault(); if(P) practiceGrade(+e.key); else grade(+e.key);}
+  else if(SWIPE_KEY[e.key]&&cur){e.preventDefault(); rateBySwipe(SWIPE_KEY[e.key]);}
+  else if((e.key==="z"&&(e.metaKey||e.ctrlKey))||e.key==="Backspace"){ if(H.length){e.preventDefault(); undo();} }
+});
+/* swipe the card to rate: ← Again · ↓ To review · → Completed (arrow keys do the same) */
+const SWIPE_KEY={ArrowLeft:1,ArrowDown:2,ArrowRight:3};
+const SWIPE_RGB=["","179,38,30","161,98,10","31,107,74"];
+// tint the card toward the rating it is being swiped to (k = 0..1)
+function tintCard(card,g,k){ if(!card) return; if(!g||k<=0){ card.style.boxShadow=""; card.style.borderColor=""; return; }
+  const a=Math.min(1,k); card.style.boxShadow=`inset 0 0 0 2000px rgba(${SWIPE_RGB[g]},${(0.16*a).toFixed(3)})`; card.style.borderColor=`rgba(${SWIPE_RGB[g]},${(0.25+0.5*a).toFixed(2)})`; }
+function rateBySwipe(g){
+  if(!cur) return;
+  const card=document.querySelector("#stage .card");
+  const lab=document.createElement("div"); lab.className="swflash l"+g; lab.textContent=["","← Again","↓ To review","Completed →"][g];
+  document.body.appendChild(lab); setTimeout(()=>lab.remove(),650);
+  tintCard(card,g,1);
+  if(card){ card.style.transition="transform .18s ease, opacity .18s ease"; card.style.transform=g===1?"translateX(-40%) rotate(-4deg)":g===2?"translateY(30%)":"translateX(40%) rotate(4deg)"; card.style.opacity="0"; }
+  setTimeout(()=>{ if(P) practiceGrade(g); else grade(g); },170);
+}
+(()=>{
+  // the card is "grabbed": left/right always rate; dragging it down rates To review whenever the card's top is on screen
+  let sx=0,sy=0,on=false,card=null,mode="",canDown=false;
+  const stage=document.getElementById("stage");
+  const reset=()=>{ tintCard(card,0,0); if(card){ card.style.transition="transform .15s ease"; card.style.transform=""; setTimeout(()=>{ if(card) card.style.transition=""; },160); } };
+  stage.addEventListener("touchstart",e=>{
+    card=e.target.closest(".card"); on=!!card&&e.touches.length===1&&!e.target.closest("input,select,textarea,.speak,.acc,.askcard");
+    if(!on) return; const t=e.touches[0]; sx=t.clientX; sy=t.clientY; mode="";
+    canDown=card.getBoundingClientRect().top>=-4; card.style.transition="";
+  },{passive:true});
+  stage.addEventListener("touchmove",e=>{
+    if(!on) return; const t=e.touches[0], dx=t.clientX-sx, dy=t.clientY-sy;
+    if(!mode){ if(Math.abs(dx)<8&&Math.abs(dy)<8) return;
+      mode=Math.abs(dx)>Math.abs(dy)?"x":(dy>0&&canDown?"down":"scroll"); }
+    if(mode==="scroll") return;
+    if(e.cancelable) e.preventDefault();
+    if(mode==="x"){ const m=Math.max(-140,Math.min(140,dx)); card.style.transform=`translateX(${m}px) rotate(${m/60}deg)`; tintCard(card,m<0?1:3,Math.abs(m)/70); }
+    else { const m=Math.max(0,Math.min(160,dy)); card.style.transform=`translateY(${m}px)`; tintCard(card,2,m/80); }
+  },{passive:false});
+  stage.addEventListener("touchend",e=>{
+    if(!on) return; on=false; const t=e.changedTouches[0], dx=t.clientX-sx, dy=t.clientY-sy;
+    if(mode==="x"&&Math.abs(dx)>70) return rateBySwipe(dx<0?1:3);
+    if(mode==="down"&&dy>80) return rateBySwipe(2);
+    reset();
+  },{passive:true});
+  stage.addEventListener("touchcancel",()=>{ on=false; reset(); },{passive:true});
+})();
+// reshuffle: a fresh deck from all sentences in the chosen levels (switches to random order if needed)
+$("#reshuffle").onclick=()=>{
+  if(S.order!=="rand"){ S.order="rand"; markDirty(null); }
+  deck=[]; used.clear(); undoNo=null; lastNo=null; P=null;
+  const f=document.createElement("div"); f.className="swflash l0"; f.textContent="⇄ Shuffled"; document.body.appendChild(f); setTimeout(()=>f.remove(),650);
+  renderCard();
+};
+// 単語 / 文法 mode: separate decks, ranges and progress pointers
+function syncMode(){ const m=isW()?"w":"g";
+  document.querySelectorAll("[data-mode]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.mode===m)));
+  $("#brandname").textContent=m==="w"?"Korean Words":"Korean Sentences"; }
+function setMode(m){
+  if((isW()?"w":"g")===m) return;
+  S[isW()?"spw":"spg"]=S.sp||null; S.mode=m; S.sp=S[m==="w"?"spw":"spg"]||null;
+  deck=[]; used.clear(); againQ=[]; recent=[]; H.length=0; undoNo=null; lastNo=null; P=null; OPEN.clear(); OPEN_G.clear(); S.rs=null;
+  markDirty(null); syncMode(); fillRange(); syncDir();
+  const f=document.createElement("div"); f.className="swflash l0"; f.textContent=m==="w"?"単語モード":"文法モード"; document.body.appendChild(f); setTimeout(()=>f.remove(),650);
+  if(view==="study") renderCard(); else refreshAll();
+}
+document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+// switch between 日→韓 (say it in Korean) and 韓→日 (understand it); the card on screen redraws in the new direction
+function syncDir(){ const d=S.dir==="kj"?"kj":"jk";
+  document.querySelectorAll("[data-dir]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.dir===d)));
+  const s=document.getElementById("s-dir"); if(s) s.value=d; }
+function setDir(d){
+  if((S.dir==="kj"?"kj":"jk")===d) return;
+  S.dir=d; markDirty(null); syncDir();
+  if(view==="study"&&cur){ if(P) renderPractice(); else { undoNo=cur; curFromAgainU=curFromAgain; renderCard(); } }
+  const f=document.createElement("div"); f.className="swflash l0"; f.textContent=d==="jk"?"日 → 韓":"韓 → 日"; document.body.appendChild(f); setTimeout(()=>f.remove(),650);
+}
+document.querySelectorAll("[data-dir]").forEach(b=>b.onclick=()=>setDir(b.dataset.dir));
+function arUI(){const b=$("#againre"); if(!b) return; const on=S.ar!==false; b.setAttribute("aria-pressed",on?"true":"false"); b.textContent="↻ Retry Loop: "+(on?"ON":"OFF");}
+$("#againre").onclick=()=>{ S.ar=(S.ar===false); if(S.ar===false) againQ=[]; arUI(); markDirty(null); renderCounts(); };
+setTimeout(arUI,0);
+$("#go").onclick=()=>{ P=null; show("study"); };
+document.querySelectorAll("[data-lv]").forEach(b=>b.onclick=()=>studyLevels([String(b.dataset.lv)]));
+$("#undo").onclick=undo;
+$("#p-end").onclick=()=>show("home");
+
+/* ---------- list ---------- */
+
+const OPEN_G=new Set();
+$("#g-all").onclick=()=>{ const nG=GN.length; if(OPEN_G.size>=nG) OPEN_G.clear(); else for(let g=0;g<nG;g++) OPEN_G.add(g); renderList(false); };
+function toggleGroup(g){ if(OPEN_G.has(g)) OPEN_G.delete(g); else OPEN_G.add(g); renderList(false); const el=document.querySelector(`tr.grp[data-g="${g}"]`); if(el){ el.focus({preventScroll:true}); const box=document.querySelector("#v-list .table"); if(el.offsetTop<box.scrollTop) box.scrollTop=el.offsetTop; } }
+const OPEN=new Set();
+function accPill(){return "";}
+function statusTd(c,no){const k=level(c);const col=k?["","var(--again)","var(--hard)","var(--good)"][k]:"var(--muted)";return `<td class="st" style="color:${col};font-weight:${k?700:400}">${lvDot(c)}<span class="stl">${k?LV[k]:"New"}</span></td>`;}
+function lvDot(c){const k=level(c);return k?`<span class="lvdot l${k}" title="${LV[k]}"></span>`:`<span class="lvdot l0" title="New"></span>`;}
+function lvButtons(no){const k=level(C[no]);return `<div class="lvset" role="group" aria-label="Level">${[1,2,3].map(j=>`<button class="l${j}" data-setlv="${j}" aria-pressed="${k===j}">${LV[j]}</button>`).join("")}</div>`;}
+function setLevel(no,k){
+  const c=C[no];
+  if(c){ C[no]={...c,g:k}; }
+  else { C[no]=preview(undefined,k,Date.now()); C[no].g=k; }
+  markDirty(no);
+  const det=document.querySelector(`tr.det[data-for="${no}"]`);
+  if(det) det.querySelectorAll("[data-setlv]").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.setlv===k)));
+  const tr=document.querySelector(`tr.w[data-no="${no}"]`);
+  if(tr){ tr.children[3].outerHTML=statusTd(C[no],no); }
+}
+function detailRow(w){const no=w[0];
+  return `<tr class="det" data-for="${no}"><td colspan="4"><div class="detail"><button class="askcard in" type="button" data-askai>Ask AI</button>
+    <div class="word"><h3>${esc(w[1])}</h3><button class="speak" data-say="w" data-no="${no}" aria-label="Play Korean">${SPK}</button></div>
+    ${exBlock(w)}
+    <div class="meta">${posTag(w)}</div>
+    ${lvButtons(no)}
+    <p class="ja">${nl(w[3])}</p>
+    ${structBlock(w)}
+    ${gramBlock(w)}
+    ${askBlock(no)}
+  </div></td></tr>`;}
+function toggleRow(tr){
+  const no=tr.dataset.no, open=tr.getAttribute("aria-expanded")==="true";
+  if(open){ OPEN.delete(no); tr.setAttribute("aria-expanded","false"); const d=tr.nextElementSibling; if(d&&d.classList.contains("det")) d.remove(); }
+  else {
+    { document.querySelectorAll('#rows tr.w[aria-expanded="true"]').forEach(o=>{ o.setAttribute("aria-expanded","false"); const d=o.nextElementSibling; if(d&&d.classList.contains("det")) d.remove(); }); OPEN.clear(); }
+    OPEN.add(no); tr.setAttribute("aria-expanded","true"); tr.insertAdjacentHTML("afterend",detailRow(byNo.get(no))); say(no,["w"]); autoDeep(tr.nextElementSibling,no);
+    const box=document.querySelector("#v-list .table"); const off=tr.offsetTop; if(off<box.scrollTop||off>box.scrollTop+box.clientHeight*0.6) box.scrollTo({top:off,behavior:"smooth"}); }
+}
+$("#rows").addEventListener("click",e=>{
+  const lb=e.target.closest("[data-setlv]"); if(lb){ const d=lb.closest("tr.det"); if(d) setLevel(d.dataset.for,+lb.dataset.setlv); return; }
+  const sb=e.target.closest("[data-say]"); if(sb){ const d=sb.closest("tr.det"); say(sb.dataset.no||(d&&d.dataset.for),[sb.dataset.say==="ex"?"e":"w"]); return; }
+  const ab=e.target.closest("[data-acc]"); if(ab){
+    S.accent=ab.dataset.acc; markDirty(null);
+    document.querySelectorAll("[data-acc]").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.acc===S.accent)));
+    const tr=ab.closest("tr.det"); if(tr) say(tr.dataset.for,["w"]); return; }
+  if(e.target.closest("tr.det")) return;
+  const gr=e.target.closest("tr.grp"); if(gr){ toggleGroup(+gr.dataset.g); return; }
+  const tr=e.target.closest("tr.w"); if(tr) toggleRow(tr);
+});
+$("#rows").addEventListener("keydown",e=>{ const gr=e.target.closest&&e.target.closest("tr.grp"); if(gr&&(e.key==="Enter"||e.key===" ")){e.preventDefault();toggleGroup(+gr.dataset.g);return;} const tr=e.target.closest&&e.target.closest("tr.w"); if(tr&&(e.key==="Enter"||e.key===" ")){e.preventDefault();toggleRow(tr);} });
+
+function renderList(reset){
+  { const set=new Set(Array.isArray(S.stf)?S.stf:[]); document.querySelectorAll("#stf [data-st]").forEach(b=>b.setAttribute("aria-pressed",String(set.has(+b.dataset.st)))); }
+  const q=$("#search").value.trim().toLowerCase(), p=$("#pos").value, stf=new Set(Array.isArray(S.stf)?S.stf:[]);
+  const now=Date.now(), end=dayStart(now)+DAY;
+  const res=W.filter(w=>{
+    const c=C[w[0]], s=stage(c);
+    if(!inMode(w)) return false;
+    if(p!=="all" && String(w[6])!==p) return false;
+    if(stf.size && !stf.has(level(c))) return false;
+    if(q && !(w[1].toLowerCase().includes(q)||w[3].join(" ").includes(q)||w[5].toLowerCase().includes(q))) return false;
+    return true;});
+  $("#list-count").textContent="· "+res.length;
+  { const nG=GN.length; $("#g-all").textContent=OPEN_G.size>=nG?"Collapse all":"Expand all"; }
+  const rowHtml=w=>{const c=C[w[0]], s=stage(c);
+    const open=OPEN.has(w[0]);
+    return `<tr class="w" data-no="${w[0]}" tabindex="0" aria-expanded="${open}"><td class="num">${w[0]}</td><td class="en">${esc(w[1])}</td><td class="pcell"><span class="pmini">${posMini(w)}</span></td>${statusTd(c,w[0])}</tr>`+(open?detailRow(w):"")};
+  // draw the first rows at once, then the rest in small batches so the screen appears quickly
+  // group into blocks of 100 (0001–0100 …); a block's words show only when it is opened.
+  // while searching, blocks with matches open automatically.
+  const groups=new Map();
+  for(const w of res){ const g=w[6]; if(!groups.has(g)) groups.set(g,[]); groups.get(g).push(w); }
+  const autoOpen=!!q;
+  const items=[];
+  const nG=GN.length;
+  for(let g=0;g<nG;g++){
+    if(!GN[g]||(GN[g].kind==="単語")!==isW()) continue;
+    const ws=groups.get(g)||[];
+    if((q||p!=="all")&&!ws.length) continue;
+    const open=(autoOpen&&ws.length>0)||OPEN_G.has(g)||p!=="all";
+    const inG=W.filter(w=>w[6]===g), seen=inG.filter(w=>level(C[w[0]])===3).length;
+    items.push(`<tr class="grp" data-g="${g}" tabindex="0" aria-expanded="${open}"><td colspan="4"><span class="gchev">${open?"▾":"▸"}</span><b class="num">${inG[0][0]}–${inG[inG.length-1][0]}</b><span class="gname">${GN[g].label}</span><span class="hint">${q||stf.size||p!=="all"?ws.length+" match · ":""}${seen}/${inG.length} completed</span></td></tr>`);
+    if(open) items.push(...ws);
+  }
+  const html=e=>typeof e==="string"?e:rowHtml(e);
+  const first=300, step=400, token=++listToken;
+  $("#rows").innerHTML=items.slice(0,first).map(html).join("");
+  fitWords();
+  let i=first;
+  const more=()=>{ if(token!==listToken||i>=items.length) return; $("#rows").insertAdjacentHTML("beforeend",items.slice(i,i+step).map(html).join("")); fitWords(); i+=step; setTimeout(more,0); };
+  setTimeout(more,0);
+}
+let listToken=0;
+// size the list box to the rest of the screen
+function fitTable(){
+  const f=document.querySelector("#v-list .tframe"), t=document.querySelector("#v-list .table"); if(!f||view!=="list") return;
+  document.querySelector("#v-list .thead").style.paddingRight=(t.offsetWidth-t.clientWidth)+"px";
+}
+addEventListener("resize",()=>fitTable());
+// keep each headword on one line: shrink the font for long ones, and cut with "…" only as a last resort
+const LONG=22;
+function fitWords(){ wireAsk($("#rows")); }
+function fitWordsOld(){
+  // every word shares one size: if any word doesn't fit its column, shrink them all together (never cut, never wrap)
+  const tb=document.querySelector("#v-list .table"); if(!tb) return;
+  let fs=parseFloat(getComputedStyle(tb).getPropertyValue("--wfs"))||17, worst=1;
+  document.querySelectorAll("#rows td.en:not([data-fit])").forEach(td=>{
+    td.dataset.fit="1"; td.style.fontSize="";
+    if(td.scrollWidth<=td.clientWidth+1) return;
+    if(td.textContent.length>LONG){   // the handful of long phrases shrink on their own so the rest can stay big
+      let f=fs; while(td.scrollWidth>td.clientWidth+1&&f>11){ f-=0.5; td.style.fontSize=f+"px"; } return; }
+    worst=Math.min(worst,(td.clientWidth-2)/td.scrollWidth);
+  });
+  if(worst<1){ fs=Math.max(10,Math.floor(fs*worst*2)/2); tb.style.setProperty("--wfs",fs+"px"); document.querySelectorAll("#rows td.en").forEach(td=>td.removeAttribute("data-fit")); fitWords(); }
+}
+let fitTimer; window.addEventListener("resize",()=>{ clearTimeout(fitTimer); fitTimer=setTimeout(()=>{ const tb=document.querySelector("#v-list .table"); if(tb) tb.style.removeProperty("--wfs"); document.querySelectorAll("#rows td.en").forEach(td=>td.removeAttribute("data-fit")); fitWords(); },200); });
+let st0; $("#search").addEventListener("input",()=>{clearTimeout(st0);st0=setTimeout(()=>renderList(true),150);});
+$("#pos").onchange=()=>renderList(true);
+document.querySelectorAll("#stf [data-st]").forEach(b=>b.onclick=()=>{ const k=+b.dataset.st; const set=new Set(Array.isArray(S.stf)?S.stf:[]); set.has(k)?set.delete(k):set.add(k); S.stf=[...set].sort(); markDirty(null); renderList(false); });
+
+/* ---------- settings ---------- */
+function renderSettings(){
+  loadVoices();
+  $("#s-round").value=String(roundSize()); $("#s-order").value=S.order; $("#s-from").value=S.from; $("#s-ex").value=S.showEx?"1":"0"; $("#s-dir").value=S.dir==="kj"?"kj":"jk";
+  $("#s-auto").value=S.auto==="off"?"off":"word"; $("#s-rate").value=String(S.rate||1);
+  $("#reset-box").innerHTML=`<button class="btn danger" id="reset">Reset…</button>`;
+  $("#reset").onclick=openResetDialog;
+}
+/* ---------- export ---------- */
+const dlP=(window.claude&&claude.use?claude.use("downloads"):Promise.resolve(null)).catch(()=>null);
+// minimal .xlsx writer (no library): SpreadsheetML files packed in an uncompressed zip
+const CRC_T=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
+function crc32(u){let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=CRC_T[(c^u[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
+function zipStore(files){ // files: [{name, data:Uint8Array}]
+  const enc=new TextEncoder(), parts=[], central=[]; let off=0;
+  const u16=v=>[v&255,(v>>>8)&255], u32=v=>[v&255,(v>>>8)&255,(v>>>16)&255,(v>>>24)&255];
+  for(const f of files){
+    const nm=enc.encode(f.name), crc=crc32(f.data), sz=f.data.length;
+    const lh=new Uint8Array([0x50,0x4b,3,4,...u16(20),...u16(0x0800),...u16(0),...u16(0),...u16(0x21),...u32(crc),...u32(sz),...u32(sz),...u16(nm.length),...u16(0)]);
+    parts.push(lh,nm,f.data);
+    central.push(new Uint8Array([0x50,0x4b,1,2,...u16(20),...u16(20),...u16(0x0800),...u16(0),...u16(0),...u16(0x21),...u32(crc),...u32(sz),...u32(sz),...u16(nm.length),...u16(0),...u16(0),...u16(0),...u16(0),...u32(0),...u32(off)]),nm);
+    off+=lh.length+nm.length+sz;
+  }
+  const cdSize=central.reduce((a,b)=>a+b.length,0);
+  const end=new Uint8Array([0x50,0x4b,5,6,...u16(0),...u16(0),...u16(files.length),...u16(files.length),...u32(cdSize),...u32(off),...u16(0)]);
+  return new Blob([...parts,...central,end],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+}
+function makeXlsx(sheetName,head,rows,widths){
+  const x=v=>String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,"");
+  const col=i=>{let s="";i++;while(i){const m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26);}return s;};
+  const cell=(v,r,c,st)=>{const ref=col(c)+r; if(v===""||v==null) return st?`<c r="${ref}" s="${st}"/>`:""; if(typeof v==="number") return `<c r="${ref}"${st?` s="${st}"`:""}><v>${v}</v></c>`; return `<c r="${ref}" t="inlineStr"${st?` s="${st}"`:""}><is><t xml:space="preserve">${x(v)}</t></is></c>`;};
+  const all=[head,...rows], last=col(head.length-1)+all.length;
+  const sheetRows=all.map((r,i)=>`<row r="${i+1}">${r.map((v,c)=>cell(v,i+1,c,i===0?1:0)).join("")}</row>`).join("");
+  const sheet=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>${widths.map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join("")}</cols><sheetData>${sheetRows}</sheetData><autoFilter ref="A1:${last}"/></worksheet>`;
+  const enc=new TextEncoder(), F=(name,str)=>({name,data:enc.encode(str)});
+  return zipStore([
+    F("[Content_Types].xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`),
+    F("_rels/.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`),
+    F("xl/workbook.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="${x(sheetName)}" sheetId="1" r:id="rId1"/></sheets><definedNames><definedName name="_xlnm._FilterDatabase" localSheetId="0" hidden="1">'${x(sheetName)}'!$A$1:$${last.replace(/\d+/,"")}$${all.length}</definedName></definedNames></workbook>`),
+    F("xl/_rels/workbook.xml.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`),
+    F("xl/worksheets/sheet1.xml",sheet),
+    F("xl/styles.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="10"/><name val="Arial"/></font><font><b/><sz val="10"/><color rgb="FFFFFFFF"/><name val="Arial"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF1F4E78"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`),
+  ]);
+}
+function fmtDate(t){ const d=new Date(t); return dayKey(t)+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"); }
+async function exportProgress(){
+  const btn=$("#exp-btn"), msg=t=>{$("#exp-msg").textContent=t;};
+  btn.disabled=true; btn.textContent="Preparing…"; msg("");
+  try{
+    const dl=await dlP;
+    if(!dl){ msg("Downloading isn’t available in this view."); return; }
+    const LVJ=["未学習","Again","To review","Completed"];
+    const head=["番号","韓国語","種類","グループ","和訳","理解度","学習回数","忘れた回数","次の復習日","復習間隔（日）"];
+    const rows=W.map(w=>{ const c=C[w[0]], k=level(c);
+      return [w[0],w[1],w[2],w[5],flat(w[3]),LVJ[k],c?(c.r||0):0,c?(c.l||0):0,c&&c.d?(c.q===2?dayKey(c.d):fmtDate(c.d)):"",c&&c.q===2?c.i:""]; });
+    const stamp=dayKey(Date.now());
+    const file={filename:`korean-sentences-progress-${stamp}.xlsx`,data:makeXlsx("学習状況",head,rows,[7,40,8,26,40,12,9,10,16,13])};
+    await dl.save(file);
+    msg("Saved "+file.filename+".");
+  }catch(e){
+    const c=e&&e.code;
+    msg(c==="declined"?"Export cancelled.":c==="rate_limited"?"Please wait a moment and try again.":"Couldn’t export. Please try again.");
+  }finally{ btn.disabled=false; btn.textContent="Export (.xlsx)"; }
+}
+$("#exp-btn").onclick=exportProgress;
+function openResetDialog(){
+  const seen=Object.keys(C).length;
+  const wrap=document.createElement("div"); wrap.className="modal-bg";
+  wrap.innerHTML=`<div class="modal" role="dialog" aria-modal="true" aria-labelledby="rs-t">
+    <h3 id="rs-t">Reset all progress?</h3>
+    <p>All ${seen} studied words, their levels and review dates will be erased, and every word goes back to New. <b>This can’t be undone.</b></p>
+    <label for="rs-in">Type <b>RESET</b> to confirm</label>
+    <input id="rs-in" autocomplete="off" autocapitalize="characters" spellcheck="false">
+    <div class="row" style="justify-content:flex-end"><button class="btn" id="rs-no">Cancel</button><button class="btn danger" id="rs-yes" disabled>Erase everything</button></div>
+  </div>`;
+  document.body.appendChild(wrap);
+  const inp=wrap.querySelector("#rs-in"), yes=wrap.querySelector("#rs-yes");
+  const close=()=>{ wrap.remove(); document.removeEventListener("keydown",esc2); };
+  const esc2=e=>{ if(e.key==="Escape") close(); };
+  document.addEventListener("keydown",esc2);
+  inp.oninput=()=>{ yes.disabled=inp.value.trim().toUpperCase()!=="RESET"; };
+  wrap.querySelector("#rs-no").onclick=close;
+  wrap.onclick=e=>{ if(e.target===wrap) close(); };
+  yes.onclick=()=>{ if(yes.disabled) return; for(const no in C) dirty.add(chunkOf(no)); C={}; S.rnd=[]; S.sp=null; againQ=[]; markDirty(null); setSync("Progress reset"); close(); show("home"); };
+  setTimeout(()=>inp.focus(),30);
+}
+$("#s-round").onchange=e=>{ const n=Math.round(+e.target.value); S.round=[5,10,15,20,25].includes(n)?n:25; e.target.value=String(S.round); markDirty(null); };
+$("#s-order").onchange=e=>{S.order=e.target.value;deck=[];used.clear();markDirty(null);};
+$("#s-from").onchange=e=>{S.from=Math.max(1,Math.min(W.length||1,+e.target.value||1));e.target.value=S.from;S.sp=null;markDirty(null);};
+$("#s-ex").onchange=e=>{S.showEx=e.target.value==="1";markDirty(null);};
+$("#s-auto").onchange=e=>{S.auto=e.target.value;markDirty(null);};
+
+$("#s-test").onclick=testVoice;
+$("#s-dir").onchange=e=>{S.dir=e.target.value;markDirty(null);syncDir();};
+function testVoice(){ const w=W.find(x=>x[0]==="0001"); if(w) say(w[0],["w"]); }
+$("#s-rate").onchange=e=>{S.rate=+e.target.value;markDirty(null);};
+
+/* ---------- boot ---------- */
+function migrate(){
+  if(S.autoSpeak===false) S.auto="off"; delete S.autoSpeak;
+  if(!S.round) S.round=25;
+  if(!S.av){ S.voice=""; S.av=1; }               // switch everyone to the natural voice once
+  if(![0.8,1,1.15].includes(+S.rate)) S.rate=1;
+  if(Object.keys(C).some(k=>k.includes("-"))||(S.rnd||[]).some(k=>String(k).includes("-"))||Object.keys(S.tm||{}).some(k=>k.includes("-"))){
+    const nc={}; for(const k in C){ const b=k.slice(0,4), v=C[k], o=nc[b];
+      if(!o||level(v)<level(o)||(level(v)===level(o)&&(v.d||0)<(o.d||0))) nc[b]=v; }
+    C=nc; for(const b in C) dirty.add(chunkOf(b)); settingsDirty=true;
+    S.rnd=[...new Set((S.rnd||[]).map(k=>String(k).slice(0,4)))];
+    const t={}; for(const k in (S.tm||{})){ const b=k.slice(0,4); if(!t[b]||S.tm[k]<t[b]) t[b]=S.tm[k]; } S.tm=t;
+    lsSave();
+  }
+  if(!S.lv3){                                     // 3 levels: Again / To review / Completed
+    const old=c=>{ if(!c||!c.q) return 0; if(c.g) return Math.min(3,c.g); return c.l>=2?1:(c.q===1?2:3); };
+    for(const no in C){ const o=old(C[no]); if(!o) continue; C[no].g=(S.tm&&S.tm[no])?2:(o===3?3:1); dirty.add(chunkOf(no)); }
+    S.tm={}; S.lv3=true; settingsDirty=true; lsSave();
+  }
+  if(S.voice){ S.voice=""; settingsDirty=true; } S.kv=1;
+  if(!S.v3){ S.dir="jk"; S.typ=true; S.v3=true; settingsDirty=true; lsSave(); }
+}
+lsLoad(); migrate();
+fetch("words.json").then(r=>r.json()).then(d=>{
+  G=d.g; W=d.w; W.forEach(w=>{byNo.set(w[0],w); if(!GN[w[6]]){ const g=G[w[6]]; GN[w[6]]={label:g[0]==="文法"?`文法 · <span class="ko">${esc(g[1])}</span> ${esc(g[2])}`:`${g[0]} · ${esc(g[1])}`,name:g[1],kind:g[0]}; }});
+  fillRange(); syncDir(); syncMode();
+  setSync("Checking saved progress…");
+  refreshAll();
+  connect();
+}).catch(()=>setSync("Couldn’t load the word list. Please reload the page."));
+renderHome();
+})();
+</script>
+
+
+</body></html>

@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>易経 占いと学び</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f0e6; --paper:#fffdf8; --ink:#2b2622; --sub:#6f655b; --line:#e2d8c6;
+  --red:#a8382a; --red-soft:#f4e3df; --gold:#9a7b3c;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif;background:var(--bg);color:var(--ink);line-height:1.75;min-height:100vh;padding-bottom:84px}
+header{text-align:center;padding:22px 16px 10px}
+header h1{font-size:22px;letter-spacing:.3em;font-weight:700}
+header p{font-size:12px;color:var(--sub);letter-spacing:.1em}
+main{max-width:640px;margin:0 auto;padding:0 14px}
+.view{display:none}.view.on{display:block}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px;margin:12px 0;box-shadow:0 1px 0 rgba(0,0,0,.03)}
+h2{font-size:17px;margin-bottom:8px;letter-spacing:.08em}
+h3{font-size:15px;margin:14px 0 6px;color:var(--red)}
+.muted{color:var(--sub);font-size:13px}
+textarea,input[type=text]{width:100%;font:inherit;font-size:15px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);resize:vertical}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font:inherit;font-size:15px;padding:11px 18px;border-radius:999px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;letter-spacing:.05em}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.red{background:var(--red);border-color:var(--red)}
+.btn:disabled{opacity:.35;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+/* coins */
+.coins{display:flex;justify-content:center;gap:14px;margin:18px 0 6px;min-height:64px}
+.coin{width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;border:2px solid var(--gold);background:radial-gradient(circle at 35% 30%,#f3e2b3,#c9a55a);color:#4a3a14;box-shadow:inset 0 0 0 5px rgba(255,255,255,.25)}
+.coin.ura{background:radial-gradient(circle at 35% 30%,#e9e2d5,#a99d88);border-color:#8a806f;color:#3c362e}
+.coin.spin{animation:spin .5s ease-out}
+@keyframes spin{0%{transform:rotateY(0) translateY(-14px)}60%{transform:rotateY(540deg) translateY(-4px)}100%{transform:rotateY(720deg)}}
+.tossinfo{text-align:center;font-size:14px;min-height:24px;color:var(--sub)}
+/* hexagram drawing */
+.hex{display:flex;flex-direction:column-reverse;gap:7px;width:120px;margin:0 auto}
+.ln{display:flex;align-items:center;gap:8px;height:13px;position:relative}
+.ln .bar{flex:1;height:13px;display:flex;gap:16px}
+.ln .bar i{flex:1;background:var(--ink);border-radius:2px}
+.ln.empty .bar i{background:transparent;border:1px dashed var(--line)}
+.ln.chg .bar i{background:var(--red)}
+.ln .mk{position:absolute;right:-26px;font-size:13px;color:var(--red);font-weight:700}
+.ln .pos{position:absolute;left:-44px;font-size:11px;color:var(--sub);width:38px;text-align:right}
+.hex.sm{width:46px;gap:3px}.hex.sm .ln{height:5px}.hex.sm .bar{height:5px;gap:6px}
+.pair{display:flex;justify-content:center;align-items:flex-start;gap:28px;margin:10px 0 4px;flex-wrap:wrap}
+.pair .col{text-align:center;padding:0 40px}
+.pair .arrow{align-self:center;font-size:22px;color:var(--sub)}
+.gname{font-size:24px;font-weight:700;margin-top:10px;letter-spacing:.1em}
+.gfull{font-size:13px;color:var(--sub)}
+.tag{display:inline-block;font-size:11px;padding:1px 9px;border-radius:999px;background:var(--red-soft);color:var(--red);margin-bottom:4px}
+.kanbun{font-size:17px;background:#faf6ec;border-left:3px solid var(--gold);padding:8px 12px;margin:6px 0;letter-spacing:.06em}
+.kw{font-weight:700;color:var(--red)}
+.rule{background:#faf6ec;border-radius:10px;padding:10px 12px;font-size:14px}
+/* grid */
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.chip{font:inherit;font-size:13px;padding:4px 11px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;color:var(--ink)}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.gcell{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 4px 8px;text-align:center;cursor:pointer}
+.gcell:hover{border-color:var(--gold)}
+.gcell .n{font-size:10px;color:var(--sub)}
+.gcell .nm{font-size:15px;font-weight:700;margin-top:6px}
+@media(max-width:420px){.grid{grid-template-columns:repeat(3,1fr)}}
+/* trigram table */
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{border-bottom:1px solid var(--line);padding:7px 4px;text-align:center}
+th{font-size:12px;color:var(--sub);font-weight:600}
+.tri{font-size:26px;line-height:1}
+/* history */
+.hist{border-bottom:1px solid var(--line);padding:10px 0;cursor:pointer}
+.hist:last-child{border-bottom:none}
+.hist .d{font-size:11px;color:var(--sub)}
+.hist .q{font-size:14px}
+.hist .r{font-size:14px;font-weight:600}
+/* nav */
+nav{position:fixed;bottom:0;left:0;right:0;background:var(--paper);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;max-width:160px;font:inherit;background:none;border:none;padding:9px 0 11px;font-size:12px;color:var(--sub);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav button b{font-size:19px;font-weight:400}
+nav button.on{color:var(--red)}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(30,25,20,.45);display:none;align-items:flex-end;justify-content:center;z-index:20}
+.modal.on{display:flex}
+.sheet{background:var(--bg);width:100%;max-width:640px;max-height:88vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 14px 30px}
+.close{float:right;font:inherit;font-size:22px;background:none;border:none;cursor:pointer;color:var(--sub)}
+.copybox{width:100%;min-height:120px;font-size:12px;margin-top:8px;display:none}
+/* AI */
+.fab{position:fixed;right:16px;bottom:86px;z-index:15;display:none;align-items:center;gap:6px;font:inherit;font-size:14px;padding:11px 16px;border-radius:999px;border:none;background:var(--red);color:#fff;box-shadow:0 4px 14px rgba(120,40,30,.3);cursor:pointer}
+.fab.on{display:inline-flex}
+.ai-only{display:none}.ai-ready .ai-only{display:inline-flex}
+#chat .sheet{display:flex;flex-direction:column;height:84vh;padding-bottom:12px}
+.ctx{font-size:12px;color:var(--sub);background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:6px 10px;margin:4px 0 8px}
+.msgs{flex:1;overflow:auto;padding:4px 2px}
+.msg{max-width:88%;padding:9px 13px;border-radius:14px;margin:6px 0;font-size:14.5px;white-space:pre-wrap;word-break:break-word}
+.msg.u{margin-left:auto;background:var(--ink);color:#fff;border-bottom-right-radius:4px}
+.msg.a{background:var(--paper);border:1px solid var(--line);border-bottom-left-radius:4px}
+.msg.a b{color:var(--red)}
+.msg.err{background:var(--red-soft);color:var(--red);font-size:13px}
+.chatin{display:flex;gap:8px;align-items:flex-end;border-top:1px solid var(--line);padding-top:10px}
+.chatin textarea{flex:1;min-height:44px;max-height:120px}
+.chatin .btn{padding:10px 16px}
+.quick{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.empty-hint{color:var(--sub);font-size:13px;text-align:center;margin-top:24px}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13px;padding:8px 16px;border-radius:999px;opacity:0;transition:.3s;pointer-events:none;z-index:30}
+.toast.on{opacity:1}
+</style>
+</head>
+<body>
+<header><h1>易 経</h1><p>三枚のコインで卦を立て、六十四卦を学ぶ</p></header>
+<main>
+
+<!-- 占う -->
+<section class="view on" id="v-divine">
+  <div class="card" id="askCard">
+    <h2>問いを立てる</h2>
+    <p class="muted">易は「どうすればよいか」を問うのに向いています。一つの問いを、一度だけ占いましょう（初筮は告ぐ）。</p>
+    <textarea id="question" rows="2" placeholder="Type..."></textarea>
+    <div class="coins" id="coins"><div class="coin">?</div><div class="coin">?</div><div class="coin">?</div></div>
+    <div class="tossinfo" id="tossinfo">下から順に六回コインを投げます</div>
+    <div class="pair"><div class="col"><div class="hex" id="building"></div></div></div>
+    <div class="row">
+      <button class="btn" id="tossBtn">コインを投げる（1/6）</button>
+      <button class="btn ghost" id="autoBtn">残りを一気に</button>
+    </div>
+  </div>
+  <div id="result"></div>
+</section>
+
+<!-- 学ぶ -->
+<section class="view" id="v-learn">
+  <div class="card">
+    <h2>陰と陽</h2>
+    <p>易は世界を<span class="kw">陽（—）</span>と<span class="kw">陰（- -）</span>の組み合わせで捉えます。陽は剛・動・明、陰は柔・静・暗。どちらが良い悪いではなく、互いに移り変わるもの。「易」には<b>変易</b>（変わる）・<b>不易</b>（変わらない法則）・<b>簡易</b>（シンプル）の三つの意味があるとされます。</p>
+  </div>
+  <div class="card">
+    <h2>八卦（はっけ）</h2>
+    <p class="muted">爻（こう）を3本重ねたもの。6本の卦は「下の八卦（内卦）」と「上の八卦（外卦）」の組み合わせです。</p>
+    <table><thead><tr><th>卦</th><th>名</th><th>象</th><th>性質</th><th>家族</th><th>方位</th></tr></thead><tbody id="triTable"></tbody></table>
+    <p class="muted" style="margin-top:8px">方位は文王の後天八卦。卦の正式名は「上の象＋下の象＋卦名」（例：水が上・雷が下で「水雷屯」）。</p>
+  </div>
+  <div class="card">
+    <h2>コインの読み方（擲銭法）</h2>
+    <p>3枚を投げ、表＝3・裏＝2として合計します。</p>
+    <table><tbody>
+      <tr><td>6</td><td>裏裏裏</td><td>老陰（- - ×）</td><td>陰。<b>陽に変わる</b></td></tr>
+      <tr><td>7</td><td>表裏裏</td><td>少陽（—）</td><td>陽のまま</td></tr>
+      <tr><td>8</td><td>表表裏</td><td>少陰（- -）</td><td>陰のまま</td></tr>
+      <tr><td>9</td><td>表表表</td><td>老陽（— ○）</td><td>陽。<b>陰に変わる</b></td></tr>
+    </tbody></table>
+    <p style="margin-top:8px">最初に得た卦が<span class="kw">本卦</span>（今の状況）、変わる爻（<span class="kw">変爻</span>）を反転させた卦が<span class="kw">之卦</span>（行き先・変化の方向）です。</p>
+  </div>
+  <div class="card">
+    <h2>爻の位置（下から上へ）</h2>
+    <table><tbody id="posTable"></tbody></table>
+    <p class="muted" style="margin-top:8px">陽の爻は「九」、陰の爻は「六」で呼びます（例：下から3番目の陽爻＝九三、一番上の陰爻＝上六）。陽爻が奇数位（初・三・五）、陰爻が偶数位（二・四・上）にあると「正」、二と五は「中」でとくに尊ばれます。</p>
+  </div>
+  <div class="card">
+    <h2>変爻の数と読む箇所</h2>
+    <p class="muted">朱熹『易学啓蒙』による代表的な読み方。流派によって違いがあります。</p>
+    <table><tbody id="ruleTable"></tbody></table>
+  </div>
+</section>
+
+<!-- 六十四卦 -->
+<section class="view" id="v-list">
+  <div class="card">
+    <h2>六十四卦</h2>
+    <p class="muted">卦をタップすると卦辞と意味が開きます。八卦で絞り込めます。</p>
+    <div class="filters" id="filters"></div>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<!-- 記録 -->
+<section class="view" id="v-hist">
+  <div class="card">
+    <h2>占いの記録</h2>
+    <p class="muted">このブラウザに保存されます（他の端末には共有されません）。後から結果と現実を振り返ると、卦の理解が深まります。</p>
+    <div id="histList"></div>
+    <div class="row"><button class="btn ghost" id="clearHist">記録をすべて消す</button></div>
+  </div>
+</section>
+</main>
+
+<nav>
+  <button data-v="divine" class="on"><b>☯</b>占う</button>
+  <button data-v="learn"><b>☰</b>学ぶ</button>
+  <button data-v="list"><b>䷀</b>六十四卦</button>
+  <button data-v="hist"><b>✎</b>記録</button>
+</nav>
+
+<div class="modal" id="modal"><div class="sheet"><button class="close" id="mclose">×</button><div id="mbody"></div></div></div>
+<button class="fab" id="fab">💬 AIに質問</button>
+<div class="modal" id="chat"><div class="sheet">
+  <div><button class="close" id="cclose">×</button><h2>AIに質問</h2></div>
+  <div class="msgs" id="msgs"></div>
+  <div class="chatin">
+    <textarea id="chatText" rows="1" placeholder="Type..."></textarea>
+    <button class="btn red" id="sendBtn">送信</button>
+  </div>
+  <div class="row" style="margin-top:6px"><button class="chip" id="newChat">会話をリセット</button></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== 八卦 =====  bits: 下爻,中爻,上爻 (1=陽)
+const TRI = {
+  "111":{n:"乾",s:"天",sym:"☰",nat:"健（すこやか）",fam:"父",dir:"北西"},
+  "110":{n:"兌",s:"沢",sym:"☱",nat:"説（よろこぶ）",fam:"少女",dir:"西"},
+  "101":{n:"離",s:"火",sym:"☲",nat:"麗（つく）",fam:"中女",dir:"南"},
+  "100":{n:"震",s:"雷",sym:"☳",nat:"動（うごく）",fam:"長男",dir:"東"},
+  "011":{n:"巽",s:"風",sym:"☴",nat:"入（いる）",fam:"長女",dir:"南東"},
+  "010":{n:"坎",s:"水",sym:"☵",nat:"陥（おちいる）",fam:"中男",dir:"北"},
+  "001":{n:"艮",s:"山",sym:"☶",nat:"止（とまる）",fam:"少男",dir:"北東"},
+  "000":{n:"坤",s:"地",sym:"☷",nat:"順（したがう）",fam:"母",dir:"南西"}
+};
+const TRI_ORDER=["111","110","101","100","011","010","001","000"];
+// 文王序：上卦×下卦（順：乾震坎艮坤巽離兌）
+const KW_KEYS=["111","100","010","001","000","011","101","110"];
+const KW=[
+ [1,25,6,33,12,44,13,10],
+ [34,51,40,62,16,32,55,54],
+ [5,3,29,39,8,48,63,60],
+ [26,27,4,52,23,18,22,41],
+ [11,24,7,15,2,46,36,19],
+ [9,42,59,53,20,57,37,61],
+ [14,21,64,56,35,50,30,38],
+ [43,17,47,31,45,28,49,58]
+];
+// [卦名, 読み(正式名), 卦辞, キーワード, 意味, 占断のヒント]
+const G=[null,
+["乾","けんいてん","元亨利貞。","創造・剛健・天","純粋な陽の力。天の運行のように休まず進む創造的なエネルギー。龍が段階を追って昇るように、時に応じた動きが大切。","力が満ちる時。ただし驕れば「亢龍悔いあり」。誠実に努め続けよ。"],
+["坤","こんいち","元亨。利牝馬之貞。君子有攸往、先迷後得主。利西南得朋、東北喪朋。安貞吉。","受容・柔順・大地","純粋な陰の力。大地のようにすべてを受け入れ育てる。先頭に立つより、よき導き手に従うことで実りを得る。","主導せず支える側に回ると吉。忍耐と包容力を。"],
+["屯","すいらいちゅん","元亨利貞。勿用有攸往。利建侯。","産みの苦しみ・始まり","草の芽が地面を突き破ろうとする難しい始まり。混沌の中に成長の芽がある。","焦って動かず、協力者を得て基盤を固めよ。"],
+["蒙","さんすいもう","亨。匪我求童蒙、童蒙求我。初筮告。再三瀆、瀆則不告。利貞。","未熟・啓蒙・学び","山の下に泉が湧く、まだ蒙（くら）い状態。教えを求める者には道が開ける。","謙虚に学ぶ時。同じ問いを何度も占うのは瀆（けが）れ。"],
+["需","すいてんじゅ","有孚、光亨。貞吉。利渉大川。","待つ・養う","雲が天に昇り雨を待つ。前方の危険（坎）を前に、力を蓄えて時を待つ。","誠をもって待てば道は開く。飲食で英気を養え。"],
+["訟","てんすいしょう","有孚窒惕。中吉、終凶。利見大人。不利渉大川。","争い・訴訟","天は上へ、水は下へと背き合う。争いの卦。","途中で和解すれば吉、最後まで争えば凶。大事は控えよ。"],
+["師","ちすいし","貞。丈人吉、无咎。","軍隊・統率","地の中に水を蓄える。多くの人を正しく率いる。","正しい目的と経験ある指導者がいれば吉。規律を重んじよ。"],
+["比","すいちひ","吉。原筮元永貞、无咎。不寧方来。後夫凶。","親しむ・協調","地上に水が満ち、互いに親しみ合う。","早く誠意をもって輪に加われ。遅れる者は凶。"],
+["小畜","ふうてんしょうちく","亨。密雲不雨、自我西郊。","小さく蓄える・一時停滞","風が天上を行くが雨にはならない。小さな力が大きな力を一時的に止める。","大きく動くより、徳を磨き小さく積み上げる時。"],
+["履","てんたくり","履虎尾、不咥人。亨。","礼・慎重に踏む","虎の尾を踏んでも咬まれない。強者の後を礼をもって歩む。","危うい状況でも、礼節と慎重さで無事に進める。"],
+["泰","ちてんたい","小往大来。吉亨。","安泰・調和・通じ合う","天の気が下り地の気が上って交わる。最も通じ合う平和な時。","好調の時。ただし泰は否に転じうる。今のうちに備えを。"],
+["否","てんちひ","否之匪人。不利君子貞。大往小来。","閉塞・塞がる","天地が交わらず、上下の意思が通じない。","無理に進まず、志を守り身を慎め。時は必ず移る。"],
+["同人","てんかどうじん","同人于野。亨。利渉大川。利君子貞。","仲間・協同","天と火が同じく上を向く。広く公明に人と志を同じくする。","私心を捨て、開かれた場で協力すれば大事を成せる。"],
+["大有","かてんたいゆう","元亨。","大いに有つ・豊かさ","天上に太陽が輝く。大きな所有と恵み。","豊かさを謙虚に保ち、善を挙げ悪を抑えよ。"],
+["謙","ちざんけん","亨。君子有終。","謙虚","高い山が地の下にある。へりくだることでかえって尊ばれる。","謙虚さが最終的な成功をもたらす。全うできる卦。"],
+["豫","らいちよ","利建侯行師。","喜び・予め備える","雷が地から出て奮い立つ。人心が和み楽しむ。","準備を整え、人々の気持ちに沿って動けば吉。浮かれ過ぎに注意。"],
+["随","たくらいずい","元亨利貞。无咎。","従う・随う","沢の中に雷が潜む。時と人に柔軟に従う。","正しいものに従えば咎なし。休むべき時は休め。"],
+["蠱","さんぷうこ","元亨。利渉大川。先甲三日、後甲三日。","腐敗を正す・刷新","器の中に虫が湧く。前代から積もった乱れを立て直す。","原因を見極め（先甲三日）、後を見通して（後甲三日）改めよ。"],
+["臨","ちたくりん","元亨利貞。至于八月有凶。","臨む・近づく","沢の上に地が臨む。陽気が伸びてくる勢いの時。","積極的に関わってよい。ただし好調は永遠でない（八月に至れば凶）。"],
+["観","ふうちかん","盥而不薦。有孚顒若。","観る・観察","風が地上を巡り、あまねく観る。また人から観られる立場でもある。","行動より観察と内省。誠実な姿勢が人を感化する。"],
+["噬嗑","からいぜいごう","亨。利用獄。","噛み砕く・障害の除去","口の中に物があり、噛み砕いて上下を合わせる。","障害ははっきり取り除くべき。けじめと公正な裁きを。"],
+["賁","さんかひ","亨。小利有攸往。","飾る・文化","山の下に火があり、山を美しく照らす。","形や見た目を整えるのは良いが、本質を忘れず小さく進め。"],
+["剥","さんちはく","不利有攸往。","剥がれる・衰退","陰が下から進み、陽が一つ残るのみ。","動かず守りを固め、時を待て。下（土台）を厚くすることが肝要。"],
+["復","ちらいふく","亨。出入无疾、朋来无咎。反復其道、七日来復。利有攸往。","復る・回復","地の下に雷。一陽が戻ってくる冬至の卦。","回復と再出発。焦らず、正しい道に立ち返れ。"],
+["无妄","てんらいむぼう","元亨利貞。其匪正有眚。不利有攸往。","無作為・自然","天の下に雷が動く。作為なく天に従う誠。","打算を捨てて正しく。邪な意図があれば災いあり。"],
+["大畜","さんてんたいちく","利貞。不家食吉。利渉大川。","大いに蓄える","山の中に天を蓄える。大きな力・学識を蓄え留める。","家にこもらず外で働け（不家食）。蓄えたものを活かす時。"],
+["頤","さんらいい","貞吉。観頤、自求口実。","養う・あご","口の形。体と心を養うこと、言葉と飲食を慎むこと。","何で自分や人を養っているかを観よ。節度ある養生を。"],
+["大過","たくふうたいか","棟撓。利有攸往。亨。","大いに過ぎる・重圧","棟木がたわむ。中心が強すぎ、両端が弱い。","非常の時には非常の行動を。思い切って動け。"],
+["坎","かんいすい","習坎。有孚、維心亨。行有尚。","険難・水","険しさが重なる。水は穴を満たしながら流れ続ける。","困難の中でも誠を保てば心は通じる。習熟して乗り越えよ。"],
+["離","りいか","利貞。亨。畜牝牛吉。","付く・明るさ・火","火は物に付いて燃える。明るさと、何に付き従うか。","正しいものに付き従うこと。柔順さ（牝牛）を養え。"],
+["咸","たくざんかん","亨。利貞。取女吉。","感応・感じ合う","若い男女が感じ合う。山の上に沢、心が通う。","素直な感受性が鍵。恋愛・縁談に吉。"],
+["恒","らいふうこう","亨。无咎。利貞。利有攸往。","恒常・継続","雷と風が常に共にある。変わらず続けること。","方針を変えず継続すれば咎なし。"],
+["遯","てんざんとん","亨。小利貞。","退く・逃れる","天の下に山。陰が伸び、賢者が退く時。","潔く退くことで身を守る。小事は正しく行えば可。"],
+["大壮","らいてんたいそう","利貞。","大いに壮ん・勢い","天の上に雷。陽の力が盛ん。","勢いがある時こそ正しさを保て。猪突猛進に注意。"],
+["晋","かちしん","康侯用錫馬蕃庶、昼日三接。","進む・昇進","太陽が地上に昇る。明るく進み、認められる。","評価や昇進の時。明るい徳を示せ。"],
+["明夷","ちかめいい","利艱貞。","明が傷つく・暗い時代","太陽が地の下に沈む。賢明さが傷つけられる時。","才を内に隠し、困難の中で志を貫け（利艱貞）。"],
+["家人","ふうかかじん","利女貞。","家族・内を治める","火から風が起こる。家の中の秩序。","足元・身内を整えることから。それぞれの役割を守れ。"],
+["睽","かたくけい","小事吉。","背き合う・違い","火は上へ、沢は下へ。互いに背く。","大事は難しいが小事は吉。違いの中に共通点を探せ。"],
+["蹇","すいざんけん","利西南、不利東北。利見大人。貞吉。","行き悩み","前に険（水）、後ろに山。進退窮まる。","無理に進まず、引き返して助けを求めよ。自らを省みよ。"],
+["解","らいすいかい","利西南。无所往、其来復吉。有攸往、夙吉。","解ける・解放","雷雨が起こり、張りつめた状況が解ける。","問題を素早く処理し、許すべきは許せ。長引かせない。"],
+["損","さんたくそん","有孚、元吉、无咎、可貞。利有攸往。曷之用、二簋可用享。","減らす・損して得る","下を減らして上を益す。","誠意ある慎ましさ。減らすことで得る。供え物は二つの器で足りる。"],
+["益","ふうらいえき","利有攸往。利渉大川。","増す・益する","上を減らして下を益す。風と雷が互いを強める。","積極的に進んでよい。人のために動くと益が増す。"],
+["夬","たくてんかい","揚于王庭。孚号有厲。告自邑。不利即戎。利有攸往。","決断・決壊","五つの陽が一つの陰を決し去る。","断固たる決断を、公に誠意をもって。力ずくの強行は不可。"],
+["姤","てんぷうこう","女壮。勿用取女。","出会い・遭遇","天の下に風。一陰が下から現れる不意の出会い。","思いがけない出会い。強い陰の侵入に注意し、深入りしない。"],
+["萃","たくちすい","亨。王仮有廟。利見大人、亨、利貞。用大牲吉。利有攸往。","集まる","沢が地上に集まる。人や物が集う。","中心となる人のもとに集え。不測の事態への備えも。"],
+["升","ちふうしょう","元亨。用見大人、勿恤。南征吉。","昇る・成長","地の中から木が伸びる。少しずつ確実に昇る。","着実に努力すれば上昇。力ある人に会え。"],
+["困","たくすいこん","亨。貞大人吉、无咎。有言不信。","困窮","沢に水がない。行き詰まり。","言葉は信じられにくい。黙して志を守れば道は開く。"],
+["井","すいふうせい","改邑不改井。无喪无得。往来井井。汔至亦未繘井、羸其瓶、凶。","井戸・養う源","水の下に木（つるべ）。変わらぬ恵みの源。","根本を整え、汲み上げるまで手を抜くな。人を養う仕組みを。"],
+["革","たくかかく","已日乃孚。元亨利貞。悔亡。","革新・変革","沢の中に火。互いに打ち消し合い、変わる。","機が熟してこそ人は信じる。正しく改めれば悔いなし。"],
+["鼎","かふうてい","元吉、亨。","鼎・新しい秩序","木に火をつけ鼎で煮る。新たなものを作り上げ養う。","新体制の確立。人材を養い、位置を正せ。"],
+["震","しんいらい","亨。震来虩虩、笑言唖唖。震驚百里、不喪匕鬯。","雷・驚き","雷が重なる。突然の衝撃。","驚いても落ち着きを失わなければ、後で笑って語れる。"],
+["艮","ごんいさん","艮其背、不獲其身。行其庭、不見其人。无咎。","止まる・山","山が重なる。止まるべき時に止まる。","欲に動かされず静かに止まれ。内省の時。"],
+["漸","ふうざんぜん","女帰吉。利貞。","徐々に進む","山の上の木がゆっくり育つ。","段階を踏んで進めば吉。結婚に吉。"],
+["帰妹","らいたくきまい","征凶。无攸利。","嫁ぐ妹・順序の乱れ","若い娘が年長の男に嫁ぐ。順序の逆転。","積極的に進むと凶。立場をわきまえ、終わりを見通せ。"],
+["豊","らいかほう","亨。王仮之。勿憂。宜日中。","豊か・盛大","雷と稲妻が共に至る。最盛期。","盛りを憂えず、正午の太陽のように照らせ。ただし盛りは傾く。"],
+["旅","かざんりょ","小亨。旅貞吉。","旅・仮住まい","山の上の火。定まらぬ旅人。","小さく慎重に。旅先の礼節を守れば吉。"],
+["巽","そんいふう","小亨。利有攸往。利見大人。","従う・浸透","風が重なる。柔らかく入り込む。","柔軟に従い、繰り返し伝えよ。よき導き手に従え。"],
+["兌","だいたく","亨。利貞。","喜び・悦ぶ","沢が重なる。喜び合い、語り合う。","和やかな交流は吉。ただし正しくなければ喜びは媚びとなる。"],
+["渙","ふうすいかん","亨。王仮有廟。利渉大川。利貞。","散る・解ける","水上を風が吹き、散らす。","凝り固まったものを解き、心を一つにまとめ直せ。"],
+["節","すいたくせつ","亨。苦節不可貞。","節度・区切り","沢の上に水。適度に留める。","節度は吉だが、苦しすぎる節制は続かない。"],
+["中孚","ふうたくちゅうふ","豚魚吉。利渉大川。利貞。","誠・真心","中が空（虚心）で、誠が満ちる。","誠は豚や魚にも通じる。真心をもって大事に臨め。"],
+["小過","らいざんしょうか","亨。利貞。可小事、不可大事。飛鳥遺之音。不宜上、宜下。大吉。","小さく過ぎる","山の上の雷。鳥が低く飛ぶ。","小事は可、大事は不可。上を目指さず下に留まれ。"],
+["既済","すいかきせい","亨小。利貞。初吉終乱。","完成・すでに済む","水と火が調和し、全ての爻が正しい位置にある。","完成した直後こそ乱れの始まり。守りを固めよ。"],
+["未済","かすいびせい","亨。小狐汔済、濡其尾。无攸利。","未完成","火は上、水は下。まだ渡り切っていない。","終わりは新たな始まり。最後まで慎重に（尾を濡らすな）。"]
+];
+const POS=["初","二","三","四","五","上"];
+const POS_DESC=["物事の始まり・下積み・まだ表に出ない","内卦の中心（中）・現場の実務者・臣下","内卦の極み・内から外への境目で危うい","外卦の入口・君主の側近（大臣）・慎重さが要る","外卦の中心（中）・君主・最も尊い位","極まり・引退・行き過ぎ"];
+const RULES=[
+ ["0","本卦の卦辞で占う"],["1","本卦の変爻の爻辞で占う"],["2","本卦の二つの変爻の爻辞。上の爻を主とする"],
+ ["3","本卦と之卦の卦辞。本卦を主とする"],["4","之卦の変わらない二爻の爻辞。下の爻を主とする"],
+ ["5","之卦の変わらない一爻の爻辞"],["6","乾は「用九」、坤は「用六」、それ以外は之卦の卦辞"]
+];
+
+// lines(bottom→top, 1/0) → 卦番号
+const BITS2NUM={}, NUM2BITS={};
+KW_KEYS.forEach((up,ui)=>KW_KEYS.forEach((lo,li)=>{const b=lo+up;BITS2NUM[b]=KW[ui][li];NUM2BITS[KW[ui][li]]=b;}));
+const fullName=n=>{const b=NUM2BITS[n],lo=TRI[b.slice(0,3)],up=TRI[b.slice(3)];return up===lo?`${up.n}為${up.s}`:`${up.s}${lo.s}${G[n][0]}`;};
+const lineName=(i,yang)=>i===0?`初${yang?"九":"六"}`:i===5?`上${yang?"九":"六"}`:`${yang?"九":"六"}${POS[i]}`;
+
+// ===== 描画 =====
+function hexHTML(bits,opts={}){ // bits: "101100" bottom→top ; changes: array index
+  const ch=opts.changes||[], cls=opts.small?"hex sm":"hex";
+  let h=`<div class="${cls}">`;
+  for(let i=0;i<6;i++){
+    if(i>=bits.length){h+=`<div class="ln empty"><div class="bar"><i></i></div></div>`;continue;}
+    const y=bits[i]==="1", c=ch.includes(i);
+    h+=`<div class="ln${c?" chg":""}">${opts.pos?`<span class="pos">${POS[i]}爻</span>`:""}<div class="bar">${y?"<i></i>":"<i></i><i></i>"}</div>${c?`<span class="mk">${y?"○":"×"}</span>`:""}</div>`;
+  }
+  return h+"</div>";
+}
+function guaBlock(n){
+  const g=G[n];
+  return `<span class="tag">第${n}卦</span><div class="gname">${g[0]}</div><div class="gfull">${fullName(n)}（${g[1]}）</div>`;
+}
+function guaDetail(n){
+  const g=G[n],b=NUM2BITS[n],lo=TRI[b.slice(0,3)],up=TRI[b.slice(3)];
+  return `<p class="muted">上卦 ${up.sym}${up.n}（${up.s}）／下卦 ${lo.sym}${lo.n}（${lo.s}）</p>
+  <h3>卦辞</h3><div class="kanbun">${g[2]}</div>
+  <h3>キーワード</h3><p class="kw">${g[3]}</p>
+  <h3>意味</h3><p>${g[4]}</p>
+  <h3>占断のヒント</h3><p>${g[5]}</p>
+  <div class="row"><button class="btn red ai-only" data-askgua="${n}">💬 ${g[0]}についてAIに質問</button></div>`;
+}
+
+// ===== 占い =====
+let lines=[]; // 6,7,8,9
+const rnd=()=>{try{const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]/4294967296;}catch(e){return Math.random();}};
+const LINE_LABEL={6:"老陰（変）",7:"少陽",8:"少陰",9:"老陽（変）"};
+function toss(animate=true){
+  if(lines.length>=6)return;
+  const c=[0,1,2].map(()=>rnd()<.5?3:2), sum=c[0]+c[1]+c[2];
+  lines.push(sum);
+  const el=document.getElementById("coins");
+  el.innerHTML=c.map(v=>`<div class="coin ${v===2?"ura":""} ${animate?"spin":""}">${v===3?"表":"裏"}</div>`).join("");
+  document.getElementById("tossinfo").textContent=`${POS[lines.length-1]}爻：${c.join("+")}＝${sum}　${LINE_LABEL[sum]}`;
+  drawBuilding();
+  const btn=document.getElementById("tossBtn");
+  if(lines.length<6){btn.textContent=`コインを投げる（${lines.length+1}/6）`;}
+  else{btn.disabled=true;document.getElementById("autoBtn").disabled=true;setTimeout(showResult,animate?450:0);}
+}
+function drawBuilding(){
+  const bits=lines.map(v=>(v===7||v===9)?"1":"0").join("");
+  const ch=lines.map((v,i)=>(v===6||v===9)?i:-1).filter(i=>i>=0);
+  document.getElementById("building").innerHTML=hexHTML(bits,{changes:ch,pos:true});
+}
+function computeResult(ls){
+  const bits=ls.map(v=>(v===7||v===9)?"1":"0").join("");
+  const ch=ls.map((v,i)=>(v===6||v===9)?i:-1).filter(i=>i>=0);
+  const to=ls.map(v=>(v===7||v===6)?"1":"0").join("");
+  return {bits,ch,toBits:to,hon:BITS2NUM[bits],shi:ch.length?BITS2NUM[to]:null};
+}
+function readingGuide(r){
+  const n=r.ch.length, hon=G[r.hon][0];
+  const cn=r.ch.map(i=>lineName(i,r.bits[i]==="1"));
+  if(n===0)return `変爻なし。<b>${hon}の卦辞</b>が答えです。状況は当面安定しています。`;
+  if(n===1)return `変爻は<b>${cn[0]}</b>の一つ。<b>${hon}の${cn[0]}の爻辞</b>を中心に読みます。位置の意味：${POS_DESC[r.ch[0]]}。`;
+  if(n===2)return `変爻は<b>${cn.join("・")}</b>。二つの爻辞を読み、<b>上の${cn[1]}</b>を主とします。`;
+  if(n===3)return `変爻が三つ。<b>本卦${hon}と之卦${G[r.shi][0]}の卦辞</b>を並べて読み、本卦を主とします。今から先への転換点。`;
+  const st=[0,1,2,3,4,5].filter(i=>!r.ch.includes(i)).map(i=>lineName(i,r.toBits[i]==="1"));
+  if(n===4)return `変爻が四つ。<b>之卦${G[r.shi][0]}の変わらない二爻（${st.join("・")}）</b>の爻辞を読み、下の${st[0]}を主とします。`;
+  if(n===5)return `変爻が五つ。<b>之卦${G[r.shi][0]}の${st[0]}の爻辞</b>を読みます。`;
+  if(r.hon===1)return `六爻すべて変化。乾の<b>「用九：見群龍无首。吉」</b>を読みます（首とならず協調せよ）。`;
+  if(r.hon===2)return `六爻すべて変化。坤の<b>「用六：利永貞」</b>を読みます（永く正しさを守れ）。`;
+  return `六爻すべて変化。<b>之卦${G[r.shi][0]}の卦辞</b>を読みます。状況が根本から入れ替わる時。`;
+}
+function resultHTML(rec){
+  const r=computeResult(rec.lines);
+  let h=`<div class="card">`;
+  if(rec.q)h+=`<p class="muted">問い</p><p style="margin-bottom:8px">${esc(rec.q)}</p>`;
+  h+=`<div class="pair"><div class="col"><p class="muted">本卦</p>${hexHTML(r.bits,{changes:r.ch})}${guaBlock(r.hon)}</div>`;
+  if(r.shi){h+=`<div class="arrow">→</div><div class="col"><p class="muted">之卦</p>${hexHTML(r.toBits)}${guaBlock(r.shi)}</div>`;}
+  h+=`</div><h3>どこを読むか</h3><div class="rule">${readingGuide(r)}</div>`;
+  h+=`<h3>本卦：${G[r.hon][0]}</h3>${guaDetail(r.hon)}`;
+  if(r.shi)h+=`<h3>之卦：${G[r.shi][0]}（変化の行き先）</h3><div class="kanbun">${G[r.shi][2]}</div><p><span class="kw">${G[r.shi][3]}</span>　${G[r.shi][4]}</p>`;
+  h+=`<div class="row"><button class="btn red ai-only" data-askrec="${rec.id}">💬 この結果をAIに質問</button><button class="btn ghost" data-ai="${rec.id}">相談文をコピー</button></div><textarea class="copybox" id="cb-${rec.id}" readonly></textarea>`;
+  h+=`<p class="muted" style="margin-top:10px">爻辞の原文・書き下し・解説は「AIに質問」で聞けます。</p></div>`;
+  return h;
+}
+function aiPrompt(rec){
+  const r=computeResult(rec.lines);
+  const ln=rec.lines.map((v,i)=>`${POS[i]}爻=${v}`).join("、");
+  const cn=r.ch.map(i=>lineName(i,r.bits[i]==="1"));
+  return `易経を学んでいます。擲銭法で占った結果を一緒に読み解いてください。
+問い：${rec.q||"（特になし）"}
+各爻（下から、6老陰/7少陽/8少陰/9老陽）：${ln}
+本卦：第${r.hon}卦 ${fullName(r.hon)}
+変爻：${cn.length?cn.join("・"):"なし"}
+之卦：${r.shi?`第${r.shi}卦 ${fullName(r.shi)}`:"なし"}
+読むべき箇所の卦辞・爻辞の原文と書き下し、意味を解説し、問いに対してどう受け止めればよいか教えてください。学習のため、卦の構造（上下の八卦・爻の位置）からの読み方にも触れてください。`;
+}
+function showResult(){
+  const rec={id:Date.now(),date:new Date().toLocaleString("ja-JP"),q:document.getElementById("question").value.trim(),lines:[...lines]};
+  saveHist(rec); currentRec=rec;
+  document.getElementById("result").innerHTML=resultHTML(rec)+`<div class="row"><button class="btn ghost" id="again">新しく占う</button></div>`;
+  document.getElementById("again").onclick=reset;
+  document.getElementById("result").scrollIntoView({behavior:"smooth"});
+}
+function reset(){
+  lines=[];currentRec=null;document.getElementById("result").innerHTML="";document.getElementById("question").value="";
+  document.getElementById("coins").innerHTML='<div class="coin">?</div><div class="coin">?</div><div class="coin">?</div>';
+  document.getElementById("tossinfo").textContent="下から順に六回コインを投げます";
+  const b=document.getElementById("tossBtn");b.disabled=false;b.textContent="コインを投げる（1/6）";
+  document.getElementById("autoBtn").disabled=false;drawBuilding();window.scrollTo({top:0,behavior:"smooth"});
+}
+document.getElementById("tossBtn").onclick=()=>toss(true);
+document.getElementById("autoBtn").onclick=()=>{while(lines.length<6)toss(false);};
+
+// ===== 記録 =====
+const KEY="iching-history-v1";
+function loadHist(){try{return JSON.parse(localStorage.getItem(KEY)||"[]");}catch(e){return memHist;}}
+let memHist=[];
+function saveHist(rec){const h=loadHist();h.unshift(rec);memHist=h;try{localStorage.setItem(KEY,JSON.stringify(h.slice(0,200)));}catch(e){}}
+function renderHist(){
+  const h=loadHist(),el=document.getElementById("histList");
+  if(!h.length){el.innerHTML='<p class="muted" style="padding:10px 0">まだ記録はありません。</p>';return;}
+  el.innerHTML=h.map(rec=>{const r=computeResult(rec.lines);
+    return `<div class="hist" data-id="${rec.id}"><div class="d">${rec.date}</div><div class="q">${esc(rec.q||"（問いなし）")}</div><div class="r">${G[r.hon][0]}${r.shi?` → ${G[r.shi][0]}`:""}　<span class="muted">${fullName(r.hon)}</span></div></div>`;}).join("");
+}
+document.getElementById("histList").onclick=e=>{const d=e.target.closest(".hist");if(!d)return;
+  const rec=loadHist().find(x=>String(x.id)===d.dataset.id);if(rec){openModal(resultHTML(rec));modalCtx={type:"result",rec};}};
+let clearArmed=false;
+document.getElementById("clearHist").onclick=e=>{
+  if(!clearArmed){clearArmed=true;e.target.textContent="もう一度押すと削除します";setTimeout(()=>{clearArmed=false;e.target.textContent="記録をすべて消す";},3000);return;}
+  memHist=[];try{localStorage.removeItem(KEY);}catch(x){} clearArmed=false;e.target.textContent="記録をすべて消す";renderHist();toast("記録を消しました");
+};
+
+// ===== AI相談コピー =====
+document.addEventListener("click",async e=>{
+  const b=e.target.closest("[data-ai]");if(!b)return;
+  const rec=loadHist().find(x=>String(x.id)===b.dataset.ai);if(!rec)return;
+  const txt=aiPrompt(rec);
+  try{await navigator.clipboard.writeText(txt);toast("コピーしました。Claudeに貼り付けてください");}
+  catch(err){const ta=b.closest(".card").querySelector(".copybox");ta.value=txt;ta.style.display="block";ta.select();toast("下の文を選択してコピーしてください");}
+});
+
+// ===== 学ぶ =====
+document.getElementById("triTable").innerHTML=TRI_ORDER.map(k=>{const t=TRI[k];return `<tr><td class="tri">${t.sym}</td><td>${t.n}</td><td>${t.s}</td><td>${t.nat}</td><td>${t.fam}</td><td>${t.dir}</td></tr>`;}).join("");
+document.getElementById("posTable").innerHTML=[5,4,3,2,1,0].map(i=>`<tr><td style="width:56px"><b>${POS[i]}爻</b></td><td style="text-align:left">${POS_DESC[i]}</td></tr>`).join("");
+document.getElementById("ruleTable").innerHTML=RULES.map(r=>`<tr><td style="width:70px">変爻${r[0]}</td><td style="text-align:left">${r[1]}</td></tr>`).join("");
+
+// ===== 六十四卦 =====
+let filt=null;
+function renderGrid(){
+  const f=document.getElementById("filters");
+  f.innerHTML=`<button class="chip ${filt?"":"on"}" data-f="">すべて</button>`+TRI_ORDER.map(k=>`<button class="chip ${filt===k?"on":""}" data-f="${k}">${TRI[k].sym}${TRI[k].n}</button>`).join("");
+  let html="";
+  for(let n=1;n<=64;n++){const b=NUM2BITS[n];
+    if(filt&&b.slice(0,3)!==filt&&b.slice(3)!==filt)continue;
+    html+=`<div class="gcell" data-n="${n}"><div class="n">${n}</div>${hexHTML(b,{small:true})}<div class="nm">${G[n][0]}</div></div>`;}
+  document.getElementById("grid").innerHTML=html;
+}
+document.getElementById("filters").onclick=e=>{const c=e.target.closest(".chip");if(!c)return;filt=c.dataset.f||null;renderGrid();};
+document.getElementById("grid").onclick=e=>{const c=e.target.closest(".gcell");if(!c)return;const n=+c.dataset.n;modalCtx={type:"gua",n};
+  openModal(`<div class="card"><div class="pair"><div class="col">${hexHTML(NUM2BITS[n],{pos:true})}${guaBlock(n)}</div></div>${guaDetail(n)}</div>`);};
+
+// ===== 共通 =====
+let modalCtx=null;
+function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function openModal(h){document.getElementById("mbody").innerHTML=h;document.getElementById("modal").classList.add("on");}
+document.getElementById("mclose").onclick=()=>document.getElementById("modal").classList.remove("on");
+document.getElementById("modal").onclick=e=>{if(e.target.id==="modal")e.currentTarget.classList.remove("on");};
+let tt;function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),2200);}
+document.querySelector("nav").onclick=e=>{const b=e.target.closest("button");if(!b)return;
+  document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+b.dataset.v));
+  if(b.dataset.v==="hist")renderHist(); window.scrollTo(0,0);};
+drawBuilding();renderGrid();
+
+// ===== AIチャット =====
+let currentRec=null, sampleFn=null, thread=[], threadKey=null, ctx={type:"general"}, busy=false, abortCtl=null;
+const BASE=`あなたは易経（周易）に詳しい、親しみやすい先生です。ユーザーは易経を学び始めたところで、自分で占いながら理解を深めようとしています。
+- 日本語で、やさしく簡潔に答えてください（長くても400字程度。求められたら詳しく）。
+- 卦辞・爻辞を引くときは、原文→書き下し→現代語の意味の順に示してください。
+- 卦の構造（上下の八卦、爻の位置・陰陽・中正）から読む視点もさりげなく添えてください。
+- 占いの結果は断定せず、問いを考えるヒントとして示してください。重要な判断（医療・法律・投資など）は占いだけで決めないよう一言添えてください。
+- 見出しや表は使わず、強調は **太字** だけにしてください。`;
+function ctxText(c){
+  if(c.type==="result"){const r=computeResult(c.rec.lines);const cn=r.ch.map(i=>lineName(i,r.bits[i]==="1"));
+    return `【いま見ている占い結果】
+問い：${c.rec.q||"（特になし）"}
+各爻（下から。6老陰/7少陽/8少陰/9老陽）：${c.rec.lines.join(",")}
+本卦：第${r.hon}卦 ${fullName(r.hon)}（卦辞：${G[r.hon][2]}）
+変爻：${cn.length?cn.join("・"):"なし"}
+之卦：${r.shi?`第${r.shi}卦 ${fullName(r.shi)}（卦辞：${G[r.shi][2]}）`:"なし"}
+アプリが示した読む箇所：${readingGuide(r).replace(/<[^>]+>/g,"")}`;}
+  if(c.type==="gua"){const n=c.n;return `【いま見ている卦】第${n}卦 ${fullName(n)}（卦辞：${G[n][2]}）`;}
+  return "【いまはアプリの学習ページを見ています。易経全般の質問です】";
+}
+function ctxLabel(c){
+  if(c.type==="result"){const r=computeResult(c.rec.lines);return `占い結果：${G[r.hon][0]}${r.shi?" → "+G[r.shi][0]:""}${c.rec.q?"「"+esc(c.rec.q)+"」":""}`;}
+  if(c.type==="gua")return `第${c.n}卦 ${fullName(c.n)}`;
+  return "易経全般について";
+}
+function ctxKey(c){return c.type==="result"?"r"+c.rec.id:c.type==="gua"?"g"+c.n:"general";}
+function quickFor(c){
+  if(c.type==="result")return ["読むべき爻辞を解説して","この結果を私の問いに当てはめると？"];
+  if(c.type==="gua")return ["この卦の六爻を順に解説して","構造から意味を読み解いて"];
+  return [];
+}
+function guessCtx(){
+  if(modalCtx&&document.getElementById("modal").classList.contains("on"))return modalCtx;
+  if(currentRec&&document.getElementById("v-divine").classList.contains("on"))return {type:"result",rec:currentRec};
+  return {type:"general"};
+}
+function openChat(c){
+  ctx=c||guessCtx();
+  const k=ctxKey(ctx); if(k!==threadKey){thread=[];threadKey=k;}
+  renderMsgs(); document.getElementById("chat").classList.add("on");
+  setTimeout(()=>document.getElementById("chatText").focus(),50);
+}
+function md(s){return esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");}
+function renderMsgs(){
+  const el=document.getElementById("msgs");
+  el.innerHTML=thread.length?thread.map(m=>`<div class="msg ${m.role==="user"?"u":m.err?"a err":"a"}">${m.role==="user"?esc(m.content):md(m.content)}</div>`).join(""):"";
+  el.scrollTop=el.scrollHeight;
+}
+async function send(text){
+  text=(text||"").trim(); if(!text||busy||!sampleFn)return;
+  busy=true; document.getElementById("sendBtn").disabled=true;
+  thread.push({role:"user",content:text});
+  const ans={role:"assistant",content:"考えています…"}; thread.push(ans); renderMsgs();
+  const msgs=thread.filter(m=>!m.err&&m!==ans).map((m,i)=>({role:m.role,content:i===0?`${BASE}\n\n${ctxText(ctx)}\n\n【質問】${m.content}`:m.content}));
+  abortCtl=new AbortController();
+  const bubble=()=>document.querySelector("#msgs .msg:last-child");
+  try{
+    const res=await sampleFn(msgs,{cache:false,signal:abortCtl.signal,onText:({text})=>{ans.content=text;const b=bubble();if(b){b.innerHTML=md(text);document.getElementById("msgs").scrollTop=1e9;}}});
+    ans.content=res.text||ans.content;
+  }catch(e){
+    ans.err=true;
+    ans.content=e&&e.code==="rate_limited"?"少し混み合っています。しばらくしてからもう一度どうぞ。":e&&e.code==="not_granted"?"AIの利用が許可されていません。":(e&&e.text)?e.text:"うまく答えられませんでした。もう一度お試しください。";
+  }
+  busy=false; document.getElementById("sendBtn").disabled=false; renderMsgs();
+}
+const chatText=document.getElementById("chatText");
+document.getElementById("sendBtn").onclick=()=>{const t=chatText.value;chatText.value="";send(t);};
+chatText.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();document.getElementById("sendBtn").click();}});
+document.getElementById("cclose").onclick=()=>{if(abortCtl&&busy)abortCtl.abort();document.getElementById("chat").classList.remove("on");};
+document.getElementById("chat").onclick=e=>{if(e.target.id==="chat")document.getElementById("cclose").click();};
+document.getElementById("newChat").onclick=()=>{if(busy)return;thread=[];openChat(ctx);};
+document.getElementById("fab").onclick=()=>openChat();
+document.addEventListener("click",e=>{
+  const r=e.target.closest("[data-askrec]");
+  if(r){const rec=loadHist().find(x=>String(x.id)===r.dataset.askrec)||currentRec;if(rec)openChat({type:"result",rec});return;}
+  const g=e.target.closest("[data-askgua]");
+  if(g)openChat({type:"gua",n:+g.dataset.askgua});
+});
+(async()=>{try{sampleFn=await window.claude?.use?.("sample");}catch(e){sampleFn=null;}
+  if(sampleFn){document.body.classList.add("ai-ready");document.getElementById("fab").classList.add("on");}})();
+</script>
+</body>
+</html>

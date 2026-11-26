@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>証券アナリスト ドリル</title>
+<style>
+:root{--bg:#f6f5f1;--card:#fff;--ink:#1d2433;--sub:#6b7280;--line:#e5e2da;--acc:#1f4e79;--acc2:#e8eef6;--red:#c2410c;--amb:#b7791f;--grn:#2f7d4f;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;padding:env(safe-area-inset-top) 0 calc(70px + env(safe-area-inset-bottom));}
+header{padding:16px 18px 6px}
+header h1{font-size:18px;margin:0;letter-spacing:.02em}
+header p{margin:2px 0 0;color:var(--sub);font-size:12px}
+main{padding:8px 14px;max-width:640px;margin:0 auto}
+.view{display:none}.view.on{display:block}
+nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:10}
+nav button{flex:1;border:0;background:none;padding:10px 0 12px;font-size:12px;color:var(--sub);font-weight:600}
+nav button.on{color:var(--acc)}
+nav svg{display:block;margin:0 auto 3px;width:22px;height:22px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.big{font-size:30px;font-weight:700}
+.bar{height:8px;border-radius:4px;background:#eee;overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.legend{display:flex;gap:12px;font-size:12px;color:var(--sub);margin-top:8px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+.subj{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;margin:12px 0 6px}
+.subj small{color:var(--sub);font-weight:400}
+.btn{border:0;border-radius:10px;padding:12px 14px;font-size:15px;font-weight:600;background:var(--acc);color:#fff;width:100%}
+.btn.ghost{background:var(--acc2);color:var(--acc)}
+select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--line);font-size:15px;background:#fff;color:var(--ink)}
+.meta{display:flex;justify-content:space-between;font-size:12px;color:var(--sub);margin:10px 2px}
+#stage{position:relative;min-height:340px;touch-action:pan-y}
+.qcard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 4px 14px rgba(0,0,0,.05);transition:transform .25s,opacity .25s;user-select:none}
+.tag{display:inline-block;font-size:11px;padding:3px 8px;border-radius:20px;background:var(--acc2);color:var(--acc);font-weight:600}
+.q{font-size:16px;line-height:1.75;margin:12px 0;white-space:pre-wrap}
+.mask{border:1.5px dashed #c9c4b8;border-radius:12px;padding:16px;text-align:center;color:var(--sub);font-size:14px;cursor:pointer;background:#faf9f6}
+.ans{display:none}
+.ans .a{font-size:17px;font-weight:700;color:var(--acc);margin:6px 0 10px;line-height:1.6}
+.ans .e{font-size:14px;line-height:1.85;color:#374151;white-space:pre-wrap;border-top:1px solid var(--line);padding-top:10px}
+.revealed .mask{display:none}.revealed .ans{display:block}
+.rate{display:flex;gap:8px;margin-top:12px}
+.rate button{flex:1;border:0;border-radius:10px;padding:12px 4px;font-weight:700;font-size:14px;color:#fff}
+.r0{background:var(--red)}.r1{background:var(--amb)}.r2{background:var(--grn)}
+.hint{text-align:center;font-size:11px;color:var(--sub);margin-top:8px}
+.stamp{position:absolute;top:16px;right:16px;font-weight:800;font-size:18px;padding:4px 10px;border:3px solid;border-radius:8px;opacity:0;transform:rotate(8deg)}
+.ai{margin-top:12px;border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden}
+.ai summary{padding:12px 14px;font-weight:700;font-size:14px;cursor:pointer;list-style:none;color:var(--acc)}
+.ai summary::-webkit-details-marker{display:none}
+.ai .inner{padding:0 14px 14px}
+.ai textarea{width:100%;min-height:64px;border:1px solid var(--line);border-radius:10px;padding:10px;font-size:15px;font-family:inherit;resize:vertical}
+.ai .out{font-size:14px;line-height:1.85;white-space:pre-wrap;margin-top:10px;color:#374151}
+.ai .log .u{font-weight:700;margin-top:10px;font-size:13px;color:var(--sub)}
+.list .it{padding:12px 2px;border-bottom:1px solid var(--line);font-size:14px;line-height:1.6;cursor:pointer}
+.list .it:last-child{border:0}
+.st{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;vertical-align:middle;background:#d6d3cc}
+.st.s0{background:var(--red)}.st.s1{background:var(--amb)}.st.s2{background:var(--grn)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.chips button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:6px 12px;font-size:13px}
+.chips button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px}
+.row:last-child{border:0}
+.sw{position:relative;width:46px;height:28px;flex:none}
+.sw input{opacity:0;width:0;height:0}
+.sw span{position:absolute;inset:0;background:#d1d5db;border-radius:14px;transition:.2s}
+.sw span:before{content:"";position:absolute;width:22px;height:22px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.sw input:checked+span{background:var(--acc)}.sw input:checked+span:before{transform:translateX(18px)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:20;padding:20px}
+.modal.on{display:flex}
+.modal .box{max-width:360px;width:100%}
+.empty{text-align:center;color:var(--sub);padding:50px 10px;font-size:14px;line-height:1.8}
+</style>
+</head>
+<body>
+<header><h1>証券アナリスト ドリル</h1><p>CMA 第1次レベル｜証券分析・財務分析・経済・倫理</p></header>
+<main>
+
+<section id="v-home" class="view on">
+  <div class="box">
+    <div style="font-size:13px;color:var(--sub)">完了したカード</div>
+    <div><span class="big" id="h-done">0</span> <span style="color:var(--sub)">/ <span id="h-total">0</span></span></div>
+    <div class="bar" style="margin-top:10px" id="h-bar"></div>
+    <div class="legend"><span><i class="dot" style="background:var(--grn)"></i>完了</span><span><i class="dot" style="background:var(--amb)"></i>要復習</span><span><i class="dot" style="background:var(--red)"></i>わからない</span></div>
+  </div>
+  <div class="box" id="h-subj"></div>
+  <button class="btn" id="h-go">学習をはじめる</button>
+  <div style="height:8px"></div>
+  <button class="btn ghost" id="h-rev">「わからない」「要復習」だけ復習</button>
+</section>
+
+<section id="v-study" class="view">
+  <select id="unitSel"></select>
+  <div class="meta"><span id="s-pos"></span><span id="s-filter"></span></div>
+  <div id="stage"></div>
+  <details class="ai" id="aiBox">
+    <summary>💬 このカードについてAIに質問</summary>
+    <div class="inner">
+      <div class="log" id="aiLog"></div>
+      <textarea id="aiIn" placeholder="わからないところを書いてください"></textarea>
+      <div style="height:8px"></div>
+      <button class="btn" id="aiSend">AIに質問</button>
+      <div class="out" id="aiNote" style="color:var(--sub);font-size:12px"></div>
+    </div>
+  </details>
+</section>
+
+<section id="v-cards" class="view">
+  <select id="cardUnit"></select>
+  <div class="chips" id="cardChips"></div>
+  <div class="box list" id="cardList"></div>
+</section>
+
+<section id="v-set" class="view">
+  <div class="box">
+    <div class="row"><span>カードをシャッフル</span><label class="sw"><input type="checkbox" id="optShuffle"><span></span></label></div>
+    <div class="row"><span>「完了」のカードを出さない</span><label class="sw"><input type="checkbox" id="optSkip" checked><span></span></label></div>
+    <div class="row"><span>答えを最初から表示</span><label class="sw"><input type="checkbox" id="optOpen"><span></span></label></div>
+  </div>
+  <div class="box" style="font-size:13px;color:var(--sub);line-height:1.8">
+    操作：カードを <b>右スワイプ＝完了</b>／<b>上スワイプ＝要復習</b>／<b>左スワイプ＝わからない</b>。タップで答えを表示。<br>
+    進み具合はこの端末のブラウザに保存されます（別の端末とは共有されません）。<br>
+    問題は公式テキストの範囲をもとにした自作問題です。数値や用語は公式テキストでも確認してください。
+  </div>
+  <button class="btn ghost" id="resetBtn" style="color:var(--red)">理解度をすべてリセット</button>
+</section>
+
+</main>
+
+<nav>
+  <button data-v="home" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+  <button data-v="study"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 3h8"/></svg>Study</button>
+  <button data-v="cards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Cards</button>
+  <button data-v="set"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Setting</button>
+</nav>
+
+<div class="modal" id="modal"><div class="box"><div id="mText" style="font-size:15px;line-height:1.7;margin-bottom:14px"></div><div style="display:flex;gap:8px"><button class="btn ghost" id="mNo">キャンセル</button><button class="btn" id="mYes" style="background:var(--red)">リセット</button></div></div></div>
+
+<script>
+const SUBJECTS=[
+ {name:"証券分析とポートフォリオ・マネジメント",units:["債券分析","株式分析","ポートフォリオ理論","デリバティブ","パフォーマンス評価"]},
+ {name:"財務分析",units:["会計の基礎","収益性・安全性分析","キャッシュフローと企業価値"]},
+ {name:"経済",units:["ミクロ経済","マクロ経済","金融・国際経済"]},
+ {name:"職業倫理",units:["職業倫理・行為基準"]}
+];
+const C=[
+// 債券分析
+["債券分析","額面100円・クーポン年4%・残存3年の利付債が100円で取引されている。最終利回り（複利）は？","4%","価格が額面と等しい（パー）債券では、最終利回りはクーポンレートと一致します。\n価格が額面より低い（アンダーパー）なら利回り＞クーポン、高い（オーバーパー）なら利回り＜クーポンになります。"],
+["債券分析","クーポン2円、価格98円、残存4年の利付債の単利最終利回り（日本式）は？","約2.55%","単利最終利回り＝｛クーポン＋（額面−価格）÷残存年数｝÷価格\n＝｛2＋(100−98)÷4｝÷98＝2.5÷98≒2.55%\n分子の（100−98）/4 は「償還差益を毎年に均等に割り振った分」です。"],
+["債券分析","マコーレー・デュレーションが5.0年、最終利回りが4%（年1回利払い）の債券の修正デュレーションは？","約4.81年","修正デュレーション＝マコーレー・デュレーション÷(1＋利回り)\n＝5.0÷1.04≒4.81年\n修正デュレーションは「利回りが1%動いたとき価格が何%動くか」を表す感応度です。"],
+["債券分析","修正デュレーション4.81年の債券で、利回りが0.5%上昇したときの価格変化率（デュレーションによる近似）は？","約−2.40%","価格変化率≒−修正デュレーション×利回り変化\n＝−4.81×0.005≒−2.40%\n金利上昇で価格は下落するのでマイナスになります。"],
+["債券分析","割引債（ゼロクーポン債）のマコーレー・デュレーションはどうなる？","残存期間と等しい","マコーレー・デュレーションはキャッシュフローの現在価値で加重平均した「回収までの平均期間」です。割引債は満期の一回しかキャッシュフローがないため、残存期間そのものになります。\n利付債はクーポン受取りがある分、残存期間より短くなります。"],
+["債券分析","通常の（凸性が正の）債券で、デュレーションだけを使って価格変化を近似すると、金利が上がる場合・下がる場合それぞれ実際の価格と比べてどうなる？","どちらの場合も実際の価格より低く見積もる","価格−利回り曲線は下に凸なので、接線（デュレーション近似）は常に曲線の下側にきます。\n・金利上昇時：実際の下落幅は近似より小さい\n・金利低下時：実際の上昇幅は近似より大きい\nこのズレを補正するのがコンベクシティ項（＋½×コンベクシティ×Δy²）です。"],
+["債券分析","1年スポットレート2%、2年スポットレート3%のとき、1年後から1年間のインプライド・フォワードレートは？","約4.01%","(1.03)²＝(1.02)×(1＋f) を解きます。\nf＝1.0609÷1.02−1≒4.01%\n純粋期待仮説では、このフォワードレートが「1年後の1年金利の予想」と解釈されます。"],
+// 株式分析
+["株式分析","次期配当50円、要求収益率8%、配当成長率3%（一定）の株式の理論価格は？（定率成長配当割引モデル）","1,000円","P＝D₁÷(r−g)＝50÷(0.08−0.03)＝1,000円\n分子は「次期」の配当（D₁）である点に注意。今期配当D₀が与えられたら D₁＝D₀×(1＋g) に直してから使います。"],
+["株式分析","配当性向40%、要求収益率8%、成長率3%のとき、予想利益ベースの理論PERは？","8倍","P＝D₁/(r−g) の両辺を予想EPS（E₁）で割ると\nPER＝配当性向÷(r−g)＝0.4÷0.05＝8倍\n成長率が高いほど、要求収益率が低いほどPERは高くなります。"],
+["株式分析","ROE10%、配当性向30%の企業のサステイナブル成長率は？","7%","サステイナブル成長率 g＝ROE×内部留保率\n＝10%×(1−0.3)＝7%\n外部資金に頼らず、利益の再投資だけで達成できる成長率です。"],
+["株式分析","売上高純利益率5%、総資産回転率1.2回、財務レバレッジ（総資産÷自己資本）2倍の企業のROEは？","12%","デュポン分解：ROE＝売上高純利益率×総資産回転率×財務レバレッジ\n＝5%×1.2×2＝12%\nどの要因でROEが高いのか（収益性・効率性・負債活用）を分けて見るための式です。"],
+["株式分析","PER15倍、ROE8%の企業のPBRは？","1.2倍","PBR＝株価/BPS、PER＝株価/EPS、ROE＝EPS/BPS なので\nPBR＝PER×ROE＝15×0.08＝1.2倍\nROEが株主資本コストを上回る企業ほどPBRは1倍を超えやすくなります。"],
+// ポートフォリオ理論
+["ポートフォリオ理論","資産A（σ=20%）に60%、資産B（σ=10%）に40%投資。相関係数0のときポートフォリオの標準偏差は？","約12.65%","σp²＝wA²σA²＋wB²σB²＋2wAwBρσAσB\n＝0.36×0.04＋0.16×0.01＋0＝0.016\nσp＝√0.016≒12.65%\n加重平均（16%）より小さいのが分散投資の効果です。"],
+["ポートフォリオ理論","無リスク金利1%、市場ポートフォリオの期待リターン6%、β=1.2の株式のCAPMによる期待リターンは？","7%","E(R)＝rf＋β×(E(RM)−rf)\n＝1%＋1.2×(6%−1%)＝7%\n(E(RM)−rf) を市場リスクプレミアムと呼びます。"],
+["ポートフォリオ理論","ある株式と市場ポートフォリオの共分散が0.03、市場の標準偏差が20%のとき、この株式のβは？","0.75","β＝Cov(Ri,RM)÷Var(RM)＝0.03÷0.2²＝0.03÷0.04＝0.75\n相関係数を使う形では β＝ρ×σi÷σM と書けます。"],
+["ポートフォリオ理論","銘柄数を増やして分散投資すると消去できるリスクと、消去できずに残るリスクは？","消去できる：非システマティック（固有）リスク／残る：システマティック（市場）リスク","個別企業の事情によるリスクは銘柄同士で打ち消し合いますが、景気や金利など市場全体に共通するリスクは残ります。\nCAPMでは、消去できるリスクには報酬（リスクプレミアム）が与えられず、βで測るシステマティック・リスクにだけプレミアムがつくと考えます。"],
+["ポートフォリオ理論","資本市場線（CML）と証券市場線（SML）の違いは？（横軸と、対象となる資産）","CML：横軸σ、効率的ポートフォリオのみ／SML：横軸β、すべての資産・ポートフォリオ","CMLは無リスク資産と市場ポートフォリオの組合せで、総リスク（標準偏差）と期待リターンの関係を表します。\nSMLはCAPMを図にしたもので、個別証券を含むすべての資産がβに応じて線上に並びます。"],
+["ポートフォリオ理論","σA=20%、σB=10%で相関係数が−1の2資産。リスクをゼロにするには資産Aにいくら配分する？","1/3（約33.3%）","ρ=−1 のとき σp＝|wAσA−wBσB| となるので、wAσA＝(1−wA)σB を解きます。\nwA＝σB÷(σA＋σB)＝10÷30＝1/3\n完全に逆に動く2資産なら、組み合わせ方次第でリスクを消せます。"],
+// デリバティブ
+["デリバティブ","株価1,000円、権利行使価格1,000円、満期1年、無リスク金利2%、ヨーロピアン・コールが80円。同条件のプットの理論価格は？（配当なし）","約60.4円","プット・コール・パリティ：C−P＝S−K/(1＋r)\nP＝C−S＋K/(1＋r)＝80−1,000＋1,000/1.02≒80−1,000＋980.39≒60.4円"],
+["デリバティブ","株価指数2,000、短期金利年1%、配当利回り年2%のとき、満期1年の先物理論価格は？","1,980","先物理論価格＝現物×{1＋(金利−配当利回り)×期間}\n＝2,000×(1＋0.01−0.02)＝1,980\n配当利回りが金利より高いと、先物は現物より安くなります（逆ザヤ）。"],
+["デリバティブ","原資産のボラティリティが上昇すると、コールとプットの価格はそれぞれどうなる？","どちらも上昇する","オプションの買い手は損失が限定され、利益は値動きが大きいほど大きくなります。そのためボラティリティが高まると、コールもプットも価値が上がります（ベガは正）。"],
+["デリバティブ","1期間二項モデル：株価100、上昇時120（u=1.2）、下落時90（d=0.9）、1期間の金利5%。権利行使価格100のコールの理論価格は？","約9.52","リスク中立確率 q＝(1.05−0.9)÷(1.2−0.9)＝0.5\n満期ペイオフ：上昇時20、下落時0\nC＝{0.5×20＋0.5×0}÷1.05≒9.52"],
+["デリバティブ","コール・オプションとプット・オプションのデルタがとる範囲は？","コール：0〜1／プット：−1〜0","デルタは原資産が1動いたときのオプション価格の変化。コールは原資産と同方向、プットは逆方向に動きます。\nディープ・イン・ザ・マネーではコール≒1、プット≒−1に近づきます。"],
+// パフォーマンス評価
+["パフォーマンス評価","ファンドのリターン8%、標準偏差14%、無リスク金利1%のときシャープ・レシオは？","0.5","シャープ・レシオ＝(Rp−rf)÷σp＝(8−1)÷14＝0.5\n総リスク1単位あたりの超過リターン。資産全体を一つのファンドで運用する場合の評価に向きます。"],
+["パフォーマンス評価","ファンドのリターン8%、β=1.4、無リスク金利1%のときトレイナー・レシオは？","5%","トレイナー・レシオ＝(Rp−rf)÷βp＝(8−1)÷1.4＝5%\nシステマティック・リスク1単位あたりの超過リターン。十分に分散された複数ファンドの一部として評価する場合に向きます。"],
+["パフォーマンス評価","ファンドのリターン8%、β=1.2、無リスク金利1%、市場リターン6%のときジェンセンのアルファは？","1%","α＝Rp−{rf＋β(RM−rf)}\n＝8−{1＋1.2×(6−1)}＝8−7＝1%\nCAPMが示す期待リターンをどれだけ上回ったかを表します。"],
+["パフォーマンス評価","ベンチマークに対するアクティブ・リターン年2%、トラッキング・エラー年4%のインフォメーション・レシオは？","0.5","IR＝アクティブ・リターン÷トラッキング・エラー＝2÷4＝0.5\nアクティブ・リスク1単位あたりの超過リターンで、運用者の腕前を測る指標です。"],
+["パフォーマンス評価","運用者の能力を評価するとき、時間加重収益率と金額加重収益率のどちらを使う？その理由は？","時間加重収益率（資金の出し入れの影響を受けないため）","資金の追加・引出しのタイミングは通常、運用者ではなく投資家が決めます。時間加重収益率はその影響を除くので運用者評価に適し、金額加重収益率（内部収益率）は投資家自身の実際の成果を測るのに適します。"],
+// 会計の基礎
+["会計の基礎","取得原価1,000万円、残存価額0、耐用年数5年の機械を定額法で償却する。毎年の減価償却費は？","200万円","定額法：(取得原価−残存価額)÷耐用年数＝1,000÷5＝200万円\n毎年同じ額を費用にします。"],
+["会計の基礎","取得原価1,000万円の機械を償却率0.4の定率法で償却する。1年目と2年目の減価償却費は？","1年目400万円／2年目240万円","定率法：期首帳簿価額×償却率\n1年目：1,000×0.4＝400\n2年目：(1,000−400)×0.4＝240\n初期に費用が大きく、年々小さくなります。"],
+["会計の基礎","買収価額500億円、被買収企業の識別可能な純資産（時価）350億円。のれんの額と、日本基準・IFRSでの扱いの違いは？","のれん150億円。日本基準は20年以内で規則的に償却、IFRSは償却せず毎期減損テスト","のれん＝買収価額−純資産の時価＝500−350＝150億円\nIFRSでは償却しない代わりに、少なくとも年1回減損テストを行います。日本基準でも減損の兆候があれば減損処理します。"],
+["会計の基礎","物価上昇期に棚卸資産を先入先出法で評価すると、総平均法に比べて売上原価と利益はどうなる？","売上原価は小さく、利益は大きくなる","先入先出法では古い（安い）仕入から先に払い出したとみなすので、売上原価が低めに、期末在庫が新しい（高い）価格で評価されます。結果として利益が大きく出ます。"],
+["会計の基礎","包括利益と当期純利益の関係は？","包括利益＝当期純利益＋その他の包括利益","その他の包括利益には、その他有価証券評価差額金、為替換算調整勘定、繰延ヘッジ損益、退職給付に係る調整額などが含まれます。純資産の変動のうち、株主との取引（増資・配当など）以外の部分が包括利益です。"],
+// 収益性・安全性分析
+["収益性・安全性分析","流動資産300、うち棚卸資産100、流動負債200の企業の流動比率と当座比率は？","流動比率150%／当座比率100%","流動比率＝流動資産÷流動負債＝300÷200＝150%\n当座比率＝当座資産÷流動負債＝(300−100)÷200＝100%\n当座比率は換金に時間がかかる棚卸資産を除いた、より厳しい短期安全性の指標です。"],
+["収益性・安全性分析","営業利益90、受取利息・配当金10、支払利息20の企業のインタレスト・カバレッジ・レシオは？","5倍","ICR＝(営業利益＋受取利息・配当金)÷支払利息＝(90＋10)÷20＝5倍\n金利の支払能力を示し、高いほど安全です。"],
+["収益性・安全性分析","固定費300、変動費率60%の企業の損益分岐点売上高は？","750","損益分岐点売上高＝固定費÷限界利益率＝300÷(1−0.6)＝750\n限界利益率＝1−変動費率。"],
+["収益性・安全性分析","売上高1,000、損益分岐点売上高750の企業の安全余裕率（経営安全率）は？","25%","安全余裕率＝(売上高−損益分岐点売上高)÷売上高＝250÷1,000＝25%\nあと何%売上が減ると赤字になるかを示します。損益分岐点比率（75%）との合計は100%です。"],
+["収益性・安全性分析","営業レバレッジが高い（固定費の割合が大きい）企業の特徴は？","売上の変化に対して営業利益が大きく変動する","営業レバレッジ＝限界利益÷営業利益。固定費が大きいと、売上が増えたときの利益の伸びが大きい一方、売上減少時の落ち込みも大きくなります（事業リスクが高い）。"],
+// CFと企業価値
+["キャッシュフローと企業価値","営業利益100、税率30%、減価償却費20、設備投資30、運転資本の増加10。フリー・キャッシュフロー（FCF）は？","50","FCF＝営業利益×(1−税率)＋減価償却費−設備投資−運転資本増加\n＝70＋20−30−10＝50\n営業利益×(1−税率)はNOPAT（税引後営業利益）。減価償却費は現金が出ていかない費用なので足し戻します。"],
+["キャッシュフローと企業価値","株主資本の時価600、負債400、株主資本コスト8%、負債コスト3%、税率30%のWACCは？","5.64%","WACC＝E/(D+E)×rE＋D/(D+E)×rD×(1−t)\n＝0.6×8%＋0.4×3%×0.7＝4.8%＋0.84%＝5.64%\n負債コストは支払利息の節税効果があるため(1−t)をかけます。"],
+["キャッシュフローと企業価値","来期FCF50、WACC6%、FCF成長率1%（永続）、有利子負債300（現預金なし）の企業の株主価値は？","700","企業価値＝FCF₁÷(WACC−g)＝50÷0.05＝1,000\n株主価値＝企業価値−有利子負債＝1,000−300＝700\nFCFは債権者と株主の両方に帰属するので、割引率はWACCを使います。"],
+["キャッシュフローと企業価値","NOPAT70、投下資本1,000、WACC5%の企業のEVA（経済付加価値）は？","20","EVA＝NOPAT−投下資本×WACC＝70−1,000×0.05＝20\n資本コストを上回る利益を上げて初めて価値を生んだと考える指標です。"],
+["キャッシュフローと企業価値","MM理論で、法人税がない場合とある場合、企業価値は負債の利用でどう変わる？","税なし：資本構成に関係なく一定／税あり：負債の節税効果分だけ増える（V_L＝V_U＋tD）","完全市場・税なしでは、資本構成を変えても企業価値は変わりません（MM第1命題）。\n法人税があると、支払利息が損金になる節税効果（税率×負債）だけ企業価値が増えます。現実には倒産コストなどとのトレードオフになります。"],
+// ミクロ
+["ミクロ経済","価格が10%上昇したとき需要量が20%減少した。需要の価格弾力性と、値上げによる売上高の変化は？","弾力性2（弾力的）／売上高は減少","価格弾力性＝需要量の変化率÷価格の変化率（絶対値）＝20÷10＝2\n弾力性が1より大きいと、値上げで数量が大きく減り、売上（価格×数量）は減少します。"],
+["ミクロ経済","完全競争市場の企業の利潤最大化条件は？","価格（P）＝限界費用（MC）","完全競争企業はプライス・テイカーで、限界収入＝価格になります。よってMR＝MCは P＝MC と同じになります。"],
+["ミクロ経済","逆需要関数 P＝100−Q、限界費用20（一定）。独占企業の生産量と価格は？","Q＝40、P＝60","総収入 PQ＝100Q−Q² より MR＝100−2Q\nMR＝MC：100−2Q＝20 → Q＝40、P＝100−40＝60\n完全競争なら P＝MC＝20、Q＝80。独占は量が少なく価格が高くなり、死荷重が生じます。"],
+["ミクロ経済","生産に外部不経済（公害など）がある場合、市場均衡の生産量は社会的に最適な量と比べてどうなる？対策は？","過大になる／ピグー税（外部費用分の課税）","企業は自分の私的費用しか考えないため、社会的費用（私的費用＋外部費用）を基準とした最適量より多く生産してしまいます。外部費用に等しい税を課すと最適量に近づきます。"],
+["ミクロ経済","ギッフェン財とはどのような財か？","価格が上がると需要量が増える劣等財（所得効果が代替効果を上回る）","価格上昇の代替効果は常に需要量を減らしますが、劣等財では実質所得の減少（所得効果）が需要を増やします。その所得効果が代替効果より大きい特殊なケースがギッフェン財です。"],
+// マクロ
+["マクロ経済","限界消費性向0.8のとき、投資が10兆円増えるとGDPはいくら増える？（単純なケインズモデル）","50兆円","投資乗数＝1÷(1−限界消費性向)＝1÷0.2＝5\nΔY＝5×10＝50兆円"],
+["マクロ経済","限界消費性向0.8のときの租税乗数と、均衡予算乗数は？","租税乗数−4／均衡予算乗数1","租税乗数＝−c÷(1−c)＝−0.8÷0.2＝−4\n政府支出と税を同額増やすと 5＋(−4)＝1。政府支出を増やした分だけGDPが増えます（均衡予算乗数の定理）。"],
+["マクロ経済","IS-LM分析で「流動性のわな」の状況では、金融政策と財政政策の効果はどうなる？","金融政策は無効、財政政策は有効","流動性のわなではLM曲線が水平になり、貨幣供給を増やしても金利が下がりません。一方、財政政策は金利上昇（クラウディングアウト）を招かず、効果がフルに出ます。"],
+["マクロ経済","名目GDP550兆円、実質GDP500兆円のときGDPデフレーターは？","110","GDPデフレーター＝名目GDP÷実質GDP×100＝550÷500×100＝110\n基準年に比べて物価が10%上がったことを示します。"],
+["マクロ経済","貯蓄投資バランス（ISバランス）の恒等式は？","(S−I)＝(G−T)＋(EX−IM)","Y＝C＋I＋G＋(EX−IM)、Y＝C＋S＋T から導かれます。\n民間の貯蓄超過＝財政赤字＋経常（貿易）黒字。民間が貯蓄超過のとき、それが財政赤字か対外黒字に回っていることを表します。"],
+["マクロ経済","フィリップス曲線とは何か？長期ではどうなる（自然失業率仮説）？","インフレ率と失業率の負の関係。長期では自然失業率の水準で垂直になる","短期にはインフレ率が上がると失業率が下がるトレードオフが見られます。フリードマンらは、人々の期待インフレ率が調整される長期では失業率は自然失業率に戻り、フィリップス曲線は垂直になると主張しました。"],
+// 金融・国際
+["金融・国際経済","名目金利3%、期待インフレ率2%のとき実質金利は？（フィッシャー方程式の近似）","約1%","名目金利≒実質金利＋期待インフレ率\n実質金利≒3%−2%＝1%"],
+["金融・国際経済","直物150円/ドル、円金利年0.5%、ドル金利年4.5%のとき、1年物の先渡為替レート（カバー付き金利平価）は？","約144.26円/ドル","F＝S×(1＋i円)÷(1＋iドル)＝150×1.005÷1.045≒144.26円\n金利の低い通貨（円）は、先渡では金利差分だけ高くなります（円高方向）。"],
+["金融・国際経済","マンデル＝フレミング・モデル（小国・資本移動が完全）で、変動相場制のとき有効なのは金融政策と財政政策のどちら？","金融政策（財政政策は無効）","変動相場制で財政拡大をすると、金利上昇圧力→資本流入→自国通貨高→純輸出減少となり、効果が打ち消されます。金融緩和は自国通貨安を通じて純輸出を増やすので有効です。固定相場制では逆になります。"],
+["金融・国際経済","日本のインフレ率1%、米国のインフレ率3%が続くとき、相対的購買力平価によると円ドル相場はどうなる？","円が年約2%増価（円高）する","相対的購買力平価では、為替レートの変化率≒両国のインフレ率の差。インフレ率が低い国の通貨は購買力が保たれるので、その差（約2%）だけ増価します。"],
+["金融・国際経済","現金預金比率0.2、預金準備率0.1のときの信用乗数（貨幣乗数）は？","4","貨幣乗数＝(c＋1)÷(c＋r)＝(0.2＋1)÷(0.2＋0.1)＝4\nマネタリーベースが1増えると、マネーストックが4増える計算です。"],
+["金融・国際経済","テイラー・ルールでは、政策金利をどのように決めるとされる？","均衡実質金利＋インフレ率＋0.5×(インフレ率−目標)＋0.5×GDPギャップ","インフレ率が目標を上回る、または景気が過熱（GDPギャップがプラス）するほど政策金利を引き上げるべきだとする目安です。中央銀行の政策スタンスの評価によく使われます。"],
+// 倫理
+["職業倫理・行為基準","業務中に未公表の重要事実（インサイダー情報）を知った。アナリストがとるべき行動は？","公表されるまで、その情報に基づく売買や推奨をしない","重要な未公表情報を使った取引は法令（金融商品取引法）と倫理基準の両方に反します。社内では情報隔壁（チャイニーズ・ウォール）を守り、コンプライアンス部門に報告します。"],
+["職業倫理・行為基準","顧客から大口の買い注文を受けた。その注文を執行する前に、自分の口座で同じ銘柄を買ってもよいか？","いけない（フロントランニングにあたる）","顧客の利益を自分の利益より優先することが基本原則です。顧客注文を知った上での先回り売買は、顧客に不利な価格をもたらす不正行為です。"],
+["職業倫理・行為基準","投資を推奨するときの「適合性の原則」とは？","顧客の知識・経験・財産状況・投資目的に照らして適切な商品を推奨すること","どんなに優れた商品でも、顧客のリスク許容度や目的に合わなければ推奨してはいけません。推奨前に顧客の状況を十分に把握し、変化があれば見直します。"]
+];
+const CARDS=C.map((c,i)=>({id:i,unit:c[0],q:c[1],a:c[2],e:c[3]}));
+const LS="cma-drill-v1";
+let S={st:{},opt:{shuffle:false,skip:true,open:false},unit:"all"};
+try{const s=JSON.parse(localStorage.getItem(LS)||"null");if(s)S=Object.assign(S,s);}catch(e){}
+const save=()=>{try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}};
+const $=id=>document.getElementById(id);
+const subjOf=u=>SUBJECTS.find(s=>s.units.includes(u)).name;
+
+// nav
+function show(v){document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));if(v==="home")renderHome();if(v==="cards")renderCards();if(v==="study"&&!deck.length)buildDeck();window.scrollTo(0,0);}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>show(b.dataset.v));
+
+// unit selects
+function fillSel(sel,withRev){let h='<option value="all">すべての単元（'+CARDS.length+'問）</option>';if(withRev)h+='<option value="review">「わからない」「要復習」のみ</option>';SUBJECTS.forEach(s=>{h+='<optgroup label="'+s.name+'">';s.units.forEach(u=>{h+='<option value="'+u+'">'+u+'（'+CARDS.filter(c=>c.unit===u).length+'問）</option>'});h+='</optgroup>'});sel.innerHTML=h;}
+fillSel($("unitSel"),true);fillSel($("cardUnit"),false);
+$("unitSel").value=S.unit;
+
+// home
+function counts(list){const r={0:0,1:0,2:0,n:0};list.forEach(c=>{const s=S.st[c.id];if(s===undefined)r.n++;else r[s]++});return r;}
+function barHTML(r,t){return '<i style="width:'+(r[2]/t*100)+'%;background:var(--grn)"></i><i style="width:'+(r[1]/t*100)+'%;background:var(--amb)"></i><i style="width:'+(r[0]/t*100)+'%;background:var(--red)"></i>';}
+function renderHome(){const r=counts(CARDS);$("h-done").textContent=r[2];$("h-total").textContent=CARDS.length;$("h-bar").innerHTML=barHTML(r,CARDS.length);
+ let h="";SUBJECTS.forEach(s=>{const l=CARDS.filter(c=>s.units.includes(c.unit));const k=counts(l);h+='<div class="subj">'+s.name+'<small>'+k[2]+' / '+l.length+'</small></div><div class="bar">'+barHTML(k,l.length)+'</div>'});$("h-subj").innerHTML=h;}
+$("h-go").onclick=()=>{buildDeck();show("study")};
+$("h-rev").onclick=()=>{S.unit="review";$("unitSel").value="review";save();buildDeck();show("study")};
+
+// study
+let deck=[],pos=0,revealed=false;
+function buildDeck(){const u=S.unit;let l=CARDS.filter(c=>u==="all"||(u==="review"?(S.st[c.id]===0||S.st[c.id]===1):c.unit===u));
+ if(S.opt.skip&&u!=="review")l=l.filter(c=>S.st[c.id]!==2);
+ if(S.opt.shuffle){l=l.slice();for(let i=l.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[l[i],l[j]]=[l[j],l[i]]}}
+ deck=l;pos=0;renderCard();}
+$("unitSel").onchange=e=>{S.unit=e.target.value;save();buildDeck()};
+const LBL=["わからない","要復習","完了"],COL=["var(--red)","var(--amb)","var(--grn)"];
+function renderCard(){const st=$("stage");resetAI();
+ $("s-filter").textContent=S.opt.skip&&S.unit!=="review"?"完了は非表示":"";
+ if(!deck.length){$("s-pos").textContent="";st.innerHTML='<div class="empty">この単元で出すカードはありません 🎉<br>別の単元を選ぶか、Setting で「完了のカードを出さない」をオフにしてください。</div>';$("aiBox").style.display="none";return;}
+ if(pos>=deck.length){$("s-pos").textContent="";const r=counts(deck);st.innerHTML='<div class="box empty" style="padding:30px 16px">この単元を一周しました！<br>完了 '+r[2]+'／要復習 '+r[1]+'／わからない '+r[0]+'<div style="height:14px"></div><button class="btn" id="again">もう一周する</button></div>';$("again").onclick=buildDeck;$("aiBox").style.display="none";return;}
+ $("aiBox").style.display="";
+ const c=deck[pos];revealed=S.opt.open;const cur=S.st[c.id];
+ $("s-pos").textContent=(pos+1)+" / "+deck.length;
+ st.innerHTML='<div class="qcard'+(revealed?" revealed":"")+'" id="qc"><div class="stamp" id="stamp"></div><span class="tag">'+c.unit+'</span>'+(cur!==undefined?' <span class="tag" style="background:#f3f1ec;color:'+COL[cur]+'">前回：'+LBL[cur]+'</span>':'')+'<div class="q">'+c.q+'</div><div class="mask" id="mask">タップして答えを見る</div><div class="ans"><div class="a">'+c.a+'</div><div class="e">'+c.e+'</div></div><div class="rate"><button class="r0" data-r="0">わからない</button><button class="r1" data-r="1">要復習</button><button class="r2" data-r="2">完了</button></div><div class="hint">← わからない ｜ ↑ 要復習 ｜ 完了 →</div></div>';
+ $("mask").onclick=()=>{$("qc").classList.add("revealed");revealed=true};
+ st.querySelectorAll(".rate button").forEach(b=>b.onclick=()=>rate(+b.dataset.r));
+ attachSwipe($("qc"));}
+function rate(r,dir){const c=deck[pos];if(!c)return;S.st[c.id]=r;save();const el=$("qc");
+ const t=dir||["translateX(-120%) rotate(-12deg)","translateY(-120%)","translateX(120%) rotate(12deg)"][r];
+ el.style.transform=t;el.style.opacity="0";setTimeout(()=>{pos++;renderCard()},220);}
+function attachSwipe(el){let x0,y0,dx=0,dy=0,drag=false;const stamp=$("stamp");
+ el.addEventListener("pointerdown",e=>{if(e.target.closest("button"))return;x0=e.clientX;y0=e.clientY;drag=true;dx=dy=0;el.style.transition="none"});
+ el.addEventListener("pointermove",e=>{if(!drag)return;dx=e.clientX-x0;dy=e.clientY-y0;if(Math.abs(dx)<6&&Math.abs(dy)<6)return;
+  if(Math.abs(dx)>Math.abs(dy)||dy<0){e.preventDefault();el.style.transform="translate("+dx+"px,"+Math.min(dy,0)+"px) rotate("+dx/20+"deg)";
+   const r=pick(dx,dy);stamp.style.opacity=r===null?0:Math.min(1,Math.max(Math.abs(dx),-dy)/120);if(r!==null){stamp.textContent=LBL[r];stamp.style.color=stamp.style.borderColor=COL[r];}}});
+ const end=()=>{if(!drag)return;drag=false;el.style.transition="";const r=pick(dx,dy);
+  if(r!==null&&(Math.abs(dx)>90||dy<-90))rate(r);else{el.style.transform="";stamp.style.opacity=0;}};
+ el.addEventListener("pointerup",end);el.addEventListener("pointercancel",end);}
+function pick(dx,dy){if(-dy>Math.abs(dx)&&dy<-20)return 1;if(dx>20)return 2;if(dx<-20)return 0;return null;}
+
+// AI
+let sample=null,aiHist=[],aiBusy=false;
+(async()=>{try{sample=await window.claude?.use("sample")}catch(e){sample=null}if(!sample){$("aiNote").textContent="このビューではAIに質問できません。claude.ai 上でこのページを開くと使えます。";$("aiSend").disabled=true;$("aiSend").style.opacity=.5;}})();
+function resetAI(){aiHist=[];$("aiLog").innerHTML="";$("aiIn").value="";$("aiBox").open=false;}
+$("aiSend").onclick=async()=>{const q=$("aiIn").value.trim();if(!q||aiBusy||!sample)return;const c=deck[pos];if(!c)return;aiBusy=true;
+ const log=$("aiLog");const u=document.createElement("div");u.className="u";u.textContent="Q. "+q;const o=document.createElement("div");o.className="out";o.textContent="考え中…";log.append(u,o);$("aiIn").value="";
+ const sys="あなたは日本証券アナリスト協会の証券アナリスト（CMA）試験の家庭教師です。学習者は次の問題カードを学習中です。\n単元："+c.unit+"\n問題："+c.q+"\n答え："+c.a+"\n解説："+c.e+"\n\n学習者の質問に日本語で、やさしく正確に答えてください。計算は途中式を示してください。カードの内容に誤りがあれば遠慮なく指摘してください。スマホで読むので簡潔に（目安300字以内、必要なら長くても可）。Markdownの記号（#や**）は使わないでください。";
+ const msgs=[];aiHist.forEach(m=>msgs.push(m));msgs.push({role:"user",content:(aiHist.length?"":sys+"\n\n質問：")+q});
+ try{const r=await sample(msgs,{cache:false,onText:({text})=>{o.textContent=text}});o.textContent=r.text;aiHist.push({role:"user",content:msgs[msgs.length-1].content},{role:"assistant",content:r.text});}
+ catch(e){o.textContent=e&&e.code==="not_granted"?"AIの利用が許可されていません。":e&&e.code==="rate_limited"?"混み合っています。少し待ってからもう一度どうぞ。":"エラーが発生しました。もう一度お試しください。";}
+ aiBusy=false;};
+
+// cards
+let cf="all";
+const CH=[["all","すべて"],["n","未学習"],["0","わからない"],["1","要復習"],["2","完了"]];
+function renderCards(){$("cardChips").innerHTML=CH.map(([k,l])=>'<button data-k="'+k+'" class="'+(cf===k?"on":"")+'">'+l+'</button>').join("");
+ $("cardChips").querySelectorAll("button").forEach(b=>b.onclick=()=>{cf=b.dataset.k;renderCards()});
+ const u=$("cardUnit").value;const l=CARDS.filter(c=>(u==="all"||c.unit===u)&&(cf==="all"||(cf==="n"?S.st[c.id]===undefined:S.st[c.id]===+cf)));
+ $("cardList").innerHTML=l.length?l.map(c=>'<div class="it" data-id="'+c.id+'"><span class="st s'+(S.st[c.id]??"")+'"></span>'+c.q+'</div>').join(""):'<div class="empty">該当するカードはありません</div>';
+ $("cardList").querySelectorAll(".it").forEach(d=>d.onclick=()=>{const c=CARDS[+d.dataset.id];deck=[c];pos=0;S.unit=c.unit;$("unitSel").value=c.unit;show("study");renderCard();});}
+$("cardUnit").onchange=renderCards;
+
+// settings
+[["optShuffle","shuffle"],["optSkip","skip"],["optOpen","open"]].forEach(([id,k])=>{$(id).checked=!!S.opt[k];$(id).onchange=e=>{S.opt[k]=e.target.checked;save();buildDeck()}});
+$("resetBtn").onclick=()=>{$("mText").textContent="すべてのカードの理解度をリセットします。よろしいですか？";$("modal").classList.add("on")};
+$("mNo").onclick=()=>$("modal").classList.remove("on");
+$("mYes").onclick=()=>{S.st={};save();$("modal").classList.remove("on");buildDeck();renderHome();};
+
+renderHome();
+</script>
+</body>
+</html>

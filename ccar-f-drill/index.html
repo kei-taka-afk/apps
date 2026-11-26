@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCAR-F ドリル</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@700;900&display=swap" rel="stylesheet">
+<style>
+/* layout: one narrow working column; domain = colored left stripe; code terms in mono */
+:root{
+  --bg:#f2f5f7; --surface:#ffffff; --ink:#16202a; --muted:#5b6875; --line:#d4dbe2;
+  --accent:#0b6b7a; --accent-ink:#ffffff; --good:#1c7c4a; --bad:#b3372f; --tint:#e6eef1;
+  --d1:#3b5bdb; --d2:#0b7285; --d3:#c2410c; --d4:#7048e8; --d5:#2b8a3e;
+  --display:"Zen Kaku Gothic New","Noto Sans JP","Hiragino Sans",sans-serif;
+  --body:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f151b; --surface:#18212a; --ink:#e6ecf1; --muted:#93a1ae; --line:#2b3743;
+    --accent:#4fb8c9; --accent-ink:#06222a; --good:#5cc48a; --bad:#ef7f76; --tint:#1f2c36;
+    --d1:#8da2fb; --d2:#5cc3d6; --d3:#f59f6b; --d4:#b197fc; --d5:#69c37b;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f151b; --surface:#18212a; --ink:#e6ecf1; --muted:#93a1ae; --line:#2b3743;
+  --accent:#4fb8c9; --accent-ink:#06222a; --good:#5cc48a; --bad:#ef7f76; --tint:#1f2c36;
+  --d1:#8da2fb; --d2:#5cc3d6; --d3:#f59f6b; --d4:#b197fc; --d5:#69c37b;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.75}
+.wrap{max-width:720px;margin:0 auto;padding:16px 16px 64px;display:flex;flex-direction:column;gap:20px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px;padding-top:8px}
+h1{font-family:var(--display);font-weight:900;font-size:1.5rem;margin:0;letter-spacing:.01em}
+h1 small{font-family:var(--body);font-weight:400;font-size:.8rem;color:var(--muted);margin-left:8px}
+h2{font-family:var(--display);font-size:1.1rem;margin:0;text-wrap:balance}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav a{padding:6px 12px;border-radius:6px;color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500}
+nav a[aria-current="page"]{background:var(--ink);color:var(--bg)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin:0}
+.facts div{border-left:3px solid var(--line);padding-left:10px}
+.facts dt{font-size:.75rem;color:var(--muted)}
+.facts dd{margin:0;font-weight:700;font-variant-numeric:tabular-nums}
+.note{font-size:.85rem;color:var(--muted);margin:0}
+.dom{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;width:100%;text-align:left;
+  background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:8px;padding:12px 14px;
+  font:inherit;color:inherit;cursor:pointer}
+.dom:hover{background:var(--tint)}
+.dom b{font-weight:700}
+.dom span{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.bar{grid-column:1/-1;height:6px;border-radius:3px;background:var(--tint);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--c)}
+.list{display:flex;flex-direction:column;gap:8px}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+.btn{font:inherit;font-weight:700;font-size:.92rem;padding:10px 16px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.btn:hover{background:var(--tint)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.45;cursor:default}
+.meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.chip{display:inline-block;padding:1px 10px;border-radius:99px;border:1px solid var(--c);color:var(--c);font-weight:700;font-size:.78rem}
+.q{font-size:1.02rem;font-weight:500;margin:0}
+code{font-family:var(--mono);font-size:.86em;background:var(--tint);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+.opt{display:flex;gap:10px;width:100%;text-align:left;font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:11px 14px;cursor:pointer;line-height:1.6}
+.opt:hover:not(:disabled){border-color:var(--accent);background:var(--tint)}
+.opt:disabled{cursor:default}
+.opt .k{font-family:var(--mono);font-weight:600;color:var(--muted);flex:none}
+.opt.sel{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.opt.ok{border-color:var(--good);box-shadow:inset 0 0 0 1px var(--good)}
+.opt.ok .k{color:var(--good)}
+.opt.ng{border-color:var(--bad);box-shadow:inset 0 0 0 1px var(--bad)}
+.opt.ng .k{color:var(--bad)}
+.exp{border-left:4px solid var(--good);background:var(--tint);border-radius:0 8px 8px 0;padding:12px 14px;font-size:.93rem}
+.exp.miss{border-left-color:var(--bad)}
+.exp b{display:block;margin-bottom:2px}
+.score{font-family:var(--display);font-size:2.4rem;font-weight:900;line-height:1.1;font-variant-numeric:tabular-nums}
+.notes ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px;font-size:.93rem}
+.notes .card{border-left:5px solid var(--c)}
+textarea{width:100%;min-height:120px;font:inherit;font-size:.85rem;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px}
+@media (prefers-reduced-motion:no-preference){.bar i{transition:width .3s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>CCAR-F ドリル<small>Claude Certified Architect – Foundations</small></h1>
+  <nav id="nav">
+    <a href="#home">ホーム</a><a href="#drill">ドリル</a><a href="#mock">模擬試験</a><a href="#notes">要点</a>
+  </nav>
+</header>
+<main id="app" class="list" style="gap:20px"></main>
+</div>
+<script>
+var D={
+ 1:{n:'エージェント設計とオーケストレーション',w:27},
+ 2:{n:'ツール設計とMCP連携',w:18},
+ 3:{n:'Claude Codeの設定とワークフロー',w:20},
+ 4:{n:'プロンプト設計と構造化出力',w:20},
+ 5:{n:'コンテキスト管理と信頼性',w:15}
+};
+// [分野, タスク, 問題, [正解, 誤答, 誤答, 誤答], 解説]  選択肢は表示時にシャッフル
+var Q=[
+[1,'1.1','エージェントループで、次の反復に進むか終了するかを判断する最も信頼できる方法はどれか。',['`stop_reason` を確認し、`tool_use` ならツールを実行して続行、`end_turn` なら終了する','アシスタントの返答文に「完了しました」などの語句が含まれるかを解析する','反復回数の上限（例: 10回）を主な停止条件にする','テキストブロックが返ってきた時点で完了とみなす'],'ループ制御は `stop_reason` で行う。自然言語の解析、任意の反復上限を主条件にすること、テキストの有無を完了シグナルとすることは典型的なアンチパターン。'],
+[1,'1.1','ツールを実行した後、その結果はどう扱うべきか。',['会話履歴に追加し、次のリクエストで履歴ごとモデルに送る','system prompt の末尾に追記していく','最新のツール結果だけを送り、それ以前の履歴は破棄する','結果ごとに新しいセッションを開始する'],'ツール結果を履歴に追加して送り返すことで、モデルは新しい情報をもとに次の行動を推論できる。'],
+[1,'1.2','coordinator が生成したサブエージェントは、coordinator の会話履歴をどう扱うか。',['継承しない。必要な情報は prompt に明示的に含めて渡す必要がある','自動的にすべて継承する','直近10ターン分だけ自動で継承する','同じ system prompt を使っていれば共有される'],'サブエージェントは分離されたコンテキストで動く。親の履歴は自動では渡らないので、必要な所見は prompt に書き込む。'],
+[1,'1.2','マルチエージェント調査システムに「AIがクリエイティブ産業に与える影響」を調べさせたところ、レポートは視覚芸術しか扱っていなかった。各サブエージェントは割り当てられた作業を正しく完了している。原因として最も可能性が高いのはどれか。',['coordinator のタスク分解が狭すぎて、音楽・執筆・映像などが割り当てられなかった','synthesis エージェントが他分野の所見を捨てた','web search エージェントのクエリが不十分だった','document analysis エージェントのフィルタが厳しすぎた'],'サブエージェントが割り当てどおりに動いているなら、問題は割り当てそのもの、つまり coordinator の分解にある。'],
+[1,'1.2','マルチエージェント構成で、サブエージェント同士を直接通信させず coordinator 経由にする主な理由はどれか。',['可観測性・一貫したエラー処理・情報の流れの制御を coordinator に集約できるから','直接通信は API 上禁止されているから','coordinator 経由のほうが必ずトークン消費が少ないから','サブエージェントは同時に1つしか起動できないから'],'hub-and-spoke 構成では、サブエージェント間の通信・エラー処理・ルーティングをすべて coordinator が担う。'],
+[1,'1.3','Agent SDK で coordinator がサブエージェントを起動できない。まず確認すべき設定はどれか。',['coordinator の `allowedTools` に `"Task"` が含まれているか','サブエージェントの `max_tokens` が十分か','`.mcp.json` にサブエージェントが登録されているか','`tool_choice` が `"auto"` になっているか'],'サブエージェントは Task ツールで起動する。coordinator の `allowedTools` に `"Task"` がなければ起動できない。'],
+[1,'1.3','3つのサブエージェントを並列に走らせたい。正しい方法はどれか。',['coordinator の1回の応答で複数の Task 呼び出しを出す','ターンを分けて1つずつ Task を呼ぶ','`fork_session` を3回実行する','Message Batches API に3件まとめて送る'],'1つの応答に複数の Task ツール呼び出しを含めると並列実行される。ターンを分けると逐次実行になる。'],
+[1,'1.3','synthesis サブエージェントの出力から出典情報が失われる。上流から所見を渡すときの改善策はどれか。',['内容とメタデータ（URL・文書名・ページ番号）を分けた構造化形式で渡す','所見を1段落の要約にまとめて渡す','出典は coordinator だけが保持し、サブエージェントには渡さない','synthesis エージェントに web 検索ツールを与えて再検索させる'],'内容と出典メタデータを分離した構造化形式にすると、後段でも帰属が保たれる。'],
+[1,'1.3','coordinator がサブエージェントに渡す prompt の書き方として適切なのはどれか。',['達成すべきゴールと品質基準を示す','実行手順を1ステップずつ細かく指定する','「前の会話を参照して」とだけ書く','ツール名の一覧だけを渡す'],'手順の逐一指定よりも、ゴールと品質基準を示すほうがサブエージェントは状況に適応できる。履歴は継承されないので「前の会話」は参照できない。'],
+[1,'1.4','サポートエージェントが、12%のケースで `get_customer` による本人確認を飛ばして `process_refund` を呼んでいる。最も効果的な対策はどれか。',['`get_customer` が検証済みIDを返すまで `process_refund` をプログラム的にブロックする前提条件ゲートを設ける','system prompt で「必ず本人確認をすること」と強調する','本人確認してから返金する few-shot 例を追加する','リクエストを分類して使えるツールを絞るルーティング層を追加する'],'順序の遵守が必須（金銭が絡む）なら、プロンプトによる誘導では失敗率がゼロにならない。プログラム的な強制が必要。'],
+[1,'1.4','エージェントが人間の担当者に引き継ぐとき、何を渡すべきか。',['顧客ID・根本原因・返金額・推奨アクションをまとめた構造化サマリー','会話全文へのリンクだけ','「エスカレーションが必要」という一文','直近のツール呼び出し結果の生データ'],'人間の担当者は会話記録を見られない前提で、必要事項を自己完結した構造化サマリーとして渡す。'],
+[1,'1.5','複数のMCPツールが Unix タイムスタンプ、ISO 8601、数値ステータスコードなど異なる形式で結果を返し、モデルが混乱している。適切な対処はどれか。',['PostToolUse hook で、モデルが見る前にツール結果を正規化する','system prompt に各形式の読み方を列挙する','モデルに毎回形式を推測させる','ツールごとに別のサブエージェントを割り当てる'],'PostToolUse hook はツール結果をモデルに渡る前に変換できる。形式の正規化はここで確実に行う。'],
+[1,'1.5','500ドルを超える返金は必ず人間の承認に回したい。確実に守らせる方法はどれか。',['ツール呼び出しをインターセプトする hook で該当する呼び出しをブロックし、人間へのエスカレーションに振り向ける','system prompt に上限額を太字で書く','ツールの description に「500ドル超は不可」と書く','上限超えの失敗例を few-shot で示す'],'保証された遵守が必要なビジネスルールは hook で強制する。プロンプトや説明文は確率的にしか効かない。'],
+[1,'1.6','「レガシーコードベースにテストを追加する」という開放的なタスクの進め方として適切なのはどれか。',['まず構造を把握し、影響の大きい領域を特定してから、依存関係の発見に応じて変わる優先度付き計画を立てる','ファイル名のアルファベット順に全ファイルのテストを書く','固定の手順パイプラインを最初に決め、途中で変更しない','最初に見つけたファイルからすぐテストを書き始める'],'予測可能な作業は固定パイプライン（prompt chaining）、開放的な調査は動的・適応的な分解が向く。'],
+[1,'1.6','14ファイルに及ぶPRを1回のパスでレビューさせると、ファイルによって深さがばらつき、指摘が矛盾する。最も適切な改善はどれか。',['ファイルごとのローカルレビューを行い、その後にファイル横断の統合パスを行う','より大きなコンテキストウィンドウのモデルに切り替える','同じ全体レビューを3回実行し、2回以上出た指摘だけ採用する','開発者にPRを小さく分割させる'],'注意の分散が原因なので、ファイル単位のパス＋横断パスに分ける。コンテキストの大きさは注意の質を解決しない。'],
+[1,'1.7','昨日の名前付きセッションの調査を続けたい。使うのはどれか。',['`--resume <session-name>`','`--output-format json`','`/memory`','`-p`'],'`--resume` で名前付きセッションを再開できる。'],
+[1,'1.7','セッションを中断している間に、対象コードが大きく書き換えられた。再開の方法として最も信頼できるのはどれか。',['構造化した要約を持たせて新しいセッションを始める（または変更されたファイルを伝えて該当部分を再分析させる）','何も伝えずにそのまま再開する','古いツール結果を信頼するよう指示して再開する','履歴を全部コピーして system prompt に貼る'],'古いツール結果は現状と食い違う。新規セッション＋構造化サマリーのほうが、古い結果を抱えた再開より信頼できる。'],
+[1,'1.7','同じ分析結果を出発点に、2通りのリファクタリング方針を試して比較したい。適切な手段はどれか。',['`fork_session` で共通のベースラインから分岐させる','同じセッションで順番に両方を試す','`/compact` で履歴を圧縮してから試す','CLAUDE.md に両方の方針を書く'],'`fork_session` は共通ベースラインから分岐して別方向の探索を行うための仕組み。'],
+
+[2,'2.1','`get_customer` と `lookup_order` の description がどちらも一文だけで、エージェントが頻繁に取り違える。最初に行うべき改善はどれか。',['各ツールの description に入力形式・クエリ例・エッジケース・類似ツールとの境界を書く','ツール選択の few-shot 例を system prompt に大量に入れる','ユーザー入力を解析して事前にツールを決めるルーティング層を作る','2つのツールを1つに統合する'],'ツールの description はモデルがツールを選ぶ主な手がかり。まず低コストで効果の高い説明の拡充から行う。'],
+[2,'2.1','`analyze_content` と `analyze_document` という似た名前のツールがあり、誤ったほうが呼ばれる。適切な対処はどれか。',['名前を変更し、説明を書き直して役割の違いを明確にする','両方のツールを毎回呼ばせる','`tool_choice` を `"any"` にする','片方を system prompt で「使用禁止」と書く'],'名前や説明の重なりは誤ルーティングの原因。名前と説明で境界をはっきりさせる。'],
+[2,'2.1','ツールの説明は十分なのに、特定の語が入力に含まれると決まって不適切なツールが選ばれる。次に調べるべきものはどれか。',['system prompt の文言が、キーワードとツールを意図せず結びつけていないか','モデルの `max_tokens`','`.mcp.json` のサーバー順序','会話履歴の長さ'],'system prompt の言い回しが、意図しないキーワード連想によるツール選択を生むことがある。'],
+[2,'2.2','MCPツールが失敗時に「Operation failed」とだけ返すため、エージェントが適切に回復できない。改善はどれか。',['`isError` を立て、`errorCategory`・`isRetryable`・人が読める説明を含む構造化エラーを返す','失敗時は空の成功レスポンスを返す','エラー時は例外を投げてワークフロー全体を止める','同じ文言を3回繰り返して返す'],'エラーの種類（transient / validation / permission など）とリトライ可否を構造化して返すと、エージェントが適切に判断できる。'],
+[2,'2.2','検索ツールの結果が空だったとき、エージェントが正しく判断するために必要な区別はどれか。',['アクセス失敗（タイムアウト等）と、正常に検索した結果の0件を区別して返す','どちらも空配列で返して統一する','どちらもエラーとして返す','0件のときは適当な既定値を返す'],'アクセス失敗はリトライの判断が必要で、有効な空結果は「該当なし」という情報。混同すると誤った結論になる。'],
+[2,'2.2','返金期限切れなどビジネスルール違反で処理できないとき、ツールは何を返すべきか。',['`retriable: false` と、顧客に伝えられる説明','`isRetryable: true` を付けて再試行させる','理由を伏せた一般的なエラー','成功として返し、後で人間が修正する'],'ビジネスルール違反は再試行しても結果が変わらない。リトライ不可であることと顧客向けの説明を返す。'],
+[2,'2.3','1つのエージェントに18個のツールを与えたところ、ツール選択の精度が落ちた。適切な設計はどれか。',['役割ごとにエージェントを分け、それぞれに必要な4〜5個に絞る','ツールを30個に増やして選択肢を広げる','すべての description を短く削る','`tool_choice` を毎回強制指定する'],'ツールが多すぎると選択が不安定になる。役割外のツールは誤用も招く（例: synthesis エージェントが web 検索をする）。'],
+[2,'2.3','モデルに会話テキストではなく、必ず何らかのツールを呼ばせたい（どのツールかは任せる）。`tool_choice` の設定はどれか。',['`"any"`','`"auto"`','`{"type": "tool", "name": "..."}`','`"none"`'],'`"auto"` はテキストを返すことがある。`"any"` はいずれかのツール呼び出しを保証する。特定ツールの強制は forced 指定。'],
+[2,'2.3','抽出パイプラインの最初のステップで必ず `extract_metadata` を呼ばせたい。設定はどれか。',['`tool_choice: {"type": "tool", "name": "extract_metadata"}`','`tool_choice: "any"`','`tool_choice: "auto"` にして system prompt で依頼する','`allowedTools` から他のツールを永久に削除する'],'特定のツールを確実に呼ばせるには forced tool selection を使う。'],
+[2,'2.3','synthesis エージェントが単純な事実確認のたびに coordinator を経由して検索エージェントに依頼しており、遅延が大きい。適切な改善はどれか。',['synthesis エージェントに範囲を絞った `verify_fact` ツールを与え、複雑な検証だけ coordinator 経由にする','synthesis エージェントに web 検索を含む全ツールを与える','事実確認をやめる','検証をすべてバッチにまとめて最後に行う'],'頻度の高い単純なニーズには、役割をまたぐツールを限定的に与える。全ツールを与えると役割分離が崩れる。'],
+[2,'2.4','チーム全員が使うMCPサーバーの設定はどこに置くか。',['プロジェクトの `.mcp.json`（バージョン管理で共有）','各自の `~/.claude.json`','`~/.claude/CLAUDE.md`','`.claude/rules/`'],'`.mcp.json` はプロジェクトスコープで共有される。`~/.claude.json` はユーザースコープで、個人用・実験用のサーバー向け。'],
+[2,'2.4','`.mcp.json` をコミットしたいが、GitHub トークンは含めたくない。方法はどれか。',['`${GITHUB_TOKEN}` のように環境変数展開を使う','トークンを Base64 にして書く','`.mcp.json` を `.gitignore` に入れて各自手書きする','トークンを CLAUDE.md に書く'],'`.mcp.json` は環境変数展開に対応しており、秘密情報をコミットせずに設定を共有できる。'],
+[2,'2.4','高機能なMCPのコード検索ツールがあるのに、エージェントが組み込みの Grep ばかり使う。対処はどれか。',['MCPツールの description を詳しくし、何ができていつ使うべきかを明確にする','Grep を削除する','MCPサーバーを2回登録する','毎回ユーザーが手動でツール名を指定する'],'説明が弱いと、エージェントは馴染みのある組み込みツールを選びがち。description の強化が先。'],
+[2,'2.4','MCP resources の主な用途はどれか。',['課題一覧・ドキュメント構成・DBスキーマなどのカタログを公開し、探索的なツール呼び出しを減らす','ツールの実行権限を管理する','サーバーの認証情報を保存する','ツール結果をキャッシュする'],'resources はコンテンツのカタログを提供し、エージェントが手探りで何度もツールを呼ぶ必要を減らす。'],
+[2,'2.5','リポジトリ内の `*.test.tsx` というファイルを名前で探したい。使う組み込みツールはどれか。',['Glob（例: `**/*.test.tsx`）','Grep','Read','Edit'],'Glob はファイルパスのパターンマッチ、Grep はファイルの中身の検索。'],
+[2,'2.5','Edit が「アンカーとなる文字列が一意でない」ために失敗した。フォールバックはどれか。',['Read でファイル全体を読み、Write で書き直す','同じ Edit を成功するまで繰り返す','Glob でファイルを探し直す','Bash で `rm` して作り直す'],'Edit は一意なテキスト一致に依存する。一意にできないときは Read + Write に切り替える。'],
+
+[3,'3.1','新しく入ったメンバーの Claude Code だけ、チームのコーディング規約に従わない。調べると規約は既存メンバー各自の `~/.claude/CLAUDE.md` に書かれていた。対処はどれか。',['規約をプロジェクトレベルの CLAUDE.md（`.claude/CLAUDE.md` またはルート）に移す','新メンバーに Claude Code を再インストールさせる','新メンバーに `--resume` で既存メンバーのセッションを再開させる','規約を `~/.claude.json` に書く'],'ユーザーレベルの指示は個人のもので、バージョン管理では共有されない。チームの規約はプロジェクトレベルに置く。'],
+[3,'3.1','Claude Code の挙動がメンバー間で食い違う。どのメモリファイルが読み込まれているかを確認するコマンドはどれか。',['`/memory`','`/compact`','`--print`','`/resume`'],'`/memory` で読み込まれているメモリファイルを確認できる。階層の診断に使う。'],
+[3,'3.1','モノレポで、パッケージごとの標準を別ファイルに保ちながら CLAUDE.md から取り込みたい。使う仕組みはどれか。',['`@import` 構文','`context: fork`','`--json-schema`','`argument-hint`'],'`@import` で外部ファイルを CLAUDE.md に取り込める。'],
+[3,'3.1','CLAUDE.md が肥大化した。テスト・API規約・デプロイなどトピック別に分割する置き場所はどれか。',['`.claude/rules/`（例: `testing.md`, `api-conventions.md`）','`.claude/commands/`','`.mcp.json`','`~/.claude/skills/`'],'`.claude/rules/` にトピック別のルールファイルを置くのが、巨大な1ファイルの代替になる。'],
+[3,'3.2','チーム全員が使えるカスタムスラッシュコマンド `/review` を作りたい。置き場所はどれか。',['プロジェクトの `.claude/commands/`','`~/.claude/commands/`','ルートの CLAUDE.md','`.claude/rules/`'],'`.claude/commands/` はプロジェクトスコープでバージョン管理される。`~/.claude/commands/` は個人用。'],
+[3,'3.2','ある skill が大量の出力を出し、メインの会話のコンテキストを埋めてしまう。SKILL.md の frontmatter で設定すべきものはどれか。',['`context: fork`','`allowed-tools`','`argument-hint`','`paths`'],'`context: fork` は skill をサブエージェントのコンテキストで実行し、冗長な出力をメイン会話から隔離する。'],
+[3,'3.2','skill が実行できる操作を、ファイル書き込みなど特定のツールに制限したい。frontmatter の項目はどれか。',['`allowed-tools`','`context: fork`','`argument-hint`','`tool_choice`'],'`allowed-tools` で skill が使えるツールを制限する。'],
+[3,'3.2','skill が引数なしで呼ばれたとき、必要なパラメータの入力を促したい。frontmatter の項目はどれか。',['`argument-hint`','`allowed-tools`','`paths`','`context: fork`'],'`argument-hint` は必要な引数を示し、指定がないときに入力を促す。'],
+[3,'3.2','チーム共有の skill を自分好みに変えたいが、他のメンバーには影響させたくない。方法はどれか。',['`~/.claude/skills/` に別の名前で個人用バリアントを置く','プロジェクトの `.claude/skills/` の同名ファイルを直接編集する','CLAUDE.md に上書き指示を書く','`.mcp.json` に個人設定を足す'],'個人用バリアントは `~/.claude/skills/` に別名で置けば、チームに影響しない。'],
+[3,'3.2','「すべての作業で守る共通規約」と「特定の作業のときだけ使う手順」の置き場所の組み合わせとして正しいのはどれか。',['共通規約は CLAUDE.md、特定作業の手順は skill','どちらも CLAUDE.md','どちらも skill','共通規約は skill、特定作業の手順は CLAUDE.md'],'CLAUDE.md は常に読み込まれる。skill は必要なときだけ呼び出されるので、タスク固有のワークフロー向け。'],
+[3,'3.3','テストファイルがリポジトリ全体のさまざまなディレクトリに散らばっている。テスト規約をテストファイル編集時だけ適用する最良の方法はどれか。',['`.claude/rules/` のファイルに `paths: ["**/*.test.tsx"]` のような glob を frontmatter で指定する','テストを含む全ディレクトリに CLAUDE.md を置く','ルートの CLAUDE.md にすべて書く','`~/.claude/CLAUDE.md` に書く'],'規約が多数のディレクトリにまたがるときは、サブディレクトリの CLAUDE.md より glob による path-specific rule が適する。'],
+[3,'3.3','`.claude/rules/` のファイルに `paths: ["terraform/**/*"]` と書いた。このルールはいつ読み込まれるか。',['パターンに一致するファイルを編集するときだけ','セッション開始時に必ず','`/memory` を実行したときだけ','`-p` で実行したときだけ'],'path-specific rule は該当ファイルを扱うときだけ読み込まれ、コンテキストを節約する。'],
+[3,'3.4','45以上のファイルに影響するライブラリ移行を任された。進め方として適切なのはどれか。',['plan mode で調査と設計を行ってから実行する','direct execution ですぐ変更を始める','ファイルごとに別セッションを開いて個別に進める','まず全ファイルを Write で書き直す'],'アーキテクチャ判断、大規模な複数ファイル変更、複数の妥当な方針がある場合は plan mode。手戻りを防げる。'],
+[3,'3.4','スタックトレースで原因が明確な、1ファイルのバグ修正。進め方はどれか。',['direct execution','plan mode で設計文書を作る','Explore サブエージェントに全体調査させる','`fork_session` で複数案を比較する'],'範囲が明確で単純な変更は直接実行でよい。'],
+[3,'3.4','大きなコードベースの調査で、冗長な探索結果によってメインのコンテキストを消費したくない。使うのはどれか。',['Explore サブエージェントに調査させ、要約を受け取る','メインセッションで全ファイルを Read する','`--output-format json` を付ける','CLAUDE.md に調査結果を全部書く'],'Explore サブエージェントは探索を隔離し、要約だけを返すのでメインのコンテキストを守れる。'],
+[3,'3.5','変換ルールを文章で説明しても、Claude の解釈が毎回ぶれる。有効な対処はどれか。',['具体的な入力と出力の例を2〜3個示す','同じ説明をより長く書き直す','「正確に」と強調する','セッションを再起動する'],'文章が一貫して解釈されないときは、具体的な入出力例が最も効く。'],
+[3,'3.5','不慣れな業務ドメインの機能を実装させる。最初にとるべき進め方はどれか。',['interview pattern: 実装前に Claude に質問させて要件を詰める','推測で実装させ、後で直す','plan mode を使わず一気に書かせる','他プロジェクトの CLAUDE.md をコピーする'],'interview pattern では、実装前に Claude が質問して、見落としている設計上の考慮点を洗い出す。'],
+[3,'3.5','互いに影響し合う3つの問題が見つかった。Claude への伝え方として適切なのはどれか。',['1つの詳細なメッセージでまとめて伝える','1つずつ別々に伝えて順に直す','最も簡単なものだけ伝える','各問題を別セッションで直す'],'相互に影響する問題はまとめて伝える。独立した問題は1つずつ直すのがよい。'],
+[3,'3.6','CIパイプラインで Claude Code を実行するとジョブがハングする。ログを見ると対話入力を待っている。対処はどれか。',['`-p`（`--print`）フラグで非対話モードにする','`--resume` を付ける','`/compact` を先に実行する','入力に空行をパイプで流し込む'],'`-p` / `--print` は非対話モードで実行し、結果を出力して終了する。CIでの基本。'],
+[3,'3.6','CIのレビュー結果をPRのインラインコメントとして自動投稿したい。Claude Code の出力指定はどれか。',['`--output-format json` と `--json-schema` を使う','出力テキストを正規表現で解析する','`/memory` の出力を使う','出力を Markdown の表で依頼する'],'`--output-format json` と `--json-schema` で機械可読な構造化出力を得られる。'],
+[3,'3.6','CIで Claude Code が生成したコードをレビューさせる。より効果的な構成はどれか。',['コードを生成したセッションとは別の、独立したインスタンスにレビューさせる','生成した同じセッションに「見直して」と頼む','生成したセッションで extended thinking を有効にして再確認する','レビューを省略してテストだけに頼る'],'同じセッションは生成時の推論を引きずり、自分の判断を疑いにくい。独立したインスタンスのほうが問題を見つけやすい。'],
+[3,'3.6','PRに新しいコミットが積まれるたびに再レビューすると、同じ指摘が重複して投稿される。対処はどれか。',['前回の指摘を入力に含め、新規または未対応の問題だけ報告させる','毎回すべてのコメントを削除してから投稿する','再レビューをやめる','指摘の上限を3件にする'],'以前の指摘を渡して差分だけを報告させると、重複コメントを避けられる。'],
+[3,'3.6','CIでテストを自動生成させると、既存テストと同じ内容のものが多い。改善はどれか。',['既存のテストファイルをコンテキストに含め、価値あるテストの基準を CLAUDE.md に書く','生成するテスト数を倍にする','既存テストを削除する','`--resume` で前回のセッションを使い回す'],'既存テストを渡すと重複を避けられる。CLAUDE.md にテスト基準や fixture の規約を書くと、低価値な出力が減る。'],
+
+[4,'4.1','コードレビューの指示が「コメントが正確か確認して」で、偽陽性が多い。改善はどれか。',['「コメントがコードの実際の挙動と矛盾する場合のみ指摘する」など明確な基準にする','「慎重に判断して」と付け加える','「確信度の高い指摘だけ報告して」と付け加える','temperature を下げる'],'曖昧な指示より、何を報告し何を無視するかの具体的な基準のほうが精度が上がる。'],
+[4,'4.1','「be conservative」「高確信の指摘のみ」といった一般的な注意書きの効果として正しいのはどれか。',['精度の改善としては当てにならない。具体的な判定基準が必要','偽陽性をほぼゼロにできる','few-shot より常に効果が高い','構造化出力と併用すれば十分'],'一般的な慎重さの指示は、明確な基準ほどには精度を改善しない。'],
+[4,'4.1','ある指摘カテゴリだけ偽陽性が多く、開発者がレビュー全体を信用しなくなってきた。当面の対処はどれか。',['そのカテゴリを一時的に無効にし、プロンプトを改善してから戻す','全カテゴリの指摘を止める','そのまま続けて開発者に慣れてもらう','偽陽性の多いカテゴリの重大度を上げる'],'偽陽性の多いカテゴリは、精度の高いカテゴリへの信頼まで損なう。'],
+[4,'4.2','判断が分かれる曖昧なケースで出力が安定しない。有効な few-shot の使い方はどれか。',['曖昧なケースを狙った例を2〜4個、判断の理由つきで示す','簡単で明白な例を50個並べる','例は出力形式だけ示し、理由は書かない','例を使わず説明文を長くする'],'少数の的を絞った例で、なぜその判断になるかを示すと、新しいパターンにも一般化しやすい。'],
+[4,'4.3','JSON の構文エラーをなくし、スキーマに沿った出力を最も確実に得る方法はどれか。',['JSON schema を定義したツールを使う（tool use）','プロンプトで「有効な JSON だけ返して」と頼む','出力を正規表現で後処理する','出力例を1つ見せる'],'tool use ＋ JSON schema が、スキーマ準拠の出力を得る最も信頼できる方法。'],
+[4,'4.3','tool use と JSON schema を使っても防げない誤りはどれか。',['明細の合計が総額と合わない、値が別のフィールドに入るなどの意味的な誤り','括弧の閉じ忘れ','必須フィールドの欠落','型の不一致'],'スキーマは構文と構造を保証するが、意味的な正しさは保証しない。別途検証が必要。'],
+[4,'4.3','文書に書かれていない項目について、モデルがもっともらしい値を作ってしまう。スキーマ設計での対処はどれか。',['そのフィールドを nullable（または optional）にする','そのフィールドを required にして必ず埋めさせる','既定値を「N/A」という文字列に固定する','フィールドをスキーマから削除する'],'必須にすると捏造を誘発する。文書にない場合は null を返せるようにする。'],
+[4,'4.3','分類の enum に当てはまらない値や判断できない値が来ることがある。設計はどれか。',['`"other"` と詳細用の文字列フィールド、および `"unclear"` を用意する','最も近い値を必ず選ばせる','enum をやめて自由記述にする','該当しないデータはエラーにする'],'`"other"` + 詳細文字列で拡張可能にし、`"unclear"` で無理な当てはめを防ぐ。'],
+[4,'4.4','抽出結果がバリデーションに失敗した。リトライ時にモデルへ渡すべきものはどれか。',['元の文書、失敗した抽出結果、具体的なバリデーションエラー','「もう一度やり直して」という指示だけ','元の文書だけ','エラーメッセージだけ'],'何がどう間違っていたかを具体的に返すことで、モデルが自己修正できる。'],
+[4,'4.4','リトライしても改善が見込めないのはどのケースか。',['必要な情報がそもそも文書に存在しない','日付の形式が指定と違う','数値が文字列として出力された','フィールドの入れ子構造が間違っている'],'リトライは形式・構造の誤りに有効。情報が存在しないなら、何度やっても得られない。'],
+[4,'4.5','(a) マージ前のブロッキングなチェック と (b) 毎晩の技術的負債レポート。Message Batches API に適するのはどれか。',['(b) のみ','(a) のみ','両方','どちらも適さない'],'Batches API は50%安いが、処理に最大24時間かかり遅延の保証がない。開発者が待つマージ前チェックには不向き。'],
+[4,'4.5','バッチ処理で一部のリクエストだけ失敗した。対処はどれか。',['`custom_id` で失敗分を特定し、その分だけ再送する（大きすぎる文書は分割）','バッチ全体を再送する','失敗分は諦める','同期APIで全件やり直す'],'`custom_id` でリクエストとレスポンスを対応づけ、失敗した項目だけを再送する。'],
+[4,'4.5','結果のSLAが30時間、バッチ処理は最大24時間かかる。提出の間隔として適切なのはどれか。',['4時間ごと','12時間ごと','24時間ごと','30時間ごと'],'最悪の待ち時間は「提出間隔＋24時間」。4時間なら最大28時間でSLA内に収まる。12時間では36時間になり超過する。'],
+[4,'4.6','独立したレビュー用インスタンスが、同一セッションでの自己レビューより有効な理由はどれか。',['同じセッションでは生成時の推論の文脈が残り、自分の判断を疑いにくいから','別インスタンスのほうがモデルの性能が高いから','自己レビューはAPIで禁止されているから','別インスタンスはトークン単価が安いから'],'生成側のコンテキストを持たない第二のインスタンスは、自己レビュー指示や extended thinking よりも微妙な問題を見つけやすい。'],
+
+[5,'5.1','長いサポート会話で履歴を段階的に要約していくと、金額・日付・顧客への約束などが失われる。対処はどれか。',['要約の対象外となる永続的な「case facts」ブロックに重要事実を保持する','要約をさらに短くする','古いターンを単純に削除する','すべて顧客に聞き直す'],'段階的要約は数値や日付を曖昧にしがち。重要な事実は要約される履歴の外に構造化して保持する。'],
+[5,'5.1','`lookup_order` が40以上のフィールドを返すが、必要なのは5つほど。対処はどれか。',['ツール結果を関連フィールドだけに絞ってからコンテキストに入れる','全フィールドをそのまま毎回入れる','`max_tokens` を増やす','ツールを呼ぶ回数を減らす'],'ツール結果は関連性に比べて多くのトークンを消費しがち。必要なフィールドだけにトリムする。'],
+[5,'5.1','長い入力の中ほどにある情報が見落とされやすい（lost in the middle）。サブエージェントの出力を集約するときの工夫はどれか。',['重要な所見を先頭に置き、明確な見出しで区切る','重要な所見を中央にまとめる','すべて1段落に連結する','出力の順序をランダムにする'],'モデルは長い入力の最初と最後に最もよく注意を向ける。重要事項は冒頭に、構造をつけて配置する。'],
+[5,'5.2','顧客が「人間の担当者と話したい」と明確に求めた。エージェントの対応はどれか。',['すぐにエスカレーションする','まず自力で解決を試みてから判断する','理由を3回確認する','感情分析のスコアが低ければエスカレーションする'],'明示的な人間への要求は、即座に尊重すべきエスカレーション条件。'],
+[5,'5.2','エスカレーションの判断材料として信頼性が低いものはどれか。',['感情（sentiment）の分析結果やモデルの自己申告の確信度','顧客による明示的な人間対応の要求','ポリシーに記載のない例外的な要求','対応が進展していない状態'],'感情や自己申告の確信度は、案件の複雑さの代理指標としては当てにならない。'],
+[5,'5.2','顧客が競合他社との価格合わせを求めた。ポリシーには自社サイト内の価格調整しか書かれていない。対応はどれか。',['ポリシーが想定していないケースとしてエスカレーションする','自社内調整のルールを類推適用して承認する','ポリシーにないので断る','少額なら独断で承認する'],'ポリシーが沈黙している（ギャップがある）場合は、推測で決めずにエスカレーションする。'],
+[5,'5.2','顧客名で検索したら該当レコードが複数見つかった。対応はどれか。',['追加の識別情報（メール・注文番号など）を尋ねる','最も新しいレコードを選ぶ','最初のレコードを選ぶ','すぐ人間にエスカレーションする'],'複数一致のときは推測せず、識別子を追加で求める。'],
+[5,'5.2','顧客が不満を強く表明しているが、問題自体はエージェントの権限内で解決できる。人間対応の要求はまだない。対応はどれか。',['不満を受け止めたうえで解決を申し出て、それでも人間を求められたらエスカレーションする','不満を検知した時点で即エスカレーションする','不満には触れず手続きだけ進める','会話を終了する'],'不満だけではエスカレーション条件にならない。受け止めつつ解決を提案し、顧客が重ねて求めたら引き継ぐ。'],
+[5,'5.3','web 検索サブエージェントがタイムアウトした。coordinator に返すべきものはどれか。',['失敗の種類、試したクエリ、部分的な結果、代替案を含む構造化エラーコンテキスト','空の結果を成功として返す','「search unavailable」という一般的なステータス','例外を投げてワークフロー全体を終了させる'],'構造化されたエラー情報があれば coordinator は賢く回復できる。空結果を成功扱いにするのも、全体を止めるのもアンチパターン。'],
+[5,'5.3','一部の情報源が利用できないままレポートを合成することになった。出力はどうあるべきか。',['どの部分が情報源の欠落によるギャップかを注記する（coverage annotation）','欠落に触れず完成したレポートとして出す','レポート全体を出さない','欠落部分を一般知識で補って出典をつけない'],'カバレッジの注記により、読み手はどこが十分に裏づけられ、どこに穴があるかを判断できる。'],
+[5,'5.4','長い探索セッションの後半で、Claude が先に見つけた具体的なクラスではなく「一般的なパターン」に言及しはじめた。対策として適切でないものはどれか。',['何もせず同じセッションで探索を続ける','scratchpad ファイルに重要な所見を書き留める','個別の調査をサブエージェントに委任する','フェーズごとに要約し、`/compact` を使う'],'これはコンテキスト劣化の兆候。scratchpad、サブエージェントへの委任、フェーズ要約、`/compact` が対策になる。'],
+[5,'5.4','長時間のマルチエージェント作業がクラッシュしても再開できるようにしたい。設計はどれか。',['各エージェントが構造化した状態（manifest）を書き出し、再開時に coordinator が読み込む','会話履歴がすべて残っていると期待する','最初からやり直す前提にする','状態を system prompt に追記し続ける'],'構造化された状態エクスポート（manifest）による復旧が、クラッシュ対策の定石。'],
+[5,'5.5','抽出システムの全体精度が97%だった。人間によるレビューを減らす前に行うべきことはどれか。',['文書の種類別・フィールド別に精度を検証する','97%なのでそのままレビューを廃止する','全体精度をもう一度測り直す','モデルの確信度が高いものは無条件に通す'],'全体の集計値は、特定の文書種別やフィールドでの低い精度を隠すことがある。'],
+[5,'5.5','高確信度と判定された抽出結果の実際の誤り率を測り、新しい誤りパターンも見つけたい。方法はどれか。',['層化ランダムサンプリングで抜き取り検査を続ける','低確信度のものだけ検査する','最初の100件だけ検査する','検査せず確信度を信頼する'],'高確信度の結果にも誤りはある。層化サンプリングで継続的に測り、確信度はラベル付き検証セットで較正する。'],
+[5,'5.6','2つの信頼できる情報源で統計値が食い違っている。synthesis エージェントの出力はどうあるべきか。',['両方の値をそれぞれの出典つきで注記し、coordinator が調整できるようにする','より新しそうな値を1つ選ぶ','2つの平均値を載せる','どちらも載せない'],'矛盾する値は勝手に解決せず、出典を付けて併記する。確立した所見と争いのある所見を分ける。'],
+[5,'5.6','調査時点の異なる2つの数値が「矛盾」と誤って扱われた。防ぐにはどうするか。',['サブエージェントの出力に発行日・データ収集日を必ず含めさせる','古い情報源をすべて除外する','数値を丸めて一致させる','情報源を1つに限定する'],'時点の違いは矛盾ではない。日付を出力に含めれば、時間的な差として正しく解釈できる。']
+];
+var NOTES={
+1:['ループ制御は `stop_reason`（`tool_use` で継続、`end_turn` で終了）。文面の解析や反復上限を主条件にしない','サブエージェントは親の履歴を継承しない。必要な所見は prompt に明示する','起動には coordinator の `allowedTools` に `"Task"`。1応答に複数の Task で並列実行','遵守が必須の順序・上限は hook や前提条件ゲートで強制する。プロンプトは確率的','大きなレビューはファイル単位のパス＋横断パス。開放的な調査は適応的に分解','`--resume` で再開、`fork_session` で分岐。コードが変わったら新規セッション＋構造化サマリー'],
+2:['description がツール選択の主な手がかり。入力形式・例・境界を書く','エラーは `isError`、`errorCategory`、`isRetryable` で構造化。アクセス失敗と0件を区別','ツールは1エージェント4〜5個に絞る。`tool_choice` は `"auto"` / `"any"` / forced','共有は `.mcp.json`（`${ENV_VAR}` 展開可）、個人用は `~/.claude.json`','Grep は中身、Glob はパス。Edit が一意に一致しなければ Read + Write'],
+3:['階層: `~/.claude/CLAUDE.md`（個人・非共有）／プロジェクト（`.claude/CLAUDE.md` かルート）／サブディレクトリ','`@import` で取り込み、`.claude/rules/` でトピック分割、`/memory` で読み込み確認','`.claude/commands/` は共有、`~/.claude/commands/` は個人','SKILL.md の frontmatter: `context: fork`（隔離）、`allowed-tools`（制限）、`argument-hint`（引数の案内）','`paths` の glob を持つルールは該当ファイル編集時だけ読み込まれる。散在する規約に強い','plan mode は大規模・設計判断・複数案。単純で明確な修正は direct execution','CI は `-p`、`--output-format json`、`--json-schema`。レビューは独立インスタンスで'],
+4:['曖昧な注意書きより具体的な判定基準。偽陽性の多いカテゴリは一時停止','few-shot は曖昧ケースを狙って2〜4個、理由つき','tool use ＋ JSON schema は構文を保証するが、意味的な誤りは防げない','捏造防止に nullable、拡張に `"other"` ＋詳細、判断不能に `"unclear"`','リトライは元文書＋失敗結果＋具体的エラーを渡す。情報がなければ無駄','Batches API: 50%安い、最大24時間、遅延保証なし、`custom_id` で照合。ブロッキング用途には不向き'],
+5:['重要事実は要約の外の「case facts」ブロックに保持。ツール結果は必要項目に絞る','エスカレーション条件: 明示的な要求、ポリシーの空白、進展なし。感情や自己申告の確信度は当てにしない','複数一致は推測せず識別子を尋ねる','エラーは構造化して伝播。空結果の成功扱いと全体停止はアンチパターン','長い探索は scratchpad、サブエージェント、`/compact`、manifest で支える','全体精度は偏りを隠す。種別・フィールド別に検証し、層化サンプリングを続ける','矛盾する値は出典つきで併記。日付を必ず含める']
+};
+
+var KEY='ccarf-drill-v1', stats={};
+try{stats=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){stats={}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(stats))}catch(e){}}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function fmt(s){return esc(s).replace(/`([^`]+)`/g,'<code>$1</code>')}
+function plain(s){return s.replace(/`/g,'')}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function idsOf(d){var r=[];Q.forEach(function(q,i){if(!d||q[0]===d)r.push(i)});return r}
+function mastered(d){return idsOf(d).filter(function(i){return stats[i]&&stats[i].ok}).length}
+function wrongIds(){return idsOf(0).filter(function(i){return stats[i]&&stats[i].ok===false})}
+
+var app=document.getElementById('app'), S=null, timer=null;
+function stopTimer(){if(timer){clearInterval(timer);timer=null}}
+
+function domButtons(){
+  return [1,2,3,4,5].map(function(d){var n=idsOf(d).length,m=mastered(d);
+    return '<button class="dom" style="--c:var(--d'+d+')" data-d="'+d+'"><b>'+d+'. '+D[d].n+'</b><span>配点 '+D[d].w+'%　正解済み '+m+' / '+n+'</span><div class="bar"><i style="width:'+(m/n*100)+'%"></i></div></button>';
+  }).join('');
+}
+function home(){
+  var w=wrongIds().length;
+  app.innerHTML='<section class="card"><h2>試験の概要</h2>'+
+  '<dl class="facts"><div><dt>試験時間</dt><dd>120分</dd></div><div><dt>問題数</dt><dd>60問</dd></div><div><dt>合格ライン</dt><dd>720 / 1000</dd></div><div><dt>出題形式</dt><dd>シナリオ型の選択式</dd></div></dl>'+
+  '<p class="note">Claude Code 単独の認定試験はなく、Claude Code の出題比率が最も高い（20%）のがこの CCAR-F です。6つのシナリオから4つが出題されます。本アプリの問題は公式試験ガイドの出題範囲をもとにしたオリジナル問題で、実際の試験問題ではありません。</p></section>'+
+  '<section class="card"><h2>分野別ドリル</h2><div class="list">'+domButtons()+'</div>'+
+  '<div class="row"><button class="btn primary" id="all">全分野からランダム10問</button><button class="btn" id="wrong"'+(w?'':' disabled')+'>間違えた問題を復習（'+w+'問）</button></div></section>';
+  bindDom();
+  document.getElementById('all').onclick=function(){start(shuffle(idsOf(0)).slice(0,10),'drill','全分野ランダム')};
+  document.getElementById('wrong').onclick=function(){start(shuffle(wrongIds()),'drill','間違えた問題')};
+}
+function drillMenu(){
+  app.innerHTML='<section class="card"><h2>分野を選ぶ</h2><p class="note">1問ごとに正誤と解説が出ます。Claude Code に絞って学ぶなら分野3から始めてください。</p><div class="list">'+domButtons()+'</div></section>';
+  bindDom();
+}
+function bindDom(){
+  [].forEach.call(app.querySelectorAll('.dom'),function(b){b.onclick=function(){var d=+b.dataset.d;start(shuffle(idsOf(d)),'drill',D[d].n)}});
+}
+function mockMenu(){
+  app.innerHTML='<section class="card"><h2>模擬試験</h2><p>20問・40分。本番と同じ配点比率（分野1から順に 5・4・4・4・3問）で出題し、解説は最後にまとめて表示します。</p>'+
+  '<p class="note">本番の720点は換算スコアで、正答率とは一致しません。ここでは正答率72%以上を目安とします。</p>'+
+  '<div class="row"><button class="btn primary" id="go">開始する</button></div></section>';
+  document.getElementById('go').onclick=function(){
+    var n={1:5,2:4,3:4,4:4,5:3},l=[];
+    [1,2,3,4,5].forEach(function(d){l=l.concat(shuffle(idsOf(d)).slice(0,n[d]))});
+    start(shuffle(l),'mock','模擬試験');
+  };
+}
+function notes(){
+  app.innerHTML='<div class="notes list" style="gap:14px">'+[1,2,3,4,5].map(function(d){
+    return '<section class="card" style="--c:var(--d'+d+')"><h2>'+d+'. '+D[d].n+'（'+D[d].w+'%）</h2><ul>'+NOTES[d].map(function(x){return '<li>'+fmt(x)+'</li>'}).join('')+'</ul></section>';
+  }).join('')+'</div>';
+}
+
+function start(list,mode,label){
+  if(!list.length)return;
+  stopTimer();
+  S={list:list,mode:mode,label:label,i:0,ans:[],ord:list.map(function(){return shuffle([0,1,2,3])}),left:40*60};
+  if(mode==='mock'){timer=setInterval(function(){S.left--;var t=document.getElementById('clock');if(t)t.textContent=clock();if(S.left<=0)finish()},1000)}
+  renderQ();
+}
+function clock(){var m=Math.floor(S.left/60),s=S.left%60;return '残り '+m+':'+(s<10?'0':'')+s}
+function renderQ(){
+  var id=S.list[S.i],q=Q[id],ord=S.ord[S.i],a=S.ans[S.i],done=a!==undefined,drill=S.mode==='drill';
+  var h='<section class="card"><div class="meta"><span class="chip" style="--c:var(--d'+q[0]+')">'+q[1]+'　'+D[q[0]].n+'</span><span>'+S.label+'　'+(S.i+1)+' / '+S.list.length+(drill?'':'　<span id="clock">'+clock()+'</span>')+'</span></div>'+
+  '<p class="q">'+fmt(q[2])+'</p><div class="list">';
+  ord.forEach(function(o,k){
+    var c='opt';
+    if(done&&drill){if(o===0)c+=' ok';else if(o===a)c+=' ng'}
+    else if(done&&o===a)c+=' sel';
+    h+='<button class="'+c+'" data-o="'+o+'"'+(done&&drill?' disabled':'')+'><span class="k">'+'ABCD'[k]+'</span><span>'+fmt(q[3][o])+'</span></button>';
+  });
+  h+='</div>';
+  if(done&&drill){
+    h+='<div class="exp'+(a===0?'':' miss')+'"><b>'+(a===0?'正解':'不正解')+'</b>'+fmt(q[4])+'</div>';
+  }
+  h+='<div class="row">';
+  if(done||!drill)h+='<button class="btn primary" id="next"'+(done?'':' disabled')+'>'+(S.i+1<S.list.length?'次の問題':'結果を見る')+'</button>';
+  if(done&&drill)h+='<button class="btn" id="ask">Claudeに質問する用にコピー</button>';
+  h+='<button class="btn" id="quit">やめる</button></div><div id="copyout"></div></section>';
+  app.innerHTML=h;
+  [].forEach.call(app.querySelectorAll('.opt'),function(b){b.onclick=function(){
+    var o=+b.dataset.o;S.ans[S.i]=o;
+    if(drill){stats[id]={ok:o===0};save()}
+    renderQ();
+  }});
+  var n=document.getElementById('next');if(n)n.onclick=function(){if(S.i+1<S.list.length){S.i++;renderQ();window.scrollTo(0,0)}else finish()};
+  var k=document.getElementById('ask');if(k)k.onclick=function(){copyAsk(id,ord,a)};
+  document.getElementById('quit').onclick=function(){stopTimer();S=null;route()};
+}
+function askText(id,ord,a){
+  var q=Q[id];
+  return 'Claude Certified Architect – Foundations (CCAR-F) の試験対策をしています。次の問題について、なぜその選択肢が正解で他が不正解なのかを、具体例を交えて日本語で詳しく教えてください。\n\n【分野】'+D[q[0]].n+'（タスク '+q[1]+'）\n【問題】'+plain(q[2])+'\n'+
+  ord.map(function(o,k){return 'ABCD'[k]+'. '+plain(q[3][o])}).join('\n')+
+  '\n【正解】'+'ABCD'[ord.indexOf(0)]+(a!==undefined?'\n【私の解答】'+'ABCD'[ord.indexOf(a)]:'')+'\n【解説】'+plain(q[4]);
+}
+function copyAsk(id,ord,a){
+  var t=askText(id,ord,a),out=document.getElementById('copyout');
+  function fallback(){out.innerHTML='<p class="note">自動コピーできませんでした。下の文章を選択してコピーしてください。</p><textarea id="asktext" readonly></textarea>';document.getElementById('asktext').value=t}
+  try{navigator.clipboard.writeText(t).then(function(){out.innerHTML='<p class="note">コピーしました。Claude のチャットに貼り付けて質問してください。</p>'},fallback)}catch(e){fallback()}
+}
+function finish(){
+  stopTimer();
+  var ok=0,by={},wrong=[];
+  S.list.forEach(function(id,i){var q=Q[id],r=S.ans[i]===0;by[q[0]]=by[q[0]]||[0,0];by[q[0]][1]++;if(r){ok++;by[q[0]][0]++}else wrong.push(i);
+    if(S.mode==='mock'){stats[id]={ok:r}}});
+  save();
+  var pct=Math.round(ok/S.list.length*100);
+  var h='<section class="card"><div class="meta"><span>'+S.label+'　結果</span></div><div class="score">'+ok+' / '+S.list.length+'　<span style="color:var(--'+(pct>=72?'good':'bad')+')">'+pct+'%</span></div>'+
+  (S.mode==='mock'?'<p class="note">目安の72%'+(pct>=72?'を超えました。':'に届いていません。弱い分野をドリルで補強してください。')+'</p>':'')+
+  '<div class="list">'+Object.keys(by).map(function(d){return '<div class="dom" style="--c:var(--d'+d+');cursor:default"><b>'+d+'. '+D[d].n+'</b><span>'+by[d][0]+' / '+by[d][1]+'</span><div class="bar"><i style="width:'+(by[d][0]/by[d][1]*100)+'%"></i></div></div>'}).join('')+'</div>'+
+  '<div class="row"><button class="btn primary" id="back">ホームへ</button>'+(wrong.length?'<button class="btn" id="redo">間違えた'+wrong.length+'問をやり直す</button>':'')+'</div></section>';
+  if(wrong.length){h+='<section class="card"><h2>間違えた問題</h2>'+wrong.map(function(i){var q=Q[S.list[i]],a=S.ans[i];
+    return '<div class="list" style="gap:6px"><div><span class="chip" style="--c:var(--d'+q[0]+')">'+q[1]+'</span></div><p class="q">'+fmt(q[2])+'</p><p class="note">あなたの解答: '+(a===undefined?'未解答':fmt(q[3][a]))+'</p><div class="exp miss"><b>正解: '+fmt(q[3][0])+'</b>'+fmt(q[4])+'</div></div>'}).join('<hr style="border:0;border-top:1px solid var(--line);width:100%;margin:6px 0">')+'</section>'}
+  app.innerHTML=h;
+  var ids=wrong.map(function(i){return S.list[i]});
+  S=null;
+  document.getElementById('back').onclick=function(){if(location.hash==='#home')route();else location.hash='#home'};
+  var r=document.getElementById('redo');if(r)r.onclick=function(){start(shuffle(ids),'drill','やり直し')};
+  window.scrollTo(0,0);
+}
+function route(){
+  stopTimer();S=null;
+  var h=location.hash.replace('#','')||'home';
+  [].forEach.call(document.querySelectorAll('#nav a'),function(a){if(a.getAttribute('href')==='#'+h)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+  if(h==='drill')drillMenu();else if(h==='mock')mockMenu();else if(h==='notes')notes();else home();
+}
+window.addEventListener('hashchange',route);
+route();
+</script>
+</body>
+</html>

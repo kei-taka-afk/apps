@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GMAT Drill</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a quiet test-center console. One column home with three section lanes;
+   in a session, stimulus on the left and the question on the right, stacked on phones. */
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --ink:#152033; --muted:#5b667a; --line:#d6dce6;
+  --accent:#1f4fd8; --accent-ink:#ffffff; --accent-soft:#e6ecfc;
+  --quant:#1f4fd8; --verbal:#8a3d8f; --data:#0d7a6b;
+  --good:#17794a; --good-soft:#e2f4ea; --bad:#b3372f; --bad-soft:#fbe6e3; --warn:#a56200;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0f141d; --surface:#18202d; --ink:#e8edf5; --muted:#9aa6ba; --line:#2c3748;
+    --accent:#7da0ff; --accent-ink:#0b1220; --accent-soft:#1d2a47;
+    --quant:#7da0ff; --verbal:#d48fd8; --data:#4fc9b6;
+    --good:#5fd09a; --good-soft:#143326; --bad:#ff8a80; --bad-soft:#3a1c1a; --warn:#f0b35a;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0f141d; --surface:#18202d; --ink:#e8edf5; --muted:#9aa6ba; --line:#2c3748;
+  --accent:#7da0ff; --accent-ink:#0b1220; --accent-soft:#1d2a47;
+  --quant:#7da0ff; --verbal:#d48fd8; --data:#4fc9b6;
+  --good:#5fd09a; --good-soft:#143326; --bad:#ff8a80; --bad-soft:#3a1c1a; --warn:#f0b35a;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 16px 64px;display:flex;flex-direction:column;gap:20px}
+header.top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:700;font-size:1.5rem;letter-spacing:-.01em;background:none;border:0;padding:0}
+.brand span{color:var(--accent)}
+nav.top-nav{display:flex;gap:6px;flex-wrap:wrap}
+.link-btn{background:none;border:1px solid transparent;border-radius:6px;padding:6px 10px;color:var(--muted);font-weight:500}
+.link-btn:hover,.link-btn.on{color:var(--ink);border-color:var(--line);background:var(--surface)}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:1.75rem}
+h2{font-size:1.2rem}
+h3{font-size:1rem}
+p{margin:0}
+.muted{color:var(--muted)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.spread{justify-content:space-between}
+
+/* format strip */
+.format{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden}
+.format div{padding:12px 14px;border-right:1px solid var(--line)}
+.format div:last-child{border-right:0}
+.format b{display:block;font-family:var(--mono);font-weight:500;font-size:1.05rem}
+.format small{color:var(--muted)}
+@media(max-width:560px){.format{grid-template-columns:repeat(2,1fr)}.format div:nth-child(2){border-right:0}.format div:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+
+/* section lanes */
+.lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:820px){.lanes{grid-template-columns:1fr}}
+.lane{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--c);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.lane .spec{font-family:var(--mono);font-size:.82rem;color:var(--muted)}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.bar .ok{background:var(--good)}
+.bar .no{background:var(--bad)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:transparent;border-radius:999px;padding:4px 11px;font-size:.85rem;color:var(--muted)}
+.chip.on{background:var(--c,var(--accent));border-color:var(--c,var(--accent));color:var(--surface);font-weight:500}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:9px 14px;font-weight:500}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.small{padding:5px 10px;font-size:.88rem}
+.lane .btn.go{background:var(--c);border-color:var(--c);color:var(--surface)}
+
+/* session */
+.sess-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.tag{display:inline-block;font-size:.78rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--c,var(--muted))}
+.clock{font-family:var(--mono);font-variant-numeric:tabular-nums;padding:4px 10px;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+.clock.over{color:var(--warn);border-color:var(--warn)}
+.prog{height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--accent)}
+.qgrid{display:grid;grid-template-columns:1fr;gap:14px}
+.qgrid.split{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media(max-width:820px){.qgrid.split{grid-template-columns:1fr}}
+.stim{max-height:none}
+.stim p+p{margin-top:.8em}
+.stim .passage{max-width:65ch}
+.qtext{font-size:1.05rem;max-width:65ch}
+.qtext .st{display:block;margin-top:.5em;padding-left:2.1em;text-indent:-2.1em}
+.opts{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:10px 12px;width:100%}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt .k{font-family:var(--mono);color:var(--muted);flex:none;width:1.2em}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.right{border-color:var(--good);background:var(--good-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt:disabled{cursor:default;color:var(--ink);opacity:1}
+.tblwrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.94rem}
+th,td{border-bottom:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:.82rem;text-transform:uppercase;letter-spacing:.03em}
+td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.pick{width:44px;text-align:center}
+.radio{width:22px;height:22px;border-radius:50%;border:2px solid var(--muted);background:transparent;padding:0;display:inline-block;position:relative}
+.radio.sel{border-color:var(--accent)}
+.radio.sel::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--accent)}
+.radio.right{border-color:var(--good)}.radio.right::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--good)}
+.radio.wrong{border-color:var(--bad)}.radio.wrong::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--bad)}
+.part{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--line)}
+.part:last-child{border-bottom:0}
+.part .lbl{flex:1 1 260px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:6px 11px;font-size:.92rem}
+.seg button.sel{border-color:var(--accent);background:var(--accent-soft)}
+.seg button.right{border-color:var(--good);background:var(--good-soft)}
+.seg button.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.seg button:disabled{cursor:default;color:var(--ink)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:12px;flex-wrap:wrap}
+.tabs button{border:0;background:none;padding:7px 12px;border-bottom:3px solid transparent;color:var(--muted);font-weight:500}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--data)}
+.verdict{border-left:4px solid var(--good);background:var(--good-soft);padding:12px 14px;border-radius:0 8px 8px 0}
+.verdict.no{border-left-color:var(--bad);background:var(--bad-soft)}
+.verdict b{font-family:var(--display)}
+.verdict .exp{margin-top:6px;max-width:68ch}
+.copybox{width:100%;min-height:120px;font-family:var(--mono);font-size:.82rem;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:8px}
+svg.chart{width:100%;height:auto;max-width:520px;display:block}
+svg.chart text{font-family:var(--mono);font-size:11px;fill:var(--muted)}
+svg.chart .ax{stroke:var(--line)}
+svg.chart .mk{fill:var(--data)}
+svg.chart .v{fill:var(--ink)}
+
+/* results + guide */
+.score{font-family:var(--display);font-size:2.6rem;font-weight:700;line-height:1}
+.rlist{display:flex;flex-direction:column}
+.ritem{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:9px 4px;border:0;border-bottom:1px solid var(--line);background:none;text-align:left;width:100%}
+.ritem:hover{background:var(--accent-soft)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--bad);justify-self:center}
+.dot.ok{background:var(--good)}
+.dot.skip{background:var(--line)}
+.guide{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media(max-width:820px){.guide{grid-template-columns:1fr}}
+.guide ul{margin:6px 0 0;padding-left:1.15em}
+.guide li{margin:3px 0}
+.guide .panel{border-top:4px solid var(--c,var(--line))}
+@media (prefers-reduced-motion:no-preference){.prog i,.bar i{transition:width .25s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <button class="brand" data-act="home">GMAT <span>Drill</span></button>
+    <nav class="top-nav">
+      <button class="link-btn" data-act="home" id="nav-home">Practice</button>
+      <button class="link-btn" data-act="guide" id="nav-guide">Strategy guide</button>
+    </nav>
+  </header>
+  <main id="app"></main>
+</div>
+
+<script>
+/* ===================== QUESTION BANK ===================== */
+var DS = [
+ "Statement (1) ALONE is sufficient, but statement (2) alone is not sufficient.",
+ "Statement (2) ALONE is sufficient, but statement (1) alone is not sufficient.",
+ "BOTH statements TOGETHER are sufficient, but NEITHER statement ALONE is sufficient.",
+ "EACH statement ALONE is sufficient.",
+ "Statements (1) and (2) TOGETHER are NOT sufficient."
+];
+function ds(stem, s1, s2){ return stem + '<span class="st">(1)&nbsp; ' + s1 + '</span><span class="st">(2)&nbsp; ' + s2 + '</span>'; }
+
+var P_FIRST = '<div class="passage"><p>Conventional accounts of first-mover advantage hold that the firm entering a market first secures durable benefits: it captures customer attention, locks in scarce resources, and moves down the learning curve before rivals arrive. Yet studies of market histories complicate this picture. In many industries, the pioneers that created a product category were eventually overtaken by later entrants, and a substantial share of pioneers failed outright.</p><p>One explanation is that pioneers bear costs from which followers are exempt. A pioneer must educate consumers about an unfamiliar product, and it must commit to a technology before it is clear which design the market will favor. Followers can observe these experiments, adopt the design that prevails, and direct their spending toward improving it rather than discovering it.</p><p>This does not mean that entering early is unwise. Rather, the evidence suggests that the advantage belongs less to the first entrant than to the first firm that pairs a viable design with the capacity to serve a mass market. Such firms are frequently early, but they are seldom first. The lesson for managers is that timing matters chiefly in relation to a firm\'s ability to scale, and that speed pursued for its own sake may be a liability.</p></div>';
+
+var P_RINGS = '<div class="passage"><p>Dendroclimatologists reconstruct past climates from the widths of annual tree rings, on the premise that a tree lays down a wider ring in a favorable growing season. The method is powerful because rings can be dated to the exact year, but the premise holds only where a single climatic factor limits growth. At a cold, high-altitude treeline, summer temperature is typically that factor, and ring width tracks temperature closely. At a warm, dry site, moisture is limiting, and the same species may record rainfall instead.</p><p>For this reason, researchers select sites carefully and average many trees to cancel the effects of local disturbances such as competition from neighboring trees or insect outbreaks. Even so, a difficulty has emerged. At some northern sites, ring widths followed measured temperatures faithfully until the mid-twentieth century and then ceased to do so, growing more slowly than rising temperatures would predict. Proposed explanations include drought stress induced by warming and reduced sunlight caused by atmospheric pollution, but none has been confirmed.</p><p>The divergence does not invalidate earlier reconstructions, which are checked against independent records such as ice cores. It does, however, caution against assuming that the relationship between a tree\'s growth and climate is fixed across centuries.</p></div>';
+
+function tbl(heads, rows){
+  var h = '<div class="tblwrap"><table><thead><tr>';
+  heads.forEach(function(x,i){ h += '<th' + (i? ' class="n"':'') + '>' + x + '</th>'; });
+  h += '</tr></thead><tbody>';
+  rows.forEach(function(r){ h += '<tr>'; r.forEach(function(x,i){ h += '<td' + (i? ' class="n"':'') + '>' + x + '</td>'; }); h += '</tr>'; });
+  return h + '</tbody></table></div>';
+}
+function barChart(labels, vals, title){
+  var W=480,H=250,L=44,B=34,T=26,R=10, max=Math.ceil(Math.max.apply(null,vals)/20)*20;
+  var pw=W-L-R, ph=H-T-B, bw=pw/labels.length, s='<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+title+'">';
+  s+='<text x="'+L+'" y="14">'+title+'</text>';
+  for(var g=0; g<=max; g+=20){ var y=T+ph-ph*g/max; s+='<line class="ax" x1="'+L+'" x2="'+(W-R)+'" y1="'+y+'" y2="'+y+'"/><text x="'+(L-6)+'" y="'+(y+4)+'" text-anchor="end">'+g+'</text>'; }
+  labels.forEach(function(lb,i){ var h=ph*vals[i]/max, x=L+i*bw+bw*0.2, y=T+ph-h;
+    s+='<rect class="mk" x="'+x+'" y="'+y+'" width="'+(bw*0.6)+'" height="'+h+'" rx="2"/><text class="v" x="'+(x+bw*0.3)+'" y="'+(y-5)+'" text-anchor="middle">'+vals[i]+'</text><text x="'+(x+bw*0.3)+'" y="'+(H-12)+'" text-anchor="middle">'+lb+'</text>'; });
+  return s+'</svg>';
+}
+function scatter(pts, xl, yl){
+  var W=480,H=270,L=48,B=42,T=14,R=14, xm=10, ym=90, pw=W-L-R, ph=H-T-B, s='<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Scatter plot of '+yl+' against '+xl+'">';
+  for(var g=0; g<=ym; g+=30){ var y=T+ph-ph*g/ym; s+='<line class="ax" x1="'+L+'" x2="'+(W-R)+'" y1="'+y+'" y2="'+y+'"/><text x="'+(L-6)+'" y="'+(y+4)+'" text-anchor="end">'+g+'</text>'; }
+  for(var gx=0; gx<=xm; gx+=2){ var x=L+pw*gx/xm; s+='<text x="'+x+'" y="'+(T+ph+15)+'" text-anchor="middle">'+gx+'</text>'; }
+  pts.forEach(function(p){ s+='<circle class="mk" cx="'+(L+pw*p[0]/xm)+'" cy="'+(T+ph-ph*p[1]/ym)+'" r="5"/>'; });
+  s+='<text x="'+(L+pw/2)+'" y="'+(H-6)+'" text-anchor="middle">'+xl+'</text><text x="12" y="'+(T+ph/2)+'" text-anchor="middle" transform="rotate(-90 12 '+(T+ph/2)+')">'+yl+'</text>';
+  return s+'</svg>';
+}
+
+var T_STORES = '<p>The table shows last quarter\'s results for the five stores of a regional retailer.</p>' + tbl(
+ ['Store','Revenue ($ thousands)','Operating cost ($ thousands)','Employees','Customer rating'],
+ [['North',420,350,14,'4.2'],['South',380,290,10,'3.9'],['East',510,450,17,'4.5'],['West',300,240,8,'4.1'],['Central',610,500,20,'3.8']]);
+var T_PRODUCTS = '<p>The table shows unit sales, 2025 price, and 2025 return rate (returned units as a percent of units sold) for a company\'s four products.</p>' + tbl(
+ ['Product','Units sold 2024','Units sold 2025','Price 2025 ($)','Return rate 2025'],
+ [['A','1,200','1,500',40,'5%'],['B','2,000','1,800',25,'2%'],['C','800','1,200',60,'8%'],['D','1,500','1,650',30,'4%']]);
+var G_VISITS = '<p>The chart shows the number of visitors to a company\'s website in each of the first six months of the year.</p>' + barChart(['Jan','Feb','Mar','Apr','May','Jun'],[40,50,45,60,75,90],'Monthly visitors (thousands)');
+var G_ADS = '<p>Each point represents one of a chain\'s eight stores, showing its monthly advertising spend and its monthly sales.</p>' + scatter([[2,30],[3,38],[4,41],[5,52],[6,55],[7,66],[8,70],[9,81]],'Advertising spend ($ thousands)','Sales ($ thousands)');
+var MSR = {tabs:[
+ {t:'Email', h:'<p><b>From:</b> Director of Operations<br><b>To:</b> Team coordinator</p><p>We have a total budget of $12,000 for this year\'s industry conference. I want to send at least 4 employees, and all of them should attend the same conference. Compare the three cities and tell me what each option would cost. Registration, hotel, and flights all have to come out of the budget.</p>'},
+ {t:'Costs', h:'<p>Costs per employee for each conference city:</p>' + tbl(['City','Registration ($)','Hotel per night ($)','Round-trip flight ($)'],[['Austin',900,180,350],['Boston',750,260,300],['Denver','1,000',150,400]])},
+ {t:'Policy', h:'<p>Each conference requires a stay of 3 hotel nights, and each employee has a separate room.</p><p>All three conferences give a 10% discount on the registration fee of every attendee when a company registers 5 or more attendees. The discount does not apply to hotels or flights.</p>'}
+]};
+
+var BANK = [
+/* ---------- QUANT : Problem Solving ---------- */
+{id:'q01',sec:'Q',type:'Problem Solving',topic:'Percents',kind:'mc',q:'The price of a jacket is increased by 25% and the new price is then decreased by 20%. The final price is what percent of the original price?',choices:['95%','96%','100%','104%','105%'],ans:2,exp:'Multiply the factors: 1.25 × 0.80 = 1.00. The final price equals the original price, so it is 100% of it. Percent changes apply to different bases, so you cannot simply compute 25 − 20.'},
+{id:'q02',sec:'Q',type:'Problem Solving',topic:'Ratios',kind:'mc',q:'At a company, the ratio of managers to staff is 2 : 7. If 12 more managers were hired and the number of staff stayed the same, the ratio would be 1 : 3. How many staff does the company have?',choices:['72','108','216','252','288'],ans:3,exp:'Let managers = 2k and staff = 7k. Then (2k + 12) / 7k = 1/3, so 6k + 36 = 7k and k = 36. Staff = 7 × 36 = 252. Check: managers 72 + 12 = 84, and 84 : 252 = 1 : 3.'},
+{id:'q03',sec:'Q',type:'Problem Solving',topic:'Work and rates',kind:'mc',q:'Machine A can fill an order in 6 hours working alone, and machine B can fill the same order in 12 hours working alone. The two machines work together for 2 hours, and then machine A stops. How many more hours does machine B need to finish the order?',choices:['3','4','5','6','8'],ans:3,exp:'Combined rate = 1/6 + 1/12 = 1/4 of the order per hour, so 2 hours completes 1/2. B finishes the remaining 1/2 at 1/12 per hour: (1/2) ÷ (1/12) = 6 hours.'},
+{id:'q04',sec:'Q',type:'Problem Solving',topic:'Number properties',kind:'mc',q:'If <i>n</i> is a positive integer and <i>n</i><sup>2</sup> is divisible by 72, what is the largest positive integer that must divide <i>n</i>?',choices:['6','12','24','36','72'],ans:1,exp:'72 = 2<sup>3</sup> × 3<sup>2</sup>. In a perfect square every prime exponent is even, so <i>n</i><sup>2</sup> contains at least 2<sup>4</sup> × 3<sup>2</sup>, which means <i>n</i> contains at least 2<sup>2</sup> × 3 = 12. The value <i>n</i> = 12 works (144 = 72 × 2), so nothing larger is forced.'},
+{id:'q05',sec:'Q',type:'Problem Solving',topic:'Exponents',kind:'mc',q:'If 3<sup><i>x</i>+2</sup> − 3<sup><i>x</i></sup> = 216, what is the value of <i>x</i>?',choices:['3','4','5','6','7'],ans:0,exp:'Factor out 3<sup><i>x</i></sup>: 3<sup><i>x</i></sup>(3<sup>2</sup> − 1) = 8 · 3<sup><i>x</i></sup> = 216, so 3<sup><i>x</i></sup> = 27 and <i>x</i> = 3.'},
+{id:'q06',sec:'Q',type:'Problem Solving',topic:'Statistics',kind:'mc',q:'The average (arithmetic mean) of 5 numbers is 18. When one of the numbers is removed, the average of the remaining 4 numbers is 16. What number was removed?',choices:['20','22','24','26','28'],ans:3,exp:'Work with sums. Original sum = 5 × 18 = 90. Remaining sum = 4 × 16 = 64. The removed number is 90 − 64 = 26.'},
+{id:'q07',sec:'Q',type:'Problem Solving',topic:'Speed and distance',kind:'mc',q:'A car travels the first half of the distance of a trip at 40 miles per hour and the second half of the distance at 60 miles per hour. What is the car\'s average speed, in miles per hour, for the entire trip?',choices:['40','42','45','46','48'],ans:4,exp:'Pick a distance: 120 miles each half. Times are 120/40 = 3 hours and 120/60 = 2 hours. Average speed = 240 / 5 = 48 mph. It is below 50 because more time is spent at the slower speed.'},
+{id:'q08',sec:'Q',type:'Problem Solving',topic:'Inequalities',kind:'mc',q:'How many integers <i>x</i> satisfy |2<i>x</i> − 5| &lt; 9?',choices:['7','8','9','10','11'],ans:1,exp:'−9 &lt; 2<i>x</i> − 5 &lt; 9 gives −4 &lt; 2<i>x</i> &lt; 14, so −2 &lt; <i>x</i> &lt; 7. The integers are −1, 0, 1, 2, 3, 4, 5, 6: eight values.'},
+{id:'q09',sec:'Q',type:'Problem Solving',topic:'Counting',kind:'mc',q:'A committee of 3 people is to be chosen from 5 women and 4 men. How many different committees include at least one man?',choices:['44','54','64','70','74'],ans:4,exp:'Count the complement. All committees: C(9,3) = 84. Committees with no men: C(5,3) = 10. At least one man: 84 − 10 = 74.'},
+{id:'q10',sec:'Q',type:'Problem Solving',topic:'Probability',kind:'mc',q:'Two fair six-sided dice are rolled. What is the probability that the sum of the two numbers shown is 8?',choices:['1/12','1/9','5/36','1/6','7/36'],ans:2,exp:'There are 36 equally likely outcomes. The pairs summing to 8 are (2,6), (3,5), (4,4), (5,3), (6,2): five outcomes. Probability = 5/36.'},
+{id:'q11',sec:'Q',type:'Problem Solving',topic:'Interest',kind:'mc',q:'An investment of $8,000 earns interest at an annual rate of 10%, compounded semiannually. What is the value of the investment after 1 year?',choices:['$8,400','$8,800','$8,820','$8,840','$9,680'],ans:2,exp:'Semiannual compounding means 5% per half-year, applied twice: 8,000 × 1.05 × 1.05 = 8,000 × 1.1025 = $8,820.'},
+{id:'q12',sec:'Q',type:'Problem Solving',topic:'Mixtures',kind:'mc',q:'A 30-liter solution is 20% alcohol by volume. How many liters of pure alcohol must be added to produce a solution that is 40% alcohol?',choices:['6','8','10','12','15'],ans:2,exp:'The solution holds 6 liters of alcohol. After adding <i>x</i> liters: (6 + <i>x</i>) / (30 + <i>x</i>) = 0.4, so 6 + <i>x</i> = 12 + 0.4<i>x</i>, giving 0.6<i>x</i> = 6 and <i>x</i> = 10.'},
+{id:'q13',sec:'Q',type:'Problem Solving',topic:'Roots',kind:'mc',q:'What is the value of (√50 + √18) / √2 ?',choices:['4','8','16','4√2','8√2'],ans:1,exp:'Divide each term: √50/√2 = √25 = 5 and √18/√2 = √9 = 3. The sum is 8.'},
+{id:'q14',sec:'Q',type:'Problem Solving',topic:'Sequences',kind:'mc',q:'In a sequence, <i>a</i><sub>1</sub> = 3 and <i>a</i><sub><i>n</i></sub> = 2<i>a</i><sub><i>n</i>−1</sub> − 1 for all <i>n</i> &gt; 1. What is <i>a</i><sub>5</sub>?',choices:['17','31','33','35','65'],ans:2,exp:'Compute term by term: 3, 5, 9, 17, 33. (Each term is 2<sup><i>n</i></sup> + 1.)'},
+{id:'q15',sec:'Q',type:'Problem Solving',topic:'Remainders',kind:'mc',q:'When the positive integer <i>n</i> is divided by 7, the remainder is 4. What is the remainder when 3<i>n</i> + 5 is divided by 7?',choices:['1','2','3','4','5'],ans:2,exp:'Use a simple value: <i>n</i> = 4. Then 3<i>n</i> + 5 = 17, and 17 = 2 × 7 + 3, so the remainder is 3. Any <i>n</i> of the form 7<i>k</i> + 4 gives the same result.'},
+{id:'q16',sec:'Q',type:'Problem Solving',topic:'Functions',kind:'mc',q:'If <i>f</i>(<i>x</i>) = <i>x</i><sup>2</sup> − 4<i>x</i> + 7, what is the minimum value of <i>f</i>(<i>x</i>)?',choices:['3','4','5','7','11'],ans:0,exp:'Complete the square: <i>x</i><sup>2</sup> − 4<i>x</i> + 7 = (<i>x</i> − 2)<sup>2</sup> + 3. A square is at least 0, so the minimum is 3, reached at <i>x</i> = 2.'},
+{id:'q17',sec:'Q',type:'Problem Solving',topic:'Overlapping sets',kind:'mc',q:'Of 120 students, 70 study French, 55 study Spanish, and 20 study neither language. How many students study both French and Spanish?',choices:['25','30','35','45','50'],ans:0,exp:'Students studying at least one language: 120 − 20 = 100. Then 70 + 55 − both = 100, so both = 25.'},
+{id:'q18',sec:'Q',type:'Problem Solving',topic:'Profit',kind:'mc',q:'A retailer buys an item for $80, marks the price up by 50%, and then sells the item at a 20% discount from the marked price. The retailer\'s profit is what percent of the cost?',choices:['10%','16%','20%','25%','30%'],ans:2,exp:'Marked price = 80 × 1.5 = $120. Sale price = 120 × 0.8 = $96. Profit = 96 − 80 = $16, and 16/80 = 20%.'},
+{id:'q19',sec:'Q',type:'Problem Solving',topic:'Linear equations',kind:'mc',q:'A theater sold 150 tickets for a total of $1,400. Adult tickets cost $12 each and child tickets cost $7 each. How many adult tickets were sold?',choices:['50','60','70','80','90'],ans:2,exp:'Let <i>a</i> be adult tickets: 12<i>a</i> + 7(150 − <i>a</i>) = 1,400, so 5<i>a</i> + 1,050 = 1,400 and <i>a</i> = 70. Check: 840 + 560 = 1,400.'},
+{id:'q20',sec:'Q',type:'Problem Solving',topic:'Number properties',kind:'mc',q:'How many positive factors does 360 have?',choices:['12','16','18','20','24'],ans:4,exp:'360 = 2<sup>3</sup> × 3<sup>2</sup> × 5. Add 1 to each exponent and multiply: (3 + 1)(2 + 1)(1 + 1) = 24.'},
+{id:'q21',sec:'Q',type:'Problem Solving',topic:'Algebra',kind:'mc',q:'If <i>x</i> + 1/<i>x</i> = 4, what is the value of <i>x</i><sup>2</sup> + 1/<i>x</i><sup>2</sup>?',choices:['12','14','16','18','20'],ans:1,exp:'Square both sides: <i>x</i><sup>2</sup> + 2 + 1/<i>x</i><sup>2</sup> = 16. Subtract 2 to get 14.'},
+{id:'q22',sec:'Q',type:'Problem Solving',topic:'Statistics',kind:'mc',q:'The list 3, 8, 12, 15, <i>x</i> consists of five integers, and its average (arithmetic mean) equals its median. What is the sum of all possible values of <i>x</i>?',choices:['2','11','22','24','31'],ans:3,exp:'The mean is (38 + <i>x</i>)/5. If <i>x</i> ≤ 8 the median is 8, so 38 + <i>x</i> = 40 and <i>x</i> = 2 (valid). If <i>x</i> ≥ 12 the median is 12, so <i>x</i> = 22 (valid). If 8 &lt; <i>x</i> &lt; 12 the median is <i>x</i>, giving <i>x</i> = 9.5, not an integer. Sum: 2 + 22 = 24.'},
+
+/* ---------- VERBAL : Critical Reasoning ---------- */
+{id:'v01',sec:'V',type:'Critical Reasoning',topic:'Weaken',kind:'mc',q:'Last year the city of Marlow installed speed cameras on its main roads. In the twelve months that followed, traffic accidents in Marlow fell by 15 percent. City officials conclude that the cameras caused the decline.<br><br>Which of the following, if true, most seriously weakens the officials\' conclusion?',choices:['The cameras were more expensive to install than the city had budgeted.','Over the same period, accidents fell by a similar percentage in nearby cities that have no speed cameras.','Most drivers in Marlow say they are aware of where the cameras are located.','The number of speeding tickets issued in Marlow rose sharply after the cameras were installed.','Marlow plans to install additional cameras on residential streets next year.'],ans:1,exp:'The conclusion is causal. If cities without cameras saw the same drop, some shared factor (weather, fuel prices, fewer trips) probably explains the decline, not the cameras. Cost and future plans are irrelevant, and more tickets or driver awareness would fit the officials\' story.'},
+{id:'v02',sec:'V',type:'Critical Reasoning',topic:'Strengthen',kind:'mc',q:'At Deltron Corporation, employees who work remotely complete more tasks per week, on average, than employees who work in the office. A manager concludes that working remotely makes Deltron employees more productive.<br><br>Which of the following, if true, most strengthens the manager\'s conclusion?',choices:['Remote employees at Deltron report higher job satisfaction than office employees.','Deltron allowed only its highest-performing employees to work remotely.','Deltron employees who switched from office work to remote work completed more tasks per week after the switch than before it.','Remote employees at Deltron work, on average, more hours per week than office employees.','Several of Deltron\'s competitors have recently ended their remote-work programs.'],ans:2,exp:'Comparing the same employees before and after the switch removes the worry that remote workers were simply better performers to begin with. Choice B is that very worry and weakens the argument. Satisfaction and competitors\' policies do not bear on productivity, and longer hours offer a different explanation for higher output.'},
+{id:'v03',sec:'V',type:'Critical Reasoning',topic:'Assumption',kind:'mc',q:'Tolar Airlines plans to replace its current aircraft with new, fuel-efficient models. Since fuel is Tolar\'s largest operating expense, the airline\'s executives argue that the plan will increase the airline\'s profits.<br><br>The executives\' argument depends on which of the following assumptions?',choices:['Tolar\'s competitors are not planning to buy fuel-efficient aircraft.','Fuel prices will rise substantially over the next decade.','The new aircraft can carry more passengers than the current aircraft.','The cost of acquiring and operating the new aircraft will not outweigh the savings on fuel.','Passengers prefer to fly on newer aircraft.'],ans:3,exp:'The argument jumps from lower fuel spending to higher profit. That holds only if the new planes do not bring costs that cancel the savings. Negate D and the conclusion collapses. The other choices might help the plan but the argument does not need them.'},
+{id:'v04',sec:'V',type:'Critical Reasoning',topic:'Evaluate',kind:'mc',q:'In a six-month trial, patients who took the new drug Zerafil reported 40 percent fewer migraines than they had reported in the six months before the trial. The manufacturer concludes that Zerafil reduces the frequency of migraines.<br><br>The answer to which of the following questions would be most useful in evaluating the manufacturer\'s conclusion?',choices:['Whether Zerafil is less expensive than existing migraine treatments','Whether similar patients given an inactive pill over the same period reported a comparable reduction in migraines','Whether the patients in the trial had previously tried other migraine treatments','Whether Zerafil can be taken together with common pain relievers','Whether migraines are more common among adults than among children'],ans:1,exp:'Without a comparison group, the drop could come from a placebo effect or from migraines naturally easing over time. If a placebo group improved just as much, the conclusion fails; if it did not, the conclusion is supported. Only B can swing the argument both ways.'},
+{id:'v05',sec:'V',type:'Critical Reasoning',topic:'Inference',kind:'mc',q:'Every analyst at Firm K who received a bonus last year exceeded his or her revenue target. Some analysts who exceeded their revenue targets were not promoted. Every analyst who was promoted received a bonus.<br><br>If the statements above are true, which of the following must also be true?',choices:['Every analyst who exceeded a revenue target received a bonus.','Some analysts who received a bonus were not promoted.','Every analyst who was promoted exceeded his or her revenue target.','No analyst who failed to be promoted received a bonus.','Most analysts at Firm K exceeded their revenue targets.'],ans:2,exp:'Chain the two "every" statements: promoted → bonus → exceeded target. So every promoted analyst exceeded the target. A reverses the first statement. B is tempting, but the unpromoted high performers may not have received bonuses. D and E go beyond what is stated.'},
+{id:'v06',sec:'V',type:'Critical Reasoning',topic:'Resolve the paradox',kind:'mc',q:'This year the coffee harvest in the Arvela region was far larger than last year\'s, and growers sold all of the coffee they harvested. Yet the growers\' total revenue from coffee was lower this year than last year.<br><br>Which of the following, if true, most helps to explain the result described above?',choices:['The growers hired more workers this year to bring in the larger harvest.','The quality of this year\'s coffee was judged to be equal to that of last year\'s.','A worldwide surplus drove the price of coffee down by a greater percentage than Arvela\'s harvest increased.','Some Arvela growers planted additional coffee trees three years ago.','Coffee consumption in the Arvela region itself remained unchanged.'],ans:2,exp:'Revenue is price times quantity. More quantity with less revenue requires the price to fall by proportionally more than quantity rose, which is what C states. Hiring workers affects costs and profit, not revenue.'},
+{id:'v07',sec:'V',type:'Critical Reasoning',topic:'Flaw',kind:'mc',q:'A survey of people who use the fitness app StrideLog found that 80 percent of them exercise at least three times a week, far above the national rate. The app\'s developer concludes that using StrideLog causes people to exercise more often.<br><br>The developer\'s reasoning is most vulnerable to which of the following criticisms?',choices:['It relies on a survey whose respondents may not have understood the questions.','It overlooks the possibility that people who already exercise often are more likely to choose to use a fitness app.','It fails to state how many people use StrideLog.','It assumes that exercising three times a week is sufficient for good health.','It does not compare StrideLog with other fitness apps.'],ans:1,exp:'The users selected themselves. Frequent exercisers are the people most likely to download a fitness app, so the correlation may run from exercise to app use. This is a reversed-causation, self-selection flaw.'},
+{id:'v08',sec:'V',type:'Critical Reasoning',topic:'Weaken a plan',kind:'mc',q:'To attract more shoppers to its downtown stores, the town of Brell plans to make all downtown street parking free. Town officials reason that shoppers who now avoid downtown because of parking fees will return.<br><br>Which of the following, if true, casts the most doubt on whether the plan will achieve its goal?',choices:['Parking fees currently provide a small share of the town\'s revenue.','Some downtown stores have closed in the past two years.','Shoppers surveyed said parking fees were one of several reasons they shop elsewhere.','Without fees, downtown employees who now park in distant lots would likely occupy most street spaces for the entire workday.','A nearby shopping mall has always offered free parking.'],ans:3,exp:'The goal is more shoppers, and the plan works only if shoppers can find the newly free spaces. If employees fill them all day, the plan could reduce parking for shoppers. C and E mildly support the idea that fees matter, and A concerns revenue, not shoppers.'},
+{id:'v09',sec:'V',type:'Critical Reasoning',topic:'Strengthen',kind:'mc',q:'Archaeologists excavating an inland site found pottery identical in style to pottery made by a coastal people who lived 300 kilometers away. The archaeologists hypothesize that members of the coastal people settled at the inland site.<br><br>Which of the following, if true, most strongly supports the archaeologists\' hypothesis?',choices:['Pottery in the coastal style has been found at many sites along ancient trade routes.','The inland site was occupied for several centuries.','The inland excavation also uncovered kilns containing unfinished pottery in the coastal style.','The coastal people were known to be skilled sailors.','Pottery in a different style has also been found at the inland site.'],ans:2,exp:'The main rival explanation is trade: the pots could have been carried inland. Kilns with unfinished coastal-style pieces show the pottery was being made at the site, which points to coastal potters living there. A strengthens the trade explanation and so weakens the hypothesis.'},
+{id:'v10',sec:'V',type:'Critical Reasoning',topic:'Boldface',kind:'mc',q:'Economists predicted that raising the minimum wage in the province would reduce employment in restaurants. <b>Restaurant employment in fact rose in the year after the increase.</b> Some commentators conclude that the theory behind the prediction is wrong. That conclusion is premature, however: <b>tourism in the province grew sharply that year, which would have raised restaurant employment whatever the level of wages.</b><br><br>In the argument above, the two portions in boldface play which of the following roles?',choices:['The first is the main conclusion of the argument; the second is evidence supporting that conclusion.','The first is evidence used to support a conclusion that the argument calls into question; the second is a consideration the argument offers to challenge that conclusion.','The first is a prediction the argument defends; the second is the main conclusion of the argument.','The first and the second are both evidence offered in support of the commentators\' conclusion.','The first is a claim the argument disputes; the second is a conclusion drawn from that claim.'],ans:1,exp:'The author\'s position is that the commentators\' conclusion is premature. The first boldface is the fact the commentators rely on; the author accepts the fact but questions the conclusion drawn from it. The second boldface is the author\'s alternative explanation, which undercuts that conclusion.'},
+
+/* ---------- VERBAL : Reading Comprehension ---------- */
+{id:'v11',sec:'V',type:'Reading Comprehension',topic:'Main idea',kind:'mc',stim:P_FIRST,q:'The primary purpose of the passage is to',choices:['explain why firms that enter a market first almost always fail','describe the costs of educating consumers about new products','compare the management practices of pioneers with those of later entrants','argue that the benefits usually credited to entering first depend more on combining a workable design with the ability to scale','recommend that firms delay entering new markets for as long as possible'],ans:3,exp:'The passage states the conventional view, complicates it, and ends with its own claim: the advantage goes to the first firm with a viable design and mass-market capacity. A is too extreme, B is one supporting detail, and E contradicts the third paragraph.'},
+{id:'v12',sec:'V',type:'Reading Comprehension',topic:'Detail',kind:'mc',stim:P_FIRST,q:'According to the passage, followers have which of the following advantages over pioneers?',choices:['They can see which design the market favors before committing their resources.','They have greater access to scarce resources.','They attract more customer attention than pioneers do.','They can scale up production more cheaply than pioneers can.','They face fewer competitors when they enter the market.'],ans:0,exp:'The second paragraph says followers can observe the pioneers\' experiments, adopt the prevailing design, and spend on improving it. B and C are benefits the conventional view assigns to pioneers.'},
+{id:'v13',sec:'V',type:'Reading Comprehension',topic:'Inference',kind:'mc',stim:P_FIRST,q:'The author of the passage would most likely agree with which of the following statements?',choices:['Entering a market early is generally a mistake.','Pioneers fail mainly because they move down the learning curve too slowly.','A firm that enters a market after the pioneer can end up in the stronger position if it is able to serve a mass market.','The first firm to enter a market is usually the first to settle on a viable design.','Managers should give speed of entry priority over all other considerations.'],ans:2,exp:'The third paragraph says the advantage goes to the first firm pairing a viable design with capacity for a mass market, and that such firms are "seldom first." A is rejected directly, and E reverses the closing lesson.'},
+{id:'v14',sec:'V',type:'Reading Comprehension',topic:'Main idea',kind:'mc',stim:P_RINGS,q:'The primary purpose of the passage is to',choices:['argue that tree rings are an unreliable source of information about past climates','describe a method of reconstructing past climates, the condition on which it depends, and a complication that has arisen','propose a new explanation for the slow growth of trees at northern sites','compare tree rings with ice cores as records of past temperature','explain how atmospheric pollution affects the growth of trees'],ans:1,exp:'Paragraph one gives the method and its key condition, paragraph two the divergence problem, and paragraph three its limited implications. A overstates the caution; the author says earlier reconstructions remain valid. C fails because the author endorses no explanation.'},
+{id:'v15',sec:'V',type:'Reading Comprehension',topic:'Detail',kind:'mc',stim:P_RINGS,q:'According to the passage, researchers average the ring widths of many trees in order to',choices:['date each ring to the exact year in which it formed','determine which climatic factor limits growth at a site','extend the reconstruction further into the past','reduce the influence of local factors unrelated to climate','correct for the divergence observed at northern sites'],ans:3,exp:'The second paragraph says averaging many trees cancels "the effects of local disturbances" such as competition and insect outbreaks.'},
+{id:'v16',sec:'V',type:'Reading Comprehension',topic:'Inference',kind:'mc',stim:P_RINGS,q:'It can be inferred from the passage that the ring widths of a tree growing at a warm, dry site would most likely be',choices:['wider on average than those of a tree at a cold treeline','impossible to date to an exact year','a better guide to past rainfall than to past temperature','unaffected by local disturbances','unsuitable for any reconstruction of past climate'],ans:2,exp:'The first paragraph says that at a warm, dry site moisture limits growth, so the tree "may record rainfall instead" of temperature. Nothing supports the comparison in A, and E is too strong.'},
+{id:'v17',sec:'V',type:'Reading Comprehension',topic:'Function',kind:'mc',stim:P_RINGS,q:'The author mentions ice cores most probably in order to',choices:['suggest that ice cores are more accurate than tree rings','identify a cause of the divergence at northern sites','show that reconstructions should not rely on tree rings','illustrate a local disturbance that affects ring width','indicate a basis for continued confidence in earlier reconstructions'],ans:4,exp:'Ice cores appear in the sentence saying the divergence "does not invalidate earlier reconstructions," because those are checked against independent records. Their role is to support that reassurance.'},
+
+/* ---------- DATA INSIGHTS : Data Sufficiency ---------- */
+{id:'d01',sec:'D',type:'Data Sufficiency',topic:'Number properties',kind:'mc',q:ds('Is the integer <i>n</i> even?','<i>n</i><sup>2</sup> + <i>n</i> is even.','3<i>n</i> + 1 is odd.'),choices:DS,ans:1,exp:'(1) <i>n</i><sup>2</sup> + <i>n</i> = <i>n</i>(<i>n</i> + 1) is a product of consecutive integers and is always even, so it tells you nothing: not sufficient. (2) If 3<i>n</i> + 1 is odd then 3<i>n</i> is even, so <i>n</i> is even: sufficient.'},
+{id:'d02',sec:'D',type:'Data Sufficiency',topic:'Algebra',kind:'mc',q:ds('What is the value of the positive number <i>x</i>?','<i>x</i><sup>2</sup> = 16','<i>x</i><sup>3</sup> = 64'),choices:DS,ans:3,exp:'(1) <i>x</i> = 4 or −4, but the stem says <i>x</i> is positive, so <i>x</i> = 4: sufficient. (2) A cube has one real root, <i>x</i> = 4: sufficient. Always reread the stem for constraints such as "positive".'},
+{id:'d03',sec:'D',type:'Data Sufficiency',topic:'Statistics',kind:'mc',q:ds('What is the average (arithmetic mean) of <i>a</i>, <i>b</i>, and <i>c</i>?','<i>a</i> + <i>b</i> = 14','<i>b</i> + <i>c</i> = 20'),choices:DS,ans:4,exp:'You need <i>a</i> + <i>b</i> + <i>c</i>. Each statement alone leaves one variable free. Together they give <i>a</i> + 2<i>b</i> + <i>c</i> = 34, which still depends on <i>b</i> (for example <i>b</i> = 4 gives a sum of 30, while <i>b</i> = 10 gives 24). Not sufficient.'},
+{id:'d04',sec:'D',type:'Data Sufficiency',topic:'Word problems',kind:'mc',q:ds('A stall sells shirts for $20 each and hats for $15 each. How many shirts did the stall sell yesterday?','Yesterday\'s revenue from shirts and hats totaled $115.','Yesterday the stall sold a total of 7 shirts and hats.'),choices:DS,ans:2,exp:'(1) 20<i>s</i> + 15<i>h</i> = 115 simplifies to 4<i>s</i> + 3<i>h</i> = 23, which has two whole-number solutions: (<i>s</i>, <i>h</i>) = (2, 5) and (5, 1). Not sufficient. (2) alone gives only <i>s</i> + <i>h</i> = 7. Together only (2, 5) has 7 items, so <i>s</i> = 2: sufficient together.'},
+{id:'d05',sec:'D',type:'Data Sufficiency',topic:'Word problems',kind:'mc',q:ds('Kira bought only notebooks, at $3 each, and pens, at $5 each. How many pens did she buy?','She spent a total of $22.','She bought more notebooks than pens.'),choices:DS,ans:0,exp:'(1) 3<i>n</i> + 5<i>p</i> = 22 with whole numbers: testing <i>p</i> = 0 to 4 leaves 22, 17, 12, 7, 2 for notebooks, and only 12 is a multiple of 3. So <i>p</i> = 2: sufficient. One equation with two unknowns can be enough when the answers must be whole numbers. (2) gives no quantities: not sufficient.'},
+{id:'d06',sec:'D',type:'Data Sufficiency',topic:'Inequalities',kind:'mc',q:ds('Is <i>x</i> &gt; <i>y</i>?','<i>x</i><sup>2</sup> &gt; <i>y</i><sup>2</sup>','<i>x</i> + <i>y</i> &gt; 0'),choices:DS,ans:2,exp:'(1) <i>x</i> = 3, <i>y</i> = 1 gives yes; <i>x</i> = −3, <i>y</i> = 1 gives no. (2) <i>x</i> = 2, <i>y</i> = 1 gives yes; <i>x</i> = 1, <i>y</i> = 2 gives no. Together: <i>x</i><sup>2</sup> − <i>y</i><sup>2</sup> = (<i>x</i> − <i>y</i>)(<i>x</i> + <i>y</i>) &gt; 0 and <i>x</i> + <i>y</i> &gt; 0 force <i>x</i> − <i>y</i> &gt; 0. Sufficient together.'},
+{id:'d07',sec:'D',type:'Data Sufficiency',topic:'Percents',kind:'mc',q:ds('Was a company\'s profit (revenue minus costs) greater in 2025 than in 2024?','The company\'s revenue was 10% greater in 2025 than in 2024.','The company\'s costs were 12% greater in 2025 than in 2024.'),choices:DS,ans:4,exp:'Percent changes without the underlying amounts are not enough. With revenue 100 → 110 and costs 50 → 56, profit rises from 50 to 54. With revenue 100 → 110 and costs 95 → 106.4, profit falls from 5 to 3.6. Even together the statements allow both answers.'},
+{id:'d08',sec:'D',type:'Data Sufficiency',topic:'Ratios',kind:'mc',q:ds('What percent of the students in a class are girls?','The ratio of boys to girls in the class is 3 to 5.','There are 12 more girls than boys in the class.'),choices:DS,ans:0,exp:'(1) Girls are 5 of every 8 students, or 62.5%: sufficient. A ratio fixes a percent even without totals. (2) A difference alone does not: 13 girls and 1 boy, or 50 girls and 38 boys, both fit. Not sufficient.'},
+
+/* ---------- DATA INSIGHTS : Two-Part Analysis ---------- */
+{id:'d09',sec:'D',type:'Two-Part Analysis',topic:'Rates',kind:'tpa',q:'A tank has an inlet pipe that adds water at a constant rate and a drain that removes water at a constant rate. With both open for 15 minutes, the volume of water in the tank increases by 180 liters. In a second test, the inlet runs alone for 6 minutes and then both run for 10 minutes, and the volume increases by 240 liters in total.<br><br>Select the rate of the inlet and the rate of the drain, in liters per minute. Make one selection in each column.',cols:['Inlet','Drain'],rows:['6','8','12','20','24','32'],ans:[3,1],exp:'From the first test, inlet − drain = 180/15 = 12. In the second test the 10 minutes with both open add 120 liters, so the inlet alone added 240 − 120 = 120 liters in 6 minutes: 20 liters per minute. The drain is 20 − 12 = 8.'},
+{id:'d10',sec:'D',type:'Two-Part Analysis',topic:'Strengthen and weaken',kind:'tpa',q:'A supermarket chain installed self-checkout kiosks in half of its stores. Over the next six months, those stores reported shorter average checkout wait times than the stores without kiosks. Management concludes that the kiosks reduce wait times.<br><br>Select the statement that would most strengthen management\'s conclusion and the statement that would most weaken it. Make one selection in each column.',cols:['Strengthen','Weaken'],rows:['The stores that received kiosks were selected at random.','The stores that received kiosks also added staffed checkout lanes during the same six months.','Kiosks cost less to operate than staffed checkout lanes.','The chain plans to install kiosks in its remaining stores next year.','Competing supermarket chains have also introduced kiosks.'],ans:[0,1],exp:'Random selection rules out the possibility that kiosk stores differed from the others to begin with, so the comparison is fair. Extra staffed lanes in the same stores give a competing explanation for the shorter waits. The other statements concern cost, plans, or competitors.'},
+{id:'d11',sec:'D',type:'Two-Part Analysis',topic:'Interest',kind:'tpa',q:'An investor divided $10,000 between Fund X, which paid 4% simple annual interest, and Fund Y, which paid 9% simple annual interest. After one year the two funds had paid a combined $700 in interest.<br><br>Select the amount invested in Fund X and the amount invested in Fund Y. Make one selection in each column.',cols:['Fund X','Fund Y'],rows:['$3,000','$4,000','$5,000','$6,000','$7,000'],ans:[1,3],exp:'Let <i>x</i> be the amount in Fund X: 0.04<i>x</i> + 0.09(10,000 − <i>x</i>) = 700, so 900 − 0.05<i>x</i> = 700 and <i>x</i> = 4,000. Fund Y holds 6,000. Check: 160 + 540 = 700.'},
+
+/* ---------- DATA INSIGHTS : Table Analysis ---------- */
+{id:'d12',sec:'D',type:'Table Analysis',topic:'Store results',kind:'multi',stim:T_STORES,q:'For each statement, select <b>True</b> if it is supported by the table and <b>False</b> otherwise. Profit means revenue minus operating cost.',parts:[
+ {l:'The store with the highest revenue also has the highest profit.',o:['True','False'],a:0},
+ {l:'The store with the highest customer rating has the highest revenue per employee.',o:['True','False'],a:1},
+ {l:'The median number of employees is the number employed at the North store.',o:['True','False'],a:0},
+ {l:'More than half of the stores have a profit greater than 20% of revenue.',o:['True','False'],a:1}],
+ exp:'Profits are North 70, South 90, East 60, West 60, Central 110, so Central leads in both revenue and profit. East has the top rating, but its revenue per employee (510/17 = 30) is the lowest; South is highest at 38. Employees sorted: 8, 10, 14, 17, 20, so the median is North\'s 14. Margins are about 16.7%, 23.7%, 11.8%, 20.0%, and 18.0%; only South is above 20%.'},
+{id:'d13',sec:'D',type:'Table Analysis',topic:'Product sales',kind:'multi',stim:T_PRODUCTS,q:'For each statement, select <b>True</b> if it is supported by the table and <b>False</b> otherwise.',parts:[
+ {l:'The product with the greatest percent increase in units sold from 2024 to 2025 also had the greatest revenue in 2025.',o:['True','False'],a:0},
+ {l:'Every product whose unit sales increased from 2024 to 2025 grew by at least 20%.',o:['True','False'],a:1},
+ {l:'The product with the fewest returned units in 2025 was the product with the lowest price.',o:['True','False'],a:0}],
+ exp:'Unit changes: A +25%, B −10%, C +50%, D +10%. Revenue in 2025: A $60,000, B $45,000, C $72,000, D $49,500, so C leads on both. D grew by only 10%, so the second statement is false. Returned units: A 75, B 36, C 96, D 66; B has the fewest and the lowest price ($25).'},
+
+/* ---------- DATA INSIGHTS : Graphics Interpretation ---------- */
+{id:'d14',sec:'D',type:'Graphics Interpretation',topic:'Bar chart',kind:'multi',stim:G_VISITS,q:'Select the option that makes each statement accurate, based on the chart.',parts:[
+ {l:'From January to June, the number of monthly visitors increased by',o:['56%','90%','125%','225%'],a:2},
+ {l:'The greatest month-to-month percent increase occurred from',o:['January to February','March to April','April to May','May to June'],a:1}],
+ exp:'January to June: (90 − 40)/40 = 125%. (225% is June as a percent of January, a common trap.) Month-to-month changes: +25%, −10%, +33.3%, +25%, +20%. March to April is the largest in percent terms even though April to May and May to June each added the same or more visitors in absolute terms.'},
+{id:'d15',sec:'D',type:'Graphics Interpretation',topic:'Scatter plot',kind:'multi',stim:G_ADS,q:'Select the option that makes each statement accurate, based on the graph.',parts:[
+ {l:'The relationship between advertising spend and sales is',o:['strongly positive','weakly positive','negative','absent'],a:0},
+ {l:'Each additional $1,000 of advertising spend is associated with an increase in sales of roughly',o:['$1,000','$3,000','$7,000','$15,000'],a:2}],
+ exp:'The points rise steadily and lie close to a line, so the relationship is strongly positive. From the first point (2, 30) to the last (9, 81), sales rise 51 over a spend increase of 7, a slope of about 7.3, or roughly $7,000 of sales per $1,000 of advertising.'},
+
+/* ---------- DATA INSIGHTS : Multi-Source Reasoning ---------- */
+{id:'d16',sec:'D',type:'Multi-Source Reasoning',topic:'Conference budget',kind:'mc',stim:MSR,q:'What would be the total cost of sending exactly 4 employees to the conference in Austin?',choices:['$5,720','$6,800','$7,160','$7,320','$7,400'],ans:2,exp:'Four attendees do not qualify for the discount. Per person: 900 + 3 × 180 + 350 = $1,790. Four people: 4 × 1,790 = $7,160. You need the Costs tab for the prices and the Policy tab for the 3 nights and the discount threshold.'},
+{id:'d17',sec:'D',type:'Multi-Source Reasoning',topic:'Conference budget',kind:'mc',stim:MSR,q:'What is the greatest number of employees the company could send to the conference in Austin without exceeding the budget?',choices:['5','6','7','8','9'],ans:2,exp:'With 5 or more attendees, registration falls to $810, so each person costs 810 + 540 + 350 = $1,700. Seven people cost $11,900, within the $12,000 budget; eight would cost $13,600.'},
+{id:'d18',sec:'D',type:'Multi-Source Reasoning',topic:'Conference budget',kind:'multi',stim:MSR,q:'For each statement, select <b>Yes</b> if it can be concluded from the information in the three tabs and <b>No</b> otherwise.',parts:[
+ {l:'Sending 6 employees to Denver would cost less than sending 6 employees to Boston.',o:['Yes','No'],a:0},
+ {l:'For a group of exactly 4 employees, Denver is the least expensive of the three cities.',o:['Yes','No'],a:1},
+ {l:'Sending 5 employees to Boston would stay within the budget.',o:['Yes','No'],a:0}],
+ exp:'With the discount, per-person costs are Denver 900 + 450 + 400 = $1,750 and Boston 675 + 780 + 300 = $1,755, so six people cost $10,500 and $10,530. Without the discount, four people cost $7,160 in Austin, $7,320 in Boston, and $7,400 in Denver, so Denver is the most expensive. Five in Boston cost 5 × 1,755 = $8,775, under $12,000.'}
+];
+
+/* ===================== APP ===================== */
+var SECS = {
+  Q:{name:'Quantitative Reasoning', short:'Quant', color:'var(--quant)', n:21, pace:128, note:'21 questions · 45 min · no calculator'},
+  V:{name:'Verbal Reasoning', short:'Verbal', color:'var(--verbal)', n:23, pace:117, note:'23 questions · 45 min'},
+  D:{name:'Data Insights', short:'Data Insights', color:'var(--data)', n:20, pace:135, note:'20 questions · 45 min · on-screen calculator'}
+};
+var KEY = 'gmat-drill-v1';
+var store = {stats:{}};
+try { var raw = localStorage.getItem(KEY); if (raw) store = JSON.parse(raw) || store; if (!store.stats) store.stats = {}; } catch(e) {}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {} }
+
+var S = {view:'home', filter:{Q:'All',V:'All',D:'All'}, sess:null, tick:null, tab:0};
+var app = document.getElementById('app');
+function byId(id){ for (var i=0;i<BANK.length;i++) if (BANK[i].id===id) return BANK[i]; return null; }
+function fmt(s){ s=Math.max(0,Math.round(s)); var m=Math.floor(s/60), r=s%60; return m+':'+(r<10?'0':'')+r; }
+function esc(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function plain(html){ var d=document.createElement('div'); d.innerHTML=String(html).replace(/<br\s*\/?>/g,'\n').replace(/<\/(p|tr|div)>/g,'\n').replace(/<\/(td|th)>/g,'  |  ').replace(/<span class="st">/g,'\n').replace(/<sup>/g,'^').replace(/<svg[\s\S]*?<\/svg>/g,'[chart]'); return d.textContent.replace(/\n{3,}/g,'\n\n').trim(); }
+
+function isAnswered(q, r){
+  if (r == null) return false;
+  if (q.kind==='mc') return true;
+  if (q.kind==='tpa') return r[0]!=null && r[1]!=null;
+  for (var i=0;i<q.parts.length;i++) if (r[i]==null) return false; return true;
+}
+function isCorrect(q, r){
+  if (!isAnswered(q,r)) return false;
+  if (q.kind==='mc') return r===q.ans;
+  if (q.kind==='tpa') return r[0]===q.ans[0] && r[1]===q.ans[1];
+  for (var i=0;i<q.parts.length;i++) if (r[i]!==q.parts[i].a) return false; return true;
+}
+function secStats(sec){
+  var t=0, ok=0, no=0;
+  BANK.forEach(function(q){ if (q.sec!==sec) return; t++; var s=store.stats[q.id]; if (s){ if (s.last) ok++; else no++; } });
+  return {t:t, ok:ok, no:no};
+}
+function typesOf(sec){ var out=[]; BANK.forEach(function(q){ if (q.sec===sec && out.indexOf(q.type)<0) out.push(q.type); }); return out; }
+function rank(q){ var s=store.stats[q.id]; return !s ? 0 : (s.last ? 2 : 1); }
+
+/* ---------- sessions ---------- */
+function startPractice(sec){
+  var f=S.filter[sec];
+  var qs=BANK.filter(function(q){ return q.sec===sec && (f==='All' || q.type===f); });
+  qs = qs.map(function(q,i){ return {q:q,i:i}; }).sort(function(a,b){ return rank(a.q)-rank(b.q) || a.i-b.i; }).map(function(x){ return x.q; });
+  begin(qs, 'practice', SECS[sec].short + (f==='All' ? '' : ' · ' + f));
+}
+function startMistakes(){
+  var qs=BANK.filter(function(q){ var s=store.stats[q.id]; return s && !s.last; });
+  if (qs.length) begin(qs, 'practice', 'Missed questions');
+}
+function startTimed(sec){
+  var pool=BANK.filter(function(q){ return sec==='ALL' || q.sec===sec; }).slice();
+  for (var i=pool.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=pool[i]; pool[i]=pool[j]; pool[j]=t; }
+  var n = sec==='ALL' ? 12 : 8;
+  var qs=pool.slice(0, Math.min(n, pool.length));
+  qs.sort(function(a,b){ return 'QVD'.indexOf(a.sec)-'QVD'.indexOf(b.sec) || (a.id<b.id?-1:1); });
+  var secs=0; qs.forEach(function(q){ secs+=SECS[q.sec].pace; });
+  begin(qs, 'timed', (sec==='ALL' ? 'Mixed' : SECS[sec].short) + ' timed set', secs);
+}
+function begin(qs, mode, title, limit){
+  S.sess={qs:qs, i:0, mode:mode, title:title, resp:{}, checked:{}, limit:limit||0, t0:Date.now(), qt0:Date.now(), done:false, review:false};
+  S.view='session'; S.tab=0; render(); startClock();
+}
+function startClock(){
+  stopClock();
+  S.tick=setInterval(function(){
+    var el=document.getElementById('clock'); var ss=S.sess; if (!el || !ss) return;
+    if (ss.mode==='timed' && !ss.done){
+      var left=ss.limit-(Date.now()-ss.t0)/1000;
+      el.textContent=fmt(left); el.className='clock'+(left<60?' over':'');
+      if (left<=0) finish();
+    } else if (ss.mode==='practice' && !ss.checked[cur().id]){
+      var e=(Date.now()-ss.qt0)/1000, pace=SECS[cur().sec].pace;
+      el.textContent=fmt(e)+' / '+fmt(pace); el.className='clock'+(e>pace?' over':'');
+    }
+  }, 500);
+}
+function stopClock(){ if (S.tick){ clearInterval(S.tick); S.tick=null; } }
+function cur(){ return S.sess.qs[S.sess.i]; }
+function record(q, ok){ var s=store.stats[q.id] || {n:0,c:0}; s.n++; if (ok) s.c++; s.last=ok; store.stats[q.id]=s; save(); }
+function finish(){
+  var ss=S.sess; if (ss.done) return; ss.done=true; stopClock();
+  ss.used=Math.min(ss.limit, (Date.now()-ss.t0)/1000);
+  ss.qs.forEach(function(q){ var r=ss.resp[q.id]; if (isAnswered(q,r)) record(q, isCorrect(q,r)); ss.checked[q.id]=true; });
+  S.view='results'; render();
+}
+
+/* ---------- rendering ---------- */
+function render(){
+  document.getElementById('nav-home').className='link-btn'+(S.view!=='guide'?' on':'');
+  document.getElementById('nav-guide').className='link-btn'+(S.view==='guide'?' on':'');
+  if (S.view==='home') app.innerHTML=homeHTML();
+  else if (S.view==='guide') app.innerHTML=guideHTML();
+  else if (S.view==='results') app.innerHTML=resultsHTML();
+  else app.innerHTML=sessionHTML();
+  window.scrollTo(0,0);
+}
+function homeHTML(){
+  var missed=BANK.filter(function(q){ var s=store.stats[q.id]; return s && !s.last; }).length;
+  var done=Object.keys(store.stats).length;
+  var h='<div class="stack" style="gap:20px">';
+  h+='<div class="stack" style="gap:6px"><h1>Practice for the GMAT, one question type at a time</h1><p class="muted">'+BANK.length+' original questions with worked explanations, in the current three-section format.</p></div>';
+  h+='<div class="format"><div><b>3 sections</b><small>any order you choose</small></div><div><b>64 questions</b><small>21 + 23 + 20</small></div><div><b>2 h 15 min</b><small>45 min per section</small></div><div><b>205–805</b><small>total score, steps of 10</small></div></div>';
+  h+='<div class="lanes">';
+  ['Q','V','D'].forEach(function(k){
+    var sc=SECS[k], st=secStats(k), types=['All'].concat(typesOf(k));
+    h+='<section class="lane" style="--c:'+sc.color+'"><div><span class="tag">'+sc.short+'</span><h2>'+sc.name+'</h2><p class="spec">'+sc.note+'</p></div>';
+    h+='<div><div class="bar" aria-hidden="true"><i class="ok" style="width:'+(100*st.ok/st.t)+'%"></i><i class="no" style="width:'+(100*st.no/st.t)+'%"></i></div><p class="muted" style="font-size:.88rem;margin-top:5px">'+st.ok+' correct · '+st.no+' to revisit · '+(st.t-st.ok-st.no)+' new</p></div>';
+    h+='<div class="chips">'+types.map(function(t){ return '<button class="chip'+(S.filter[k]===t?' on':'')+'" data-act="filter" data-sec="'+k+'" data-v="'+esc(t)+'">'+esc(t)+'</button>'; }).join('')+'</div>';
+    h+='<div class="row" style="margin-top:auto"><button class="btn go" data-act="practice" data-sec="'+k+'">Practice</button><button class="btn" data-act="timed" data-sec="'+k+'">Timed set of 8</button></div></section>';
+  });
+  h+='</div>';
+  h+='<div class="panel row spread"><div><h3>Mixed timed set</h3><p class="muted">12 questions across all three sections at exam pace. Answers are revealed at the end.</p></div><button class="btn primary" data-act="timed" data-sec="ALL">Start mixed set</button></div>';
+  h+='<div class="panel row spread"><div><h3>Missed questions</h3><p class="muted">'+(missed ? missed+' question'+(missed>1?'s':'')+' you last answered incorrectly.' : (done ? 'Nothing to revisit right now.' : 'Questions you miss will collect here.'))+'</p></div><div class="row"><button class="btn" data-act="mistakes"'+(missed?'':' disabled')+'>Review missed</button>'+(done?'<button class="btn" data-act="reset">Reset progress</button>':'')+'</div></div>';
+  h+='<p class="muted" style="font-size:.85rem">Progress is saved in this browser only. Questions are original practice items written in the style of the exam; they are not official GMAT questions.</p>';
+  return h+'</div>';
+}
+function stimHTML(q){
+  if (!q.stim) return '';
+  if (typeof q.stim==='string') return '<div class="panel stim">'+q.stim+'</div>';
+  var t=q.stim.tabs, h='<div class="panel stim"><div class="tabs" role="tablist">';
+  t.forEach(function(x,i){ h+='<button role="tab" aria-selected="'+(i===S.tab)+'" class="'+(i===S.tab?'on':'')+'" data-act="tab" data-i="'+i+'">'+x.t+'</button>'; });
+  return h+'</div>'+t[S.tab].h+'</div>';
+}
+function answerHTML(q, r, shown){
+  var h='';
+  if (q.kind==='mc'){
+    h+='<div class="opts">';
+    q.choices.forEach(function(c,i){
+      var cls='opt'; if (shown){ if (i===q.ans) cls+=' right'; else if (r===i) cls+=' wrong'; } else if (r===i) cls+=' sel';
+      h+='<button class="'+cls+'" data-act="pick" data-i="'+i+'"'+(shown?' disabled':'')+'><span class="k">'+'ABCDE'[i]+'</span><span>'+c+'</span></button>';
+    });
+    h+='</div>';
+  } else if (q.kind==='tpa'){
+    r=r||[null,null];
+    h+='<div class="tblwrap"><table><thead><tr><th class="pick">'+q.cols[0]+'</th><th class="pick">'+q.cols[1]+'</th><th></th></tr></thead><tbody>';
+    q.rows.forEach(function(row,i){
+      h+='<tr>';
+      [0,1].forEach(function(c){
+        var cls='radio'; if (shown){ if (q.ans[c]===i) cls+=' right'; else if (r[c]===i) cls+=' wrong'; } else if (r[c]===i) cls+=' sel';
+        h+='<td class="pick"><button class="'+cls+'" aria-label="'+q.cols[c]+': '+esc(plain(row))+'" data-act="tpa" data-c="'+c+'" data-i="'+i+'"'+(shown?' disabled':'')+'></button></td>';
+      });
+      h+='<td>'+row+'</td></tr>';
+    });
+    h+='</tbody></table></div>';
+  } else {
+    r=r||[];
+    h+='<div>';
+    q.parts.forEach(function(p,pi){
+      h+='<div class="part"><div class="lbl">'+p.l+'</div><div class="seg">';
+      p.o.forEach(function(o,oi){
+        var cls=''; if (shown){ if (oi===p.a) cls='right'; else if (r[pi]===oi) cls='wrong'; } else if (r[pi]===oi) cls='sel';
+        h+='<button class="'+cls+'" data-act="part" data-p="'+pi+'" data-i="'+oi+'"'+(shown?' disabled':'')+'>'+o+'</button>';
+      });
+      h+='</div></div>';
+    });
+    h+='</div>';
+  }
+  return h;
+}
+function sessionHTML(){
+  var ss=S.sess, q=cur(), r=ss.resp[q.id], shown=!!ss.checked[q.id], sc=SECS[q.sec];
+  var last=ss.i===ss.qs.length-1, timedLive=ss.mode==='timed' && !ss.done;
+  var h='<div class="stack" style="gap:14px">';
+  h+='<div class="sess-head"><div><span class="tag" style="--c:'+sc.color+'">'+q.type+' · '+q.topic+'</span><div class="muted" style="font-size:.9rem">'+esc(ss.title)+' · Question '+(ss.i+1)+' of '+ss.qs.length+'</div></div>';
+  h+='<div class="row">'+((timedLive || (ss.mode==='practice' && !shown)) ? '<span class="clock" id="clock" aria-label="Timer">'+(timedLive?fmt(ss.limit-(Date.now()-ss.t0)/1000):'0:00 / '+fmt(sc.pace))+'</span>' : '')+'<button class="btn small" data-act="'+(ss.review?'results':'quit')+'">'+(ss.review?'Back to results':'Exit')+'</button></div></div>';
+  h+='<div class="prog"><i style="width:'+(100*(ss.i+(shown?1:0))/ss.qs.length)+'%"></i></div>';
+  h+='<div class="qgrid'+(q.stim?' split':'')+'">'+stimHTML(q)+'<div class="panel stack"><div class="qtext">'+q.q+'</div>'+answerHTML(q,r,shown);
+  if (shown){
+    var ok=isCorrect(q,r), ans=isAnswered(q,r);
+    h+='<div class="verdict'+(ok?'':' no')+'"><b>'+(ok?'Correct':(ans?'Incorrect':'Not answered'))+'</b><div class="exp">'+q.exp+'</div></div>';
+    h+='<div class="row"><button class="btn small" data-act="copy">Copy question to ask Claude</button><span class="muted" id="copymsg" style="font-size:.88rem"></span></div><div id="copyfallback"></div>';
+  }
+  h+='<div class="row spread" style="margin-top:4px"><button class="btn" data-act="prev"'+(ss.i===0?' disabled':'')+'>Back</button><div class="row">';
+  if (ss.mode==='practice' && !shown) h+='<button class="btn primary" data-act="check"'+(isAnswered(q,r)?'':' disabled')+'>Check answer</button>';
+  else if (timedLive) h+= last ? '<button class="btn primary" data-act="finish">Finish and score</button>' : '<button class="btn primary" data-act="next">Next</button>';
+  else if (ss.review) h+= last ? '<button class="btn primary" data-act="results">Back to results</button>' : '<button class="btn primary" data-act="next">Next</button>';
+  else h+= last ? '<button class="btn primary" data-act="summary">See summary</button>' : '<button class="btn primary" data-act="next">Next question</button>';
+  h+='</div></div></div></div></div>';
+  return h;
+}
+function resultsHTML(){
+  var ss=S.sess, ok=0, by={};
+  ss.qs.forEach(function(q){ var c=isCorrect(q,ss.resp[q.id]); if (c) ok++; by[q.sec]=by[q.sec]||[0,0]; by[q.sec][1]++; if (c) by[q.sec][0]++; });
+  var pct=Math.round(100*ok/ss.qs.length);
+  var h='<div class="stack" style="gap:16px"><div class="panel stack"><span class="tag">'+esc(ss.title)+'</span><div class="row" style="align-items:flex-end;gap:16px"><div class="score mono">'+ok+'/'+ss.qs.length+'</div><div class="muted">'+pct+'% correct'+(ss.mode==='timed' ? ' · used '+fmt(ss.used)+' of '+fmt(ss.limit) : '')+'</div></div>';
+  h+='<div class="row">'+Object.keys(by).map(function(k){ return '<span class="chip" style="color:'+SECS[k].color+';border-color:'+SECS[k].color+'">'+SECS[k].short+' '+by[k][0]+'/'+by[k][1]+'</span>'; }).join('')+'</div>';
+  h+='<div class="row"><button class="btn primary" data-act="home">Back to practice</button></div></div>';
+  h+='<div class="panel"><h3 style="margin-bottom:6px">Review each question</h3><div class="rlist">';
+  ss.qs.forEach(function(q,i){ var r=ss.resp[q.id], a=isAnswered(q,r), c=isCorrect(q,r);
+    h+='<button class="ritem" data-act="review" data-i="'+i+'"><span class="dot'+(c?' ok':(a?'':' skip'))+'"></span><span><b>'+(i+1)+'.</b> '+q.type+' · '+q.topic+'</span><span class="muted" style="font-size:.88rem">'+(c?'Correct':(a?'Incorrect':'Skipped'))+'</span></button>'; });
+  return h+'</div></div></div>';
+}
+function guideHTML(){
+  return '<div class="stack" style="gap:16px"><div class="stack" style="gap:6px"><h1>Strategy guide</h1><p class="muted">What each section tests and how to pace it.</p></div><div class="guide">'
+  +'<div class="panel"><h2>How the exam works</h2><ul><li>Three sections of 45 minutes each: Quantitative Reasoning (21 questions), Verbal Reasoning (23), Data Insights (20).</li><li>You choose the section order and may take one optional 10-minute break.</li><li>Total score runs from 205 to 805; each section is scored 60 to 90 and counts equally.</li><li>The test is adaptive by question: difficulty follows your performance, and every question must be answered in order.</li><li>At the end of a section, with time remaining, you can review bookmarked questions and change up to three answers.</li><li>Unanswered questions carry a penalty, so guess before time runs out.</li></ul></div>'
+  +'<div class="panel"><h2>Pacing targets</h2><div class="tblwrap"><table><thead><tr><th>Section</th><th class="n">Per question</th><th class="n">Checkpoint at 22:30</th></tr></thead><tbody><tr><td>Quant</td><td class="n">2:08</td><td class="n">Q11</td></tr><tr><td>Verbal</td><td class="n">1:57</td><td class="n">Q12</td></tr><tr><td>Data Insights</td><td class="n">2:15</td><td class="n">Q10</td></tr></tbody></table></div><ul><li>If a question passes 3 minutes with no path to the answer, eliminate, guess, bookmark, and move on.</li><li>The practice timer in this app turns amber when you pass the per-question target.</li></ul></div>'
+  +'<div class="panel" style="--c:var(--quant)"><h2>Quantitative Reasoning</h2><ul><li>Problem Solving only: arithmetic and algebra. Geometry is not tested, and there is no calculator.</li><li>Translate the words into equations before computing.</li><li>Pick smart numbers for percents, ratios, and "must be true" questions: 100 for percents, a common multiple for rates.</li><li>Work backward from the answer choices when the question asks for a single value.</li><li>Know factor counts, remainders, even and odd rules, and average = sum ÷ count.</li><li>For "at least one" counting or probability, compute the complement.</li></ul></div>'
+  +'<div class="panel" style="--c:var(--verbal)"><h2>Verbal Reasoning</h2><ul><li>Critical Reasoning and Reading Comprehension only. There is no sentence correction.</li><li>Critical Reasoning: read the question first, then find the conclusion and the evidence. The answer almost always lives in the gap between them.</li><li>For causal arguments, test three alternatives: another cause, reversed cause, coincidence.</li><li>Assumption check: negate the choice. If the argument falls apart, the choice is required.</li><li>Inference answers must be provable from the text; avoid strong words such as "all" or "most" unless the passage supports them.</li><li>Reading Comprehension: note each paragraph\'s job in a few words, then return to the text for detail questions.</li></ul></div>'
+  +'<div class="panel" style="--c:var(--data)"><h2>Data Sufficiency</h2><ul><li>You judge whether the statements are enough to answer; do not compute the answer unless you must.</li><li>Test statement (1) alone, then (2) alone while forgetting (1), and combine only if both fail.</li><li>For yes/no questions, "always no" is sufficient. A statement fails only when it allows both yes and no.</li><li>Try awkward values: zero, negatives, fractions, and equal numbers.</li><li>One equation with two unknowns can be sufficient when the values must be positive whole numbers.</li><li>The five answer choices never change, so memorize them.</li></ul></div>'
+  +'<div class="panel" style="--c:var(--data)"><h2>Other Data Insights types</h2><ul><li>Multi-Source Reasoning: skim every tab first and note what each holds. Most questions need two tabs.</li><li>Table Analysis: on the exam you can sort by any column. Sort before hunting for a maximum or a median.</li><li>Graphics Interpretation: read the title, axes, and units before the statement. Watch percent change against absolute change.</li><li>Two-Part Analysis: the two columns usually depend on each other. Find the relationship first, then test the rows.</li><li>Multi-part questions give no partial credit; every part must be right.</li><li>The on-screen calculator is available in this section only.</li></ul></div>'
+  +'</div></div>';
+}
+
+/* ---------- events ---------- */
+function copyText(){
+  var q=cur(), ss=S.sess, r=ss.resp[q.id], t='GMAT practice question ('+q.type+', '+q.topic+')\n\n';
+  if (q.stim){ t += (typeof q.stim==='string' ? plain(q.stim) : q.stim.tabs.map(function(x){ return '['+x.t+']\n'+plain(x.h); }).join('\n\n')) + '\n\n'; }
+  t += plain(q.q) + '\n\n';
+  if (q.kind==='mc'){
+    t += q.choices.map(function(c,i){ return 'ABCDE'[i]+'. '+plain(c); }).join('\n') + '\n\nMy answer: '+(r!=null?'ABCDE'[r]:'none')+'\nCorrect answer: '+'ABCDE'[q.ans];
+  } else if (q.kind==='tpa'){
+    t += 'Options: '+q.rows.map(plain).join(' / ')+'\n\n' + [0,1].map(function(c){ return q.cols[c]+' — my answer: '+(r && r[c]!=null ? plain(q.rows[r[c]]) : 'none')+'; correct: '+plain(q.rows[q.ans[c]]); }).join('\n');
+  } else {
+    t += q.parts.map(function(p,i){ return '- '+plain(p.l)+' ['+p.o.join(' / ')+'] — my answer: '+(r && r[i]!=null ? p.o[r[i]] : 'none')+'; correct: '+p.o[p.a]; }).join('\n');
+  }
+  t += '\n\nExplanation given: '+plain(q.exp)+'\n\nPlease explain this question step by step, show the fastest way to solve it under time pressure, and tell me where my reasoning likely went wrong.';
+  return t;
+}
+app.addEventListener('click', function(e){
+  var b=e.target.closest('[data-act]'); if (!b) return; act(b);
+});
+document.querySelector('header.top').addEventListener('click', function(e){
+  var b=e.target.closest('[data-act]'); if (!b) return; act(b);
+});
+function act(b){
+  var a=b.getAttribute('data-act'), ss=S.sess, q, r;
+  if (a==='home' || a==='guide'){
+    if (S.view==='session' && ss && ss.mode==='timed' && !ss.done){ finish(); return; }
+    stopClock(); S.view=a; render(); return;
+  }
+  if (a==='filter'){ S.filter[b.getAttribute('data-sec')]=b.getAttribute('data-v'); render(); return; }
+  if (a==='practice'){ startPractice(b.getAttribute('data-sec')); return; }
+  if (a==='timed'){ startTimed(b.getAttribute('data-sec')); return; }
+  if (a==='mistakes'){ startMistakes(); return; }
+  if (a==='reset'){
+    if (b.getAttribute('data-sure')){ store={stats:{}}; save(); render(); }
+    else { b.setAttribute('data-sure','1'); b.textContent='Tap again to erase progress'; }
+    return;
+  }
+  if (!ss) return;
+  q=cur();
+  if (a==='tab'){ S.tab=+b.getAttribute('data-i'); keepScroll(); return; }
+  if (a==='pick'){ ss.resp[q.id]=+b.getAttribute('data-i'); keepScroll(); return; }
+  if (a==='tpa'){ r=(ss.resp[q.id]||[null,null]).slice(); r[+b.getAttribute('data-c')]=+b.getAttribute('data-i'); ss.resp[q.id]=r; keepScroll(); return; }
+  if (a==='part'){ r=(ss.resp[q.id]||[]).slice(); r[+b.getAttribute('data-p')]=+b.getAttribute('data-i'); ss.resp[q.id]=r; keepScroll(); return; }
+  if (a==='check'){ if (!isAnswered(q,ss.resp[q.id])) return; ss.checked[q.id]=true; record(q,isCorrect(q,ss.resp[q.id])); keepScroll(); return; }
+  if (a==='next' || a==='prev'){
+    var ni=ss.i+(a==='next'?1:-1); if (ni<0 || ni>=ss.qs.length) return;
+    var sameStim=ss.qs[ni].stim && ss.qs[ni].stim===q.stim;
+    ss.i=ni; ss.qt0=Date.now(); if (!sameStim) S.tab=0; render(); return;
+  }
+  if (a==='finish'){ finish(); return; }
+  if (a==='summary'){ ss.done=true; stopClock(); ss.used=0; S.view='results'; render(); return; }
+  if (a==='results'){ S.view='results'; render(); return; }
+  if (a==='review'){ ss.review=true; ss.i=+b.getAttribute('data-i'); S.tab=0; S.view='session'; render(); return; }
+  if (a==='quit'){
+    if (ss.mode==='timed' && !ss.done){ finish(); return; }
+    stopClock(); S.view='home'; render(); return;
+  }
+  if (a==='copy'){
+    var text=copyText(), msg=document.getElementById('copymsg');
+    var fallback=function(){ document.getElementById('copyfallback').innerHTML='<textarea class="copybox" id="copyarea" readonly></textarea>'; var ta=document.getElementById('copyarea'); ta.value=text; ta.focus(); ta.select(); msg.textContent='Copying was blocked. Select the text below and copy it.'; };
+    try { navigator.clipboard.writeText(text).then(function(){ msg.textContent='Copied. Paste it into a Claude chat.'; }, fallback); } catch(err){ fallback(); }
+    return;
+  }
+}
+function keepScroll(){ var y=window.scrollY; app.innerHTML=sessionHTML(); window.scrollTo(0,y); }
+render();
+</script>
+</body>
+</html>

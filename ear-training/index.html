@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>音感/コード</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Zen+Old+Mincho:wght@700&display=swap" rel="stylesheet">
+<style>
+/* 配色: 冷たい灰の譜面台 + 真鍮(ペダル)のアクセント。鍵盤は常に象牙と黒檀。
+   レイアウト: 1画面アプリ。上に問題、下(親指の届く位置)に鍵盤・回答ボタン。 */
+:root{
+  --bg:#eceef2; --panel:#f8f9fb; --ink:#161a22; --muted:#5a6372; --line:#cdd2db;
+  --accent:#8f6210; --accent-ink:#ffffff; --accent-soft:#f0e3c4;
+  --good:#1b7a53; --bad:#c2412d; --warn:#a86a10;
+  --key-w:#fbfaf5; --key-w-ink:#4a505c; --key-edge:#b9bec8; --key-b:#1b1d22; --key-b-ink:#d9dbe0;
+  --f-display:'Fraunces','Zen Old Mincho','Hiragino Mincho ProN',serif;
+  --f-body:'Zen Kaku Gothic New','Hiragino Sans','Yu Gothic',system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#14161b; --panel:#1e2128; --ink:#eceef2; --muted:#9ca5b4; --line:#343945;
+    --accent:#dcae52; --accent-ink:#1b1404; --accent-soft:#3b3120;
+    --good:#4cc48f; --bad:#f0806a; --warn:#e3b341;
+    --key-w:#e8e5dc; --key-w-ink:#4a505c; --key-edge:#8d929c; --key-b:#0b0c0f; --key-b-ink:#c9ccd3;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14161b; --panel:#1e2128; --ink:#eceef2; --muted:#9ca5b4; --line:#343945;
+  --accent:#dcae52; --accent-ink:#1b1404; --accent-soft:#3b3120;
+  --good:#4cc48f; --bad:#f0806a; --warn:#e3b341;
+  --key-w:#e8e5dc; --key-w-ink:#4a505c; --key-edge:#8d929c; --key-b:#0b0c0f; --key-b-ink:#c9ccd3;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
+  display:flex;flex-direction:column;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px 6px}
+.top h1{font-family:var(--f-display);font-size:19px;margin:0;letter-spacing:.02em}
+.ghost{background:transparent;border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:12.5px;color:var(--muted)}
+
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:0 16px;padding:4px;background:var(--panel);
+  border:1px solid var(--line);border-radius:12px}
+.tabs button{border:0;background:transparent;border-radius:8px;padding:8px 2px;font-size:13px;font-weight:500;color:var(--muted);white-space:nowrap}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+
+main{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column}
+.view{flex:1;display:flex;flex-direction:column;gap:12px;padding:12px 16px 14px;max-width:760px;width:100%;margin:0 auto}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 12px;font-size:13px;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--ink);font-weight:700}
+.chips.tight .chip{padding:5px 0;min-width:42px;text-align:center}
+
+.prompt{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:4px}
+.big{font-family:var(--f-display);font-size:clamp(44px,13vw,68px);line-height:1.1;font-weight:600;min-height:1.1em}
+.sub{font-size:13px;color:var(--muted);min-height:1.5em}
+.msg{font-size:14.5px;font-weight:500;min-height:1.5em;margin:0;text-wrap:balance}
+.msg.good{color:var(--good)} .msg.bad{color:var(--bad)}
+
+.actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.btn{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:10px 16px;font-weight:500;min-height:44px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700;padding-inline:26px}
+
+.score{font-size:12.5px;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums;margin:0}
+
+/* 鍵盤 */
+.kb{position:relative;display:flex;height:var(--kh,150px);border-top:5px solid var(--accent);border-radius:3px 3px 8px 8px;
+  user-select:none;-webkit-user-select:none;margin-top:auto;flex-shrink:0}
+.key{border:0;margin:0;padding:0 0 6px;display:flex;align-items:flex-end;justify-content:center;font-size:11px;line-height:1.1;font-weight:500}
+.key.w{flex:1;min-width:0;background:var(--key-w);color:var(--key-w-ink);border:1px solid var(--key-edge);border-top:0;border-radius:0 0 6px 6px;margin-left:-1px}
+.key.w:first-child{margin-left:0}
+.key.b{position:absolute;top:0;height:60%;width:calc(100% / var(--n) * .64);transform:translateX(-50%);z-index:2;
+  background:var(--key-b);color:var(--key-b-ink);border-radius:0 0 5px 5px;font-size:10px;box-shadow:0 2px 3px rgba(0,0,0,.35)}
+.key:active{filter:brightness(.88)}
+.key.sel{background:var(--accent);color:var(--accent-ink)}
+.key.ok{background:var(--good);color:#fff}
+.key.bad{background:var(--bad);color:#fff}
+.key.off{opacity:.38}
+.kb.small{--kh:84px;margin-top:0}
+.kb.small .key{font-size:0}
+.kb.x2 .key.w{font-size:9.5px}
+
+/* コードの種類ボタン */
+.types{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:auto}
+.types.two{grid-template-columns:repeat(2,1fr)}
+.type{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:8px 4px;min-height:58px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.type b{font-family:var(--f-display);font-size:20px;font-weight:600;line-height:1.15}
+.type span{font-size:10.5px;color:var(--muted);line-height:1.2}
+.type.ok{background:var(--good);border-color:var(--good);color:#fff}
+.type.bad{background:var(--bad);border-color:var(--bad);color:#fff}
+.type.ok span,.type.bad span{color:#fff}
+
+.label{font-size:12px;color:var(--muted);margin:0 0 4px}
+.view > .label{margin:0 0 -8px}
+.top-btns{display:flex;gap:6px}
+.ghost.ai{border-color:var(--accent);color:var(--ink);font-weight:700;background:var(--accent-soft)}
+.sheet{position:fixed;inset:0;z-index:10;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
+.sheet-in{background:var(--bg);color:var(--ink);width:100%;max-width:760px;height:min(88%,660px);border-radius:16px 16px 0 0;
+  padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.sheet-head{display:flex;justify-content:space-between;align-items:center}
+.sheet-head h2{font-family:var(--f-display);font-size:18px;margin:0}
+.sheet .label{margin:0}
+.log{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+.bub{padding:9px 12px;border-radius:12px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14.5px;line-height:1.6;max-width:92%}
+.bub.me{align-self:flex-end;background:var(--accent-soft)}
+.bub.ai{align-self:flex-start;background:var(--panel);border:1px solid var(--line)}
+.bub.err{color:var(--bad)}
+#ai-form{display:flex;gap:8px}
+#ai-q{flex:1;min-width:0;font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink)}
+#ai-q:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.btn:disabled{opacity:.5}
+.card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 16px 16px 42px;
+  box-shadow:0 2px 0 var(--line);display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.card::before{content:"";position:absolute;left:14px;top:20px;width:14px;height:14px;border-radius:50%;background:var(--bg);border:1px solid var(--line)}
+.card .meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--muted);padding-right:86px;min-height:26px}
+.tag{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:2px 9px;color:var(--ink)}
+.askcard{position:absolute;top:12px;right:12px}
+.cardhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.card .msg{text-align:left;min-height:0}
+.card .answer .msg{font-size:19px;font-weight:700}
+.card #b-check{align-self:stretch}
+.card .kb{align-self:stretch;margin:6px 0 0 -28px}
+.card{will-change:transform;touch-action:pan-y}
+.swflash{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%);z-index:20;padding:10px 20px;border-radius:999px;
+  color:var(--panel);font-weight:700;font-size:17px;pointer-events:none}
+.answer-area{margin-top:auto;display:grid;grid-template-columns:minmax(126px,2fr) 3fr;gap:12px;align-items:start}
+.answer-area .col{display:flex;flex-direction:column;gap:6px;min-width:0}
+.answer-area .label{margin:0}
+#e-roots{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+#e-roots .chip{min-width:0;min-height:44px;padding:0;border-radius:10px;text-align:center;font-size:15px;color:var(--ink)}
+.answer-area .types,.answer-area .types.two{margin-top:0;grid-template-columns:repeat(2,1fr);gap:6px}
+.answer-area .type{min-height:44px;padding:4px 2px;border-radius:10px}
+.answer-area .type b{font-size:17px}
+.answer-area .type span{font-size:9.5px}
+.chip.ok{background:var(--good);border-color:var(--good);color:var(--panel);font-weight:700}
+.chip.bad{background:var(--bad);border-color:var(--bad);color:var(--panel);font-weight:700}
+.why{white-space:pre-line;font-size:13.5px;line-height:1.65;margin:6px 0 0;text-align:left;color:var(--ink)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;background:var(--muted)}
+.dot.l1{background:var(--bad)} .dot.l2{background:var(--warn)} .dot.l3{background:var(--good)}
+.rate{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.rate .cap{flex-basis:100%;text-align:center;font-size:12px;color:var(--muted);margin:0}
+.rate button{flex:1;min-width:84px;min-height:46px;border:0;border-radius:10px;color:var(--panel);font-weight:700}
+.rate .l1{background:var(--bad)} .rate .l2{background:var(--warn)} .rate .l3{background:var(--good)}
+.btn[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);font-weight:700}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 16px 10px;font-size:11.5px;color:var(--muted)}
+.foot button{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:11.5px;padding:4px 0;white-space:nowrap}
+@media (min-width:700px){
+  .kb{--kh:190px} .kb.small{--kh:110px} .key{font-size:13px} .kb.x2 .key.w{font-size:12px}
+  .tabs button{font-size:15px}
+}
+@media (prefers-reduced-motion:no-preference){ .key,.type,.chip,.btn{transition:background-color .12s} }
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>音感/コード</h1>
+  <div class="top-btns">
+    <button class="ghost ai" id="ai-open" type="button" hidden>AIに聞く</button>
+    <button class="ghost" id="notation" type="button">表記: ドレミ</button>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="練習モード">
+  <button role="tab" data-tab="pitch" aria-selected="true">音あて</button>
+  <button role="tab" data-tab="chord-ear" aria-selected="false">コード聴き</button>
+  <button role="tab" data-tab="chord-build" aria-selected="false">構成音</button>
+  <button role="tab" data-tab="chord-dict" aria-selected="false">コード表</button>
+</nav>
+
+<main>
+  <!-- 音あて -->
+  <section class="view" id="v-pitch">
+    <p class="label">出題範囲</p>
+    <div class="chips" id="p-levels" role="group" aria-label="レベル"></div>
+    <div class="prompt">
+      <div class="big" id="p-big">?</div>
+      <p class="msg" id="p-msg" aria-live="polite">「聴く」を押して、鳴った音の鍵盤をタップ</p>
+    </div>
+    <div class="actions">
+      <button class="btn primary" id="p-play" type="button">聴く</button>
+      <button class="btn" id="p-ref" type="button">基準のド</button>
+      <button class="btn" id="p-free" type="button" aria-pressed="false">試し弾き</button>
+      <button class="btn primary" id="p-next" type="button" hidden>次の音</button>
+    </div>
+    <p class="score" id="p-score"></p>
+    <div class="kb x2" id="p-kb" aria-label="答えの鍵盤"></div>
+  </section>
+
+  <!-- コード聴き -->
+  <section class="view" id="v-chord-ear" hidden>
+    <p class="label">答え方</p>
+    <div class="chips" id="e-mode" role="group" aria-label="答え方"></div>
+    <p class="label">出題範囲（選択肢の数が変わる。左ほど少ない）</p>
+    <div class="chips" id="e-levels" role="group" aria-label="レベル"></div>
+    <div class="prompt">
+      <div class="big" id="e-big">?</div>
+      <p class="msg" id="e-msg" aria-live="polite">「聴く」を押して、コードの種類を選ぶ</p>
+    </div>
+    <div class="actions">
+      <button class="btn primary" id="e-play" type="button">聴く</button>
+      <button class="btn" id="e-arp" type="button">ばらして聴く</button>
+      <button class="btn" id="e-ref" type="button">基準のド</button>
+      <button class="btn primary" id="e-check" type="button" hidden>答え合わせ</button>
+      <button class="btn" id="e-clear" type="button" hidden>選び直す</button>
+      <button class="btn" id="e-ai" type="button" hidden>AIに聞く</button>
+      <button class="btn primary" id="e-next" type="button" hidden>次のコード</button>
+    </div>
+    <div class="kb small x2" id="e-kb" aria-label="ミからシまでの鍵盤"></div>
+    <p class="score" id="e-score"></p>
+    <div class="answer-area" id="e-answer">
+      <div class="col">
+        <p class="label">① ルート音</p>
+        <div id="e-roots" role="group" aria-label="ルート音"></div>
+      </div>
+      <div class="col">
+        <p class="label">② 種類</p>
+        <div class="types" id="e-types"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 構成音カード -->
+  <section class="view" id="v-chord-build" hidden>
+    <p class="label">出題範囲</p>
+    <div class="chips" id="b-levels" role="group" aria-label="レベル"></div>
+    <p class="label">出題する理解度</p>
+    <div class="chips" id="b-sf" role="group" aria-label="出題する理解度"></div>
+    <article class="card">
+      <button class="ghost ai askcard" id="b-ai" type="button" hidden>AIに聞く</button>
+      <div class="meta"><span class="tag" id="b-lv"></span><span id="b-sub"></span></div>
+      <div class="cardhead">
+        <div class="big" id="b-big"></div>
+        <button class="btn" id="b-hear" type="button">聴く</button>
+      </div>
+      <div class="answer" id="b-ans" hidden>
+        <p class="msg" id="b-notes"></p>
+        <div class="sub" id="b-formula"></div>
+        <p class="why" id="b-why"></p>
+      </div>
+      <p class="msg" id="b-msg" aria-live="polite"></p>
+      <button class="btn primary" id="b-check" type="button">答えを見る</button>
+      <div class="kb x2" id="b-kb" aria-label="ミからシまでの鍵盤"></div>
+    </article>
+    <div class="rate" id="b-rate" hidden></div>
+    <p class="score" id="b-score"></p>
+  </section>
+
+  <!-- コード表 -->
+  <section class="view" id="v-chord-dict" hidden>
+    <div>
+      <p class="label">ルート</p>
+      <div class="chips tight" id="d-roots" role="group" aria-label="ルート"></div>
+    </div>
+    <div>
+      <p class="label">種類</p>
+      <div class="chips" id="d-types" role="group" aria-label="コードの種類"></div>
+    </div>
+    <div class="prompt">
+      <div class="big" id="d-big"></div>
+      <div class="sub" id="d-sub"></div>
+      <p class="msg" id="d-notes"></p>
+      <div class="sub" id="d-formula"></div>
+      <p class="why" id="d-why"></p>
+    </div>
+    <div class="actions">
+      <button class="btn primary" id="d-play" type="button">和音で聴く</button>
+      <button class="btn" id="d-arp" type="button">ばらして聴く</button>
+      <button class="btn" id="d-ai" type="button" hidden>AIに聞く</button>
+    </div>
+    <div class="kb x2" id="d-kb" aria-label="ミからシまでの鍵盤"></div>
+  </section>
+</main>
+
+<div class="sheet" id="ai" hidden role="dialog" aria-modal="true" aria-labelledby="ai-title">
+  <div class="sheet-in">
+    <div class="sheet-head">
+      <h2 id="ai-title">AIに聞く</h2>
+      <button class="ghost" id="ai-close" type="button">閉じる</button>
+    </div>
+    <p class="label" id="ai-ctx"></p>
+    <div class="log" id="ai-log" aria-live="polite"></div>
+    <form id="ai-form">
+      <input id="ai-q" type="text" autocomplete="off" placeholder="質問を入力" aria-label="質問">
+      <button class="btn primary" id="ai-send" type="submit">送る</button>
+    </form>
+  </div>
+</div>
+
+<footer class="foot">
+  <span>音が出ないときは消音スイッチと音量を確認</span>
+  <button id="reset" type="button">記録をリセット</button>
+</footer>
+
+<script>
+(() => {
+'use strict';
+const $ = id => document.getElementById(id);
+const LET = 'CDEFGAB', NAT = [0,2,4,5,7,9,11], SOLF = ['ド','レ','ミ','ファ','ソ','ラ','シ'];
+const ACC = {'-2':'♭♭','-1':'♭','0':'','1':'♯','2':'♯♯'};
+const PC_SHARP = [[0,0],[0,1],[1,0],[1,1],[2,0],[3,0],[3,1],[4,0],[4,1],[5,0],[5,1],[6,0]];
+const ROOT_MAJ = [[0,0],[1,-1],[1,0],[2,-1],[2,0],[3,0],[3,1],[4,0],[5,-1],[5,0],[6,-1],[6,0]];
+const ROOT_MIN = ROOT_MAJ.map((r,i) => i===1 ? [0,1] : i===8 ? [4,1] : r);
+const IVN = {'1,0':'ルート','3,4':'長3度','3,3':'短3度','4,5':'完全4度','5,7':'完全5度','5,6':'減5度','5,8':'増5度','7,10':'短7度','7,11':'長7度'};
+const TYPES = {
+  maj:  {sym:'',     jp:'メジャー',         iv:[[1,0],[3,4],[5,7]]},
+  min:  {sym:'m',    jp:'マイナー',         iv:[[1,0],[3,3],[5,7]], minor:true},
+  dim:  {sym:'dim',  jp:'ディミニッシュ',   iv:[[1,0],[3,3],[5,6]], minor:true},
+  aug:  {sym:'aug',  jp:'オーギュメント',   iv:[[1,0],[3,4],[5,8]]},
+  dom7: {sym:'7',    jp:'セブンス',         iv:[[1,0],[3,4],[5,7],[7,10]]},
+  maj7: {sym:'M7',   jp:'メジャーセブンス', iv:[[1,0],[3,4],[5,7],[7,11]]},
+  min7: {sym:'m7',   jp:'マイナーセブンス', iv:[[1,0],[3,3],[5,7],[7,10]], minor:true},
+  sus4: {sym:'sus4', jp:'サスフォー',       iv:[[1,0],[4,5],[5,7]]},
+  m7b5: {sym:'m7♭5', jp:'マイナーセブン・フラットファイブ', iv:[[1,0],[3,3],[5,6],[7,10]], minor:true}
+};
+const ALL_TYPES = Object.keys(TYPES);
+const ALL_PC = [0,1,2,3,4,5,6,7,8,9,10,11];
+
+/* ---------- 保存 ---------- */
+const KEY = 'onkan-chord-v1';
+let store = {notation:'solf', lv:{pitch:1, ear:1, build:1}, st:{pitch:{}, ear:{}, build:{}}};
+try {
+  const raw = JSON.parse(localStorage.getItem(KEY) || 'null');
+  if (raw && raw.st && raw.lv) store = Object.assign(store, raw);
+} catch (e) {}
+['pitch', 'ear', 'build', 'earnotes'].forEach(k => { store.st[k] = store.st[k] || {}; });
+if (store.earMode !== 'notes') store.earMode = 'type';
+store.lvl = store.lvl || {}; store.sf = store.sf || {};
+if (!store.v2) { store.lv.pitch = Math.max(1, (store.lv.pitch || 1) - 1); store.v2 = 1; } /* 「ド・ミ・ソ」廃止に合わせて番号を詰める */
+if (!(store.lv.pitch >= 1 && store.lv.pitch <= 3)) store.lv.pitch = 1;
+if (!store.v3) { store.lv.ear = 4; store.v3 = 1; } /* コード聴きは最初から全種類を出す */
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} };
+
+/* ---------- 名前 ---------- */
+const nm = (li, acc) => (store.notation === 'solf' ? SOLF[li] : LET[li]) + ACC[acc];
+const pcName = pc => nm(PC_SHARP[pc][0], PC_SHARP[pc][1]);
+function chord(pc, tk) {
+  const T = TYPES[tk], r = (T.minor ? ROOT_MIN : ROOT_MAJ)[pc], VLOW = 53; /* 弾き語り用: 構成音をすべて下のファ(F3)〜上のファ(F4)に収める */
+  const notes = T.iv.map(([d, s]) => {
+    const li = (r[0] + d - 1) % 7, p = (pc + s) % 12;
+    return {li, acc: ((p - NAT[li] + 18) % 12) - 6, pc: p, midi: VLOW + ((p + 7) % 12), d, s};
+  });
+  return {pc, tk, root: LET[r[0]] + ACC[r[1]], name: LET[r[0]] + ACC[r[1]] + T.sym, notes};
+}
+const noteList = c => c.notes.map(n => nm(n.li, n.acc)).join('・');
+const TYPE_WHY = {
+  maj: 'メジャーは「ルート＋長3度＋完全5度」。明るい響きの基本形です。',
+  min: 'マイナーは、メジャーの3度を半音下げた形（短3度）。暗めの響きになります。',
+  dim: 'ディミニッシュは、マイナーの5度も半音下げた形（減5度）。短3度を2つ重ねます。',
+  aug: 'オーギュメントは、メジャーの5度を半音上げた形（増5度）。長3度を2つ重ねます。',
+  dom7: 'セブンスは、メジャーに短7度（ルートの全音下と同じ音）を足した形です。',
+  maj7: 'メジャーセブンスは、メジャーに長7度（ルートの半音下と同じ音）を足した形です。',
+  min7: 'マイナーセブンスは、マイナーに短7度（ルートの全音下と同じ音）を足した形です。',
+  sus4: 'サスフォーは、メジャーの3度を半音上げて完全4度に置き換えた形です。',
+  m7b5: 'マイナーセブン・フラットファイブは、マイナーセブンスの5度を半音下げた形です。'
+};
+function whyText(c) {
+  const root = nm(c.notes[0].li, c.notes[0].acc), L = [TYPE_WHY[c.tk]];
+  L.push(root + ' ＝ ルート（コード名 ' + c.root + ' の音）');
+  c.notes.slice(1).forEach(n => L.push(nm(n.li, n.acc) + ' ＝ ' + root + 'から半音' + n.s + 'つ上（' + IVN[n.d + ',' + n.s] + '）'));
+  L.push('押さえ方（ファ〜ファ）: 下から ' + c.notes.slice().sort((a, b) => a.midi - b.midi).map(n => nm(n.li, n.acc)).join('・'));
+  return L.join('\n');
+}
+const formula = c => c.notes.map(n => IVN[n.d + ',' + n.s]).join('・');
+
+/* ---------- 音 ---------- */
+let ctx = null, master = null, sil = null;
+/* iPhoneの消音モードでもスピーカーから鳴るよう、無音の音声を流して再生扱いにする */
+function silentUrl() {
+  const n = 4000, b = new Uint8Array(44 + n), v = new DataView(b.buffer);
+  const w = (o, s) => { for (let i = 0; i < s.length; i++) b[o + i] = s.charCodeAt(i); };
+  w(0, 'RIFF'); v.setUint32(4, 36 + n, true); w(8, 'WAVEfmt '); v.setUint32(16, 16, true);
+  v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, 8000, true); v.setUint32(28, 8000, true);
+  v.setUint16(32, 1, true); v.setUint16(34, 8, true); w(36, 'data'); v.setUint32(40, n, true);
+  b.fill(128, 44);
+  return URL.createObjectURL(new Blob([b], {type: 'audio/wav'}));
+}
+function unmute() {
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+  try {
+    if (!sil) { sil = new Audio(silentUrl()); sil.loop = true; sil.setAttribute('playsinline', ''); }
+    if (sil.paused) { const p = sil.play(); if (p && p.catch) p.catch(() => {}); }
+  } catch (e) {}
+}
+document.addEventListener('visibilitychange', () => { if (document.hidden && sil) { try { sil.pause(); } catch (e) {} } });
+function audio() {
+  unmute();
+  if (!ctx) {
+    const C = window.AudioContext || window.webkitAudioContext;
+    ctx = new C();
+    master = ctx.createDynamicsCompressor();
+    master.connect(ctx.destination);
+  }
+  if (ctx.state === 'suspended') ctx.resume();
+  return ctx;
+}
+function tone(midi, t0, dur, vel) {
+  const f = 440 * Math.pow(2, (midi - 69) / 12);
+  const out = ctx.createGain(); out.gain.value = vel;
+  const lp = ctx.createBiquadFilter(); lp.type = 'lowpass';
+  lp.frequency.setValueAtTime(Math.min(f * 9, 10000), t0);
+  lp.frequency.exponentialRampToValueAtTime(Math.max(f * 2.2, 700), t0 + dur);
+  out.connect(lp); lp.connect(master);
+  [1, .46, .22, .11, .05].forEach((a, i) => {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.value = f * (i + 1) * (1 + 0.0004 * i * i);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(a, t0 + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur / (1 + i * 0.35));
+    o.connect(g); g.connect(out);
+    o.start(t0); o.stop(t0 + dur + 0.05);
+  });
+}
+/* notes: midiの配列。mode: 'chord' 同時 / 'arp' 順番のあと同時 / 'seq' 順番だけ */
+function play(notes, mode) {
+  try {
+    audio();
+    const t = ctx.currentTime + 0.04;
+    if (mode !== 'seq') notes = notes.slice().sort((a, b) => a - b);
+    if (mode === 'arp' || mode === 'seq') {
+      const gap = mode === 'seq' ? 0.75 : 0.36;
+      notes.forEach((m, i) => tone(m, t + i * gap, 1.3, 0.3));
+      if (mode === 'arp') notes.forEach(m => tone(m, t + notes.length * gap + 0.15, 2, 0.26 / Math.sqrt(notes.length)));
+    } else {
+      notes.forEach(m => tone(m, t, notes.length > 1 ? 2.2 : 1.8, 0.34 / Math.sqrt(notes.length)));
+    }
+  } catch (e) {}
+}
+
+/* ---------- 成績 ---------- */
+function rec(mode, key, ok) {
+  const o = store.st[mode][key] || (store.st[mode][key] = {n:0, c:0});
+  o.n++; if (ok) o.c++;
+  save();
+}
+function pick(mode, keys, prev) {
+  const pool = keys.length >= 7 ? keys.filter(k => k !== prev) : keys;
+  const w = pool.map(k => { const s = store.st[mode][k]; return s && s.n ? 1 + 3 * (1 - s.c / s.n) : 2; });
+  let r = Math.random() * w.reduce((a, b) => a + b, 0);
+  for (let i = 0; i < pool.length; i++) { r -= w[i]; if (r <= 0) return pool[i]; }
+  return pool[pool.length - 1];
+}
+function scoreLine(mode, streak, label) {
+  const st = store.st[mode]; let n = 0, c = 0; const weak = [];
+  Object.keys(st).forEach(k => { n += st[k].n; c += st[k].c; if (st[k].n >= 3 && st[k].c / st[k].n < 0.7) weak.push([k, st[k].c / st[k].n]); });
+  if (!n) return 'まだ記録がありません';
+  weak.sort((a, b) => a[1] - b[1]);
+  let s = '連続正解 ' + streak + ' ｜ 正答 ' + c + '/' + n + '（' + Math.round(c / n * 100) + '%）';
+  if (weak.length) s += ' ｜ 苦手: ' + weak.slice(0, 3).map(x => label(x[0])).join('・');
+  return s;
+}
+
+/* ---------- 鍵盤 ---------- */
+const WI = {0:0, 2:1, 4:2, 5:3, 7:4, 9:5, 11:6};
+const KB_LOW = 52, KB_HIGH = 71; /* ミ(E3)〜シ(B4) */
+function buildKb(el, low, high, onTap) {
+  el.innerHTML = '';
+  const blacks = []; let w = 0;
+  for (let m = low; m <= high; m++) {
+    const pc = m % 12, b = document.createElement('button');
+    b.type = 'button'; b.dataset.midi = m;
+    if (pc in WI) { b.className = 'key w'; el.appendChild(b); w++; }
+    else { b.className = 'key b'; b.dataset.w = w; blacks.push(b); }
+    if (onTap) b.addEventListener('click', () => onTap(m)); else b.tabIndex = -1;
+  }
+  el.style.setProperty('--n', w);
+  blacks.forEach(b => { b.style.left = (b.dataset.w / w * 100) + '%'; el.appendChild(b); });
+  labelKb(el);
+}
+function labelKb(el) {
+  const two = el.classList.contains('x2');
+  el.querySelectorAll('.key').forEach(k => {
+    const pc = k.dataset.midi % 12;
+    k.textContent = (two && !(pc in WI)) ? '' : pcName(pc);
+    k.setAttribute('aria-label', pcName(pc));
+  });
+}
+function mark(el, cls) { /* cls: {midi: 'ok'|'bad'|'sel'} */
+  el.querySelectorAll('.key').forEach(k => {
+    k.classList.remove('ok', 'bad', 'sel');
+    const c = cls[k.dataset.midi]; if (c) k.classList.add(c);
+  });
+}
+function levelChips(el, labels, mode, onChange) {
+  el.innerHTML = '';
+  labels.forEach((t, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.textContent = t;
+    b.setAttribute('aria-pressed', store.lv[mode] === i + 1);
+    b.addEventListener('click', () => {
+      store.lv[mode] = i + 1; save();
+      el.querySelectorAll('.chip').forEach((c, j) => c.setAttribute('aria-pressed', j === i));
+      onChange();
+    });
+    el.appendChild(b);
+  });
+}
+const setMsg = (el, text, kind) => { el.textContent = text; el.className = 'msg' + (kind ? ' ' + kind : ''); };
+
+/* ========== 理解度（未学習 / もう一度 / 要復習 / 完了） ========== */
+const LVL = ['未学習', 'もう一度', '要復習', '完了'];
+const lvOf = (mode, key) => (store.lvl[mode] || {})[key] || 0;
+const sfOf = mode => { const f = store.sf[mode]; return mode === 'build' && Array.isArray(f) && f.length ? f : [0, 1, 2, 3]; };
+function items(mode) {
+  if (mode === 'pitch') return PLV[store.lv.pitch].map(String);
+  const L = mode === 'build' ? BLV[store.lv.build] : {types: ELV[store.lv.ear], roots: ALL_PC};
+  const out = []; L.roots.forEach(pc => L.types.forEach(tk => out.push(pc + ':' + tk)));
+  return out;
+}
+function drawItem(mode, prev) {
+  const f = sfOf(mode); let p = items(mode).filter(k => f.includes(lvOf(mode, k))), fb = false;
+  if (!p.length) { p = items(mode); fb = true; }
+  if (p.length >= 4) p = p.filter(k => k !== prev);
+  return {key: p[Math.floor(Math.random() * p.length)], fb};
+}
+const FB_NOTE = '（選んだ理解度に当てはまる問題がないので、全体から出題）';
+function renderSf(mode, el, onChange) {
+  const cnt = [0, 0, 0, 0], f = sfOf(mode);
+  items(mode).forEach(k => cnt[lvOf(mode, k)]++);
+  el.innerHTML = '';
+  LVL.forEach((t, k) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip';
+    b.innerHTML = '<span class="dot l' + k + '"></span>' + t + ' ' + cnt[k];
+    b.setAttribute('aria-pressed', f.includes(k));
+    b.addEventListener('click', () => {
+      const g = f.includes(k) ? f.filter(x => x !== k) : f.concat([k]);
+      if (!g.length) return;
+      store.sf[mode] = g; save(); onChange();
+    });
+    el.appendChild(b);
+  });
+}
+function rateRow(el, onRate) {
+  el.innerHTML = '<p class="cap">理解度を選ぶと次のカードへ（カードを左・下・右にスワイプでも同じ）</p>';
+  [1, 2, 3].forEach(k => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'l' + k; b.textContent = LVL[k];
+    b.addEventListener('click', () => onRate(k));
+    el.appendChild(b);
+  });
+}
+function setLvl(mode, key, k) { (store.lvl[mode] = store.lvl[mode] || {})[key] = k; save(); }
+
+/* ========== 音あて ========== */
+const PLV = {1:[0,2,4,5,7,9,11], 2:ALL_PC, 3:ALL_PC};
+const P = {q:null, done:false, prev:null, streak:0};
+function pReset() {
+  P.q = null; P.done = false;
+  $('p-big').textContent = '?';
+  setMsg($('p-msg'), '「聴く」を押して、鳴った音の鍵盤をタップ');
+  $('p-play').textContent = '聴く'; $('p-play').className = 'btn primary'; $('p-next').hidden = true;
+  mark($('p-kb'), {});
+  const set = PLV[store.lv.pitch];
+  $('p-kb').querySelectorAll('.key').forEach(k => k.classList.toggle('off', !set.includes(k.dataset.midi % 12)));
+  pScore();
+}
+const pScore = () => $('p-score').textContent = scoreLine('pitch', P.streak, k => pcName(+k));
+function pNew() {
+  const lv = store.lv.pitch, d = drawItem('pitch', String(P.prev)), pc = +d.key;
+  P.prev = pc;
+  let midi = 60 + pc > KB_HIGH ? 48 + pc : 60 + pc;
+  if (lv === 3) { const c = []; for (let m = KB_LOW; m <= KB_HIGH; m++) if (m % 12 === pc) c.push(m); midi = c[Math.floor(Math.random() * c.length)]; }
+  P.q = {pc, midi};
+  P.done = false;
+  $('p-big').textContent = '?';
+  setMsg($('p-msg'), '鳴った音の鍵盤をタップ' + (d.fb ? FB_NOTE : ''));
+  $('p-play').textContent = 'もう一度聴く'; $('p-play').className = 'btn primary'; $('p-next').hidden = true;
+  mark($('p-kb'), {});
+  play([P.q.midi]);
+}
+function pTap(midi) {
+  const pc = midi % 12;
+  if (!P.q || P.done || P.free || !PLV[store.lv.pitch].includes(pc)) { play([midi]); return; }
+  const ok = pc === P.q.pc;
+  rec('pitch', P.q.pc, ok);
+  P.streak = ok ? P.streak + 1 : 0; P.done = true;
+  const m = {}; m[P.q.midi] = 'ok'; if (!ok) m[midi] = 'bad';
+  mark($('p-kb'), m);
+  $('p-big').textContent = pcName(P.q.pc);
+  if (ok) { setMsg($('p-msg'), '正解', 'good'); play([P.q.midi]); }
+  else { setMsg($('p-msg'), 'ちがいます。選んだ音 → 正解の音の順に鳴ります', 'bad'); play([midi, P.q.midi], 'seq'); }
+  $('p-play').className = 'btn'; $('p-next').hidden = false;
+  pScore();
+}
+$('p-play').addEventListener('click', () => P.q ? play([P.q.midi]) : pNew());
+$('p-next').addEventListener('click', pNew);
+$('p-ref').addEventListener('click', () => play([60]));
+$('p-free').addEventListener('click', () => {
+  P.free = !P.free; $('p-free').setAttribute('aria-pressed', P.free);
+  if (P.q && !P.done) setMsg($('p-msg'), P.free ? '試し弾き中。鍵盤を押しても回答になりません' : '鳴った音の鍵盤をタップ');
+});
+
+/* ========== コード聴き ========== */
+const ELV = {1:['maj','min'], 2:['maj','min','dim','aug'], 3:['maj','min','dim','aug','dom7','maj7','min7'], 4:ALL_TYPES};
+const E = {q:null, done:false, prev:null, streak:0, sel:new Set(), root:0};
+const eNotes = () => store.earMode === 'notes';
+const eKey = () => eNotes() ? 'earnotes' : 'ear';
+function eModeUI() {
+  const n = eNotes();
+  $('e-answer').hidden = n; $('e-kb').classList.toggle('small', !n);
+  $('e-check').hidden = $('e-clear').hidden = !n || E.done || !E.q;
+}
+function eTap(midi) {
+  play([midi]);
+  if (!eNotes() || !E.q || E.done) return;
+  if (E.sel.has(midi)) E.sel.delete(midi); else E.sel.add(midi);
+  const m = {}; E.sel.forEach(x => m[x] = 'sel'); mark($('e-kb'), m);
+}
+function eCheck() {
+  if (!E.q || E.done) return;
+  if (!E.sel.size) { setMsg($('e-msg'), '鍵盤をタップして音を選んでください'); return; }
+  const want = new Set(E.q.notes.map(n => n.pc)), got = new Set([...E.sel].map(x => x % 12));
+  const ok = want.size === got.size && [...want].every(p => got.has(p));
+  rec('earnotes', E.q.tk, ok);
+  E.streak = ok ? E.streak + 1 : 0; E.done = true;
+  E.miss = ok ? '' : [...got].map(pcName).join('・');
+  const m = {}; E.sel.forEach(x => { if (!want.has(x % 12)) m[x] = 'bad'; });
+  E.q.notes.forEach(n => m[n.midi] = 'ok');
+  mark($('e-kb'), m);
+  $('e-big').textContent = E.q.name;
+  setMsg($('e-msg'), (ok ? '正解。' : '正しくは ') + noteList(E.q) + '（' + TYPES[E.q.tk].jp + '）', ok ? 'good' : 'bad');
+  $('e-play').className = 'btn'; $('e-next').hidden = false;
+  eModeUI(); play(E.q.notes.map(n => n.midi), 'arp'); eScore(); aiBtns();
+}
+function eButtons() {
+  const el = $('e-types'), list = ELV[store.lv.ear];
+  el.innerHTML = ''; el.classList.toggle('two', list.length <= 4);
+  list.forEach(tk => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'type'; b.dataset.tk = tk;
+    b.innerHTML = '<b>' + chord(E.root, tk).name + '</b><span>' + TYPES[tk].jp + '</span>';
+    b.addEventListener('click', () => eAnswer(tk));
+    el.appendChild(b);
+  });
+}
+function eRoots() {
+  const el = $('e-roots'); el.innerHTML = '';
+  ROOT_MAJ.forEach((r, pc) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.textContent = LET[r[0]] + ACC[r[1]];
+    b.setAttribute('aria-pressed', pc === E.root);
+    if (E.done && E.q && pc === E.q.pc) b.classList.add('ok');
+    b.addEventListener('click', () => { E.root = pc; eRoots(); eButtons(); });
+    el.appendChild(b);
+  });
+}
+function eReset() {
+  E.q = null; E.done = false;
+  $('e-big').textContent = '?';
+  setMsg($('e-msg'), eNotes() ? '「聴く」を押して、鳴っている音をすべて鍵盤で選ぶ' : '「聴く」を押して、ルートと種類を選ぶ');
+  $('e-play').textContent = '聴く'; $('e-play').className = 'btn primary'; $('e-next').hidden = true;
+  E.sel.clear(); mark($('e-kb'), {}); eRoots(); eButtons(); eModeUI(); eScore(); aiBtns();
+}
+const eScore = () => $('e-score').textContent = scoreLine(eKey(), E.streak, k => 'C' + TYPES[k].sym);
+function eNew() {
+  const d = drawItem(eKey(), E.prev), kv = d.key.split(':');
+  E.prev = d.key; E.q = chord(+kv[0], kv[1]); E.done = false;
+  E.sel.clear(); eModeUI(); E.miss = ''; aiBtns();
+  $('e-big').textContent = '?';
+  setMsg($('e-msg'), (eNotes() ? '鳴っている音をすべて鍵盤で選ぶ' : 'ルートを選んでから、種類のボタンで答える') + (d.fb ? FB_NOTE : ''));
+  $('e-play').textContent = 'もう一度聴く'; $('e-play').className = 'btn primary'; $('e-next').hidden = true;
+  mark($('e-kb'), {});
+  eRoots(); eButtons();
+  play(E.q.notes.map(n => n.midi));
+}
+function eAnswer(tk) {
+  if (!E.q) { setMsg($('e-msg'), '先に「聴く」を押してください'); return; }
+  if (E.done) { /* 答えたあとは、選んだルートと種類で聴き比べ */
+    const c = chord(E.root, tk), same = E.root === E.q.pc && tk === E.q.tk, m = {};
+    c.notes.forEach(n => m[n.midi] = same ? 'ok' : 'sel');
+    mark($('e-kb'), m); $('e-big').textContent = c.name; play(c.notes.map(n => n.midi)); return;
+  }
+  const rootOk = E.root === E.q.pc, typeOk = tk === E.q.tk, ok = rootOk && typeOk;
+  rec('ear', E.q.tk, ok);
+  E.streak = ok ? E.streak + 1 : 0; E.done = true;
+  E.miss = ok ? '' : chord(E.root, tk).name;
+  eRoots();
+  $('e-roots').querySelectorAll('.chip').forEach((b, pc) => { if (!rootOk && pc === E.root) b.classList.add('bad'); });
+  $('e-types').querySelectorAll('.type').forEach(b => {
+    if (b.dataset.tk === E.q.tk) b.classList.add('ok'); else if (b.dataset.tk === tk) b.classList.add('bad');
+  });
+  const m = {}; E.q.notes.forEach(n => m[n.midi] = 'ok'); mark($('e-kb'), m);
+  $('e-big').textContent = E.q.name;
+  const why = ok ? '正解。' : !rootOk && !typeOk ? 'ルートも種類もちがいます。' : !rootOk ? '種類は正解、ルートがちがいます。' : 'ルートは正解、種類がちがいます。';
+  setMsg($('e-msg'), why + '正解は ' + E.q.name + '（' + noteList(E.q) + '）。ボタンで聴き比べできます', ok ? 'good' : 'bad');
+  $('e-play').className = 'btn'; $('e-next').hidden = false;
+  if (!ok) play(E.q.notes.map(n => n.midi));
+  eScore(); aiBtns();
+}
+$('e-play').addEventListener('click', () => E.q ? play(E.q.notes.map(n => n.midi)) : eNew());
+$('e-arp').addEventListener('click', () => { if (!E.q) eNew(); else play(E.q.notes.map(n => n.midi), 'arp'); });
+$('e-next').addEventListener('click', eNew);
+$('e-check').addEventListener('click', eCheck);
+$('e-clear').addEventListener('click', () => { E.sel.clear(); mark($('e-kb'), {}); });
+$('e-ref').addEventListener('click', () => play([60]));
+function eModeChips() {
+  const el = $('e-mode'); el.innerHTML = '';
+  [['type', 'コード名で答える'], ['notes', '構成音で答える']].forEach(([k, t]) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.textContent = t;
+    b.setAttribute('aria-pressed', store.earMode === k);
+    b.addEventListener('click', () => { store.earMode = k; save(); E.streak = 0; eModeChips(); eReset(); });
+    el.appendChild(b);
+  });
+}
+
+/* ========== コード作り ========== */
+const WHITE = [0,2,4,5,7,9,11];
+const BLV = {
+  1:{types:['maj','min'], roots:WHITE},
+  2:{types:['maj','min'], roots:ALL_PC},
+  3:{types:['maj','min','dom7','maj7','min7'], roots:ALL_PC},
+  4:{types:ALL_TYPES, roots:ALL_PC}
+};
+const B = {q:null, done:false, sel:new Set(), prev:'', streak:0};
+const bScore = () => $('b-score').textContent = scoreLine('build', B.streak, k => 'C' + TYPES[k].sym);
+function bNew() {
+  const d = drawItem('build', B.prev), kv = d.key.split(':'), tk = kv[1];
+  B.prev = d.key; B.q = chord(+kv[0], tk); B.done = false; B.sel.clear(); B.miss = '';
+  const k = lvOf('build', d.key);
+  $('b-lv').innerHTML = '<span class="dot l' + k + '"></span>' + LVL[k];
+  $('b-big').textContent = B.q.name;
+  $('b-sub').textContent = B.q.root + ' ' + TYPES[tk].jp + '（' + B.q.notes.length + '音）';
+  $('b-ans').hidden = true;
+  setMsg($('b-msg'), '構成音を思い浮かべてから「答えを見る」。鍵盤で選んで確かめることもできます' + (d.fb ? FB_NOTE : ''));
+  $('b-check').hidden = false; $('b-rate').hidden = true;
+  mark($('b-kb'), {}); bScore(); aiBtns(); bSf();
+}
+function bTap(midi) {
+  play([midi]);
+  if (B.done) return;
+  if (B.sel.has(midi)) B.sel.delete(midi); else B.sel.add(midi);
+  const m = {}; B.sel.forEach(x => m[x] = 'sel'); mark($('b-kb'), m);
+}
+function bCheck() {
+  const want = new Set(B.q.notes.map(n => n.pc)), got = new Set([...B.sel].map(x => x % 12));
+  const tried = B.sel.size > 0;
+  const ok = tried && want.size === got.size && [...want].every(p => got.has(p));
+  if (tried) { rec('build', B.q.tk, ok); B.streak = ok ? B.streak + 1 : 0; }
+  B.done = true;
+  B.miss = tried && !ok ? [...got].map(pcName).join('・') : '';
+  const m = {}; B.sel.forEach(x => { if (!want.has(x % 12)) m[x] = 'bad'; });
+  B.q.notes.forEach(n => m[n.midi] = 'ok');
+  mark($('b-kb'), m);
+  $('b-notes').textContent = noteList(B.q); $('b-formula').textContent = formula(B.q); $('b-why').textContent = whyText(B.q); $('b-ans').hidden = false;
+  setMsg($('b-msg'), tried ? (ok ? '鍵盤で選んだ音は正解' : '鍵盤で選んだ音はちがいます（赤が余分な音）') : '', tried ? (ok ? 'good' : 'bad') : '');
+  $('b-check').hidden = true; $('b-rate').hidden = false;
+  play(B.q.notes.map(n => n.midi), 'arp');
+  bScore(); aiBtns();
+}
+$('b-check').addEventListener('click', bCheck);
+$('b-hear').addEventListener('click', () => play(B.q.notes.map(n => n.midi), B.done ? 'arp' : undefined));
+function bRate(k) { setLvl('build', B.prev, k); bNew(); }
+rateRow($('b-rate'), bRate);
+/* スワイプ: 左=もう一度 / 下=要復習 / 右=完了（English Wordsと同じ） */
+(() => {
+  const card = document.querySelector('#v-chord-build .card'), COL = ['', 'var(--bad)', 'var(--warn)', 'var(--good)'];
+  let sx = 0, sy = 0, on = false, mode = '', canDown = false, busy = false;
+  const tint = (g, a) => { card.style.boxShadow = g ? 'inset 0 0 0 ' + Math.min(4, 1 + a * 3).toFixed(1) + 'px ' + COL[g] : ''; };
+  const reset = () => { tint(0, 0); card.style.transition = 'transform .15s ease'; card.style.transform = ''; setTimeout(() => { card.style.transition = ''; }, 160); };
+  function fly(g) {
+    busy = true;
+    const lab = document.createElement('div');
+    lab.className = 'swflash'; lab.style.background = COL[g];
+    lab.textContent = ['', '← もう一度', '↓ 要復習', '完了 →'][g];
+    document.body.appendChild(lab); setTimeout(() => lab.remove(), 650);
+    tint(g, 1);
+    card.style.transition = 'transform .18s ease, opacity .18s ease';
+    card.style.transform = g === 1 ? 'translateX(-40%) rotate(-4deg)' : g === 2 ? 'translateY(30%)' : 'translateX(40%) rotate(4deg)';
+    card.style.opacity = '0';
+    setTimeout(() => { bRate(g); card.style.transition = ''; card.style.transform = ''; card.style.opacity = ''; tint(0, 0); busy = false; }, 180);
+  }
+  card.addEventListener('touchstart', e => {
+    on = !busy && e.touches.length === 1 && !e.target.closest('button:not(.key)');
+    if (!on) return;
+    const t = e.touches[0]; sx = t.clientX; sy = t.clientY; mode = '';
+    canDown = card.getBoundingClientRect().top >= -4; card.style.transition = '';
+  }, {passive: true});
+  card.addEventListener('touchmove', e => {
+    if (!on) return;
+    const t = e.touches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+    if (!mode) { if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return; mode = Math.abs(dx) > Math.abs(dy) ? 'x' : (dy > 0 && canDown ? 'down' : 'scroll'); }
+    if (mode === 'scroll') return;
+    if (e.cancelable) e.preventDefault();
+    if (mode === 'x') { const m = Math.max(-140, Math.min(140, dx)); card.style.transform = 'translateX(' + m + 'px) rotate(' + (m / 60) + 'deg)'; tint(m < 0 ? 1 : 3, Math.abs(m) / 70); }
+    else { const m = Math.max(0, Math.min(160, dy)); card.style.transform = 'translateY(' + m + 'px)'; tint(2, m / 80); }
+  }, {passive: false});
+  card.addEventListener('touchend', e => {
+    if (!on) return; on = false;
+    const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+    if (mode === 'x' && Math.abs(dx) > 70) return fly(dx < 0 ? 1 : 3);
+    if (mode === 'down' && dy > 80) return fly(2);
+    reset();
+  }, {passive: true});
+  card.addEventListener('touchcancel', () => { on = false; reset(); }, {passive: true});
+})();
+function bSf() { renderSf('build', $('b-sf'), bNew); }
+
+/* ========== コード表 ========== */
+const D = {pc:0, tk:'maj'};
+function dRender() {
+  const roots = TYPES[D.tk].minor ? ROOT_MIN : ROOT_MAJ, rEl = $('d-roots'), tEl = $('d-types');
+  rEl.innerHTML = ''; tEl.innerHTML = '';
+  roots.forEach((r, pc) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.textContent = LET[r[0]] + ACC[r[1]];
+    b.setAttribute('aria-pressed', pc === D.pc);
+    b.addEventListener('click', () => { D.pc = pc; dRender(); dPlay(); });
+    rEl.appendChild(b);
+  });
+  ALL_TYPES.forEach(tk => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.textContent = TYPES[tk].sym || 'メジャー';
+    b.setAttribute('aria-pressed', tk === D.tk);
+    b.addEventListener('click', () => { D.tk = tk; dRender(); dPlay(); });
+    tEl.appendChild(b);
+  });
+  const c = chord(D.pc, D.tk), m = {};
+  c.notes.forEach(n => m[n.midi] = 'sel');
+  $('d-big').textContent = c.name;
+  $('d-sub').textContent = c.root + ' ' + TYPES[D.tk].jp;
+  $('d-notes').textContent = noteList(c);
+  $('d-formula').textContent = formula(c);
+  $('d-why').textContent = whyText(c);
+  mark($('d-kb'), m);
+}
+const dPlay = mode => play(chord(D.pc, D.tk).notes.map(n => n.midi), mode);
+$('d-play').addEventListener('click', () => dPlay());
+$('d-arp').addEventListener('click', () => dPlay('arp'));
+
+/* ========== 共通 ========== */
+const TABS = ['pitch', 'chord-ear', 'chord-build', 'chord-dict'];
+const LVN = {
+  pitch: ['白鍵7音', '12音', '全音域'],
+  ear: ['メジャー/マイナー', '+dim・aug', '+セブンス', 'ぜんぶ'],
+  build: ['白鍵ルート', '全ルート', '+セブンス', 'ぜんぶ']
+};
+let curTab = 'pitch';
+
+/* ========== AIに聞く ========== */
+let sample = null, aiHist = [], aiCtl = null, aiBusy = false;
+async function aiInit() {
+  if (sample) return;
+  try {
+    if (window.claude && window.claude.use) {
+      sample = await window.claude.use('sample');
+      if (sample) { $('ai-open').hidden = false; aiBtns(); }
+    }
+  } catch (e) {}
+}
+aiInit(); window.addEventListener('load', aiInit);
+function aiWhere() {
+  if (curTab === 'pitch') return '音あて' + (P.q && P.done ? '（' + pcName(P.q.pc) + '）' : '');
+  if (curTab === 'chord-ear') return 'コード聴き' + (E.q && E.done ? '（' + E.q.name + '）' : '');
+  if (curTab === 'chord-build') return '構成音（' + B.q.name + '）';
+  return 'コード表（' + chord(D.pc, D.tk).name + '）';
+}
+function aiContext() {
+  const L = [];
+  if (curTab === 'pitch') {
+    L.push('画面: 音あて（基準音なしで鳴った1音の音名を当てる練習）。レベル: ' + LVN.pitch[store.lv.pitch - 1]);
+    if (P.q && P.done) L.push('直前の問題の正解: ' + pcName(P.q.pc));
+    L.push('成績: ' + $('p-score').textContent);
+  } else if (curTab === 'chord-ear') {
+    L.push('画面: コード聴き（鳴ったコードの' + (eNotes() ? '構成音を耳で聴き取って鍵盤で答える' : 'ルートと種類を耳で当てる') + '練習）。出題範囲: ' + ELV[store.lv.ear].map(k => 'C' + TYPES[k].sym).join('、') + '（ルートは毎回変わる）');
+    if (E.q && E.done) L.push('直前の問題の正解: ' + E.q.name + '（構成音 ' + noteList(E.q) + '）' + (E.miss ? '。学習者の答え: ' + E.miss + '（不正解）' : ''));
+    L.push('成績: ' + $('e-score').textContent);
+  } else if (curTab === 'chord-build') {
+    L.push('画面: コード作り（コード名を見て構成音を鍵盤で選ぶ練習）。レベル: ' + LVN.build[store.lv.build - 1]);
+    L.push('いまの問題: ' + B.q.name + '（' + (B.done ? '答え合わせ済み。構成音 ' + noteList(B.q) + (B.miss ? '。学習者が選んだ音: ' + B.miss + '（不正解）' : '') : 'まだ回答前') + '）');
+    L.push('成績: ' + $('b-score').textContent);
+  } else {
+    const c = chord(D.pc, D.tk);
+    L.push('画面: コード表。表示中のコード: ' + c.name + '（' + TYPES[D.tk].jp + '）、構成音 ' + noteList(c) + '、度数 ' + formula(c));
+  }
+  return L.join('\n');
+}
+function aiBubble(kind, text) {
+  const d = document.createElement('div');
+  d.className = 'bub ' + kind; d.textContent = text;
+  $('ai-log').appendChild(d); $('ai-log').scrollTop = $('ai-log').scrollHeight;
+  return d;
+}
+async function aiAsk(q) {
+  q = (q || '').trim();
+  if (!q || aiBusy || !sample) return;
+  aiBusy = true; $('ai-send').disabled = true; $('ai-q').value = '';
+  aiBubble('me', q);
+  const out = aiBubble('ai', '考え中…');
+  const prompt = 'あなたはピアノと音楽理論のやさしい先生です。日本語で答えてください。スマホで読むので短く（目安200字、長くても400字）。' +
+    '#や*などのマークダウン記号は使わず、必要なら「・」で箇条書きにしてください。音名は' + (store.notation === 'solf' ? 'ドレミ' : 'CDE') +
+    '表記、コード名はC・Am7のような英字表記で書いてください。\n\n【学習者のいまの状況】\n' + aiContext() + '\n\n【質問】\n' + q;
+  const ctl = aiCtl = new AbortController();
+  try {
+    const r = await sample(aiHist.concat([{role: 'user', content: prompt}]), {
+      signal: ctl.signal, cache: false,
+      onText: ({text}) => { if (text) { out.textContent = text; $('ai-log').scrollTop = $('ai-log').scrollHeight; } }
+    });
+    out.textContent = r.text + (r.truncated ? '\n（途中で切れました）' : '');
+    aiHist.push({role: 'user', content: q}, {role: 'assistant', content: r.text});
+    if (aiHist.length > 12) aiHist = aiHist.slice(-12);
+  } catch (e) {
+    const code = e && e.code;
+    out.classList.add('err');
+    out.textContent = ctl.signal.aborted ? '中止しました'
+      : code === 'not_granted' ? 'AIの利用が許可されていないため、答えられません。'
+      : code === 'rate_limited' ? '利用が集中しています。少し待ってからもう一度送ってください。'
+      : 'うまく答えを取得できませんでした。もう一度送ってください。';
+  } finally {
+    aiBusy = false; $('ai-send').disabled = false;
+  }
+}
+function aiOpen() {
+  $('ai-ctx').textContent = 'いまの画面をふまえて答えます: ' + aiWhere();
+  $('ai').hidden = false;
+  try { $('ai-q').focus(); } catch (e) {}
+}
+function aiClose() { if (aiCtl) aiCtl.abort(); $('ai').hidden = true; }
+function aiBtns() {
+  $('b-ai').hidden = !sample;
+  $('e-ai').hidden = !(sample && E.q && E.done);
+  $('d-ai').hidden = !sample;
+}
+$('b-ai').addEventListener('click', aiOpen);
+$('e-ai').addEventListener('click', aiOpen);
+$('d-ai').addEventListener('click', aiOpen);
+$('ai-open').addEventListener('click', aiOpen);
+$('ai-close').addEventListener('click', aiClose);
+$('ai').addEventListener('click', e => { if (e.target === $('ai')) aiClose(); });
+$('ai-form').addEventListener('submit', e => { e.preventDefault(); aiAsk($('ai-q').value); });
+
+function showTab(t) {
+  if (!TABS.includes(t)) t = 'pitch';
+  curTab = t;
+  TABS.forEach(x => { $('v-' + x).hidden = x !== t; });
+  document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === t));
+  try { if (location.hash.slice(1) !== t) location.hash = t; } catch (e) {}
+}
+document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
+
+function relabel() {
+  $('notation').textContent = '表記: ' + (store.notation === 'solf' ? 'ドレミ' : 'CDE');
+  ['p-kb', 'e-kb', 'b-kb', 'd-kb'].forEach(id => labelKb($(id)));
+  if (P.done) $('p-big').textContent = pcName(P.q.pc);
+  if (B.done) { $('b-notes').textContent = noteList(B.q); $('b-why').textContent = whyText(B.q); }
+  pScore(); dRender();
+}
+$('notation').addEventListener('click', () => { store.notation = store.notation === 'solf' ? 'abc' : 'solf'; save(); relabel(); });
+
+let armed = false;
+$('reset').addEventListener('click', () => {
+  if (!armed) { armed = true; $('reset').textContent = 'もう一度押すと消えます'; setTimeout(() => { armed = false; $('reset').textContent = '記録をリセット'; }, 4000); return; }
+  store.st = {pitch:{}, ear:{}, build:{}, earnotes:{}}; store.lvl = {}; save();
+  P.streak = E.streak = B.streak = 0; armed = false; $('reset').textContent = '記録をリセット';
+  pScore(); eScore(); bScore(); bNew();
+});
+
+buildKb($('p-kb'), KB_LOW, KB_HIGH, pTap);
+buildKb($('e-kb'), KB_LOW, KB_HIGH, eTap);
+eModeChips();
+buildKb($('b-kb'), KB_LOW, KB_HIGH, bTap);
+buildKb($('d-kb'), KB_LOW, KB_HIGH, m => play([m]));
+levelChips($('p-levels'), LVN.pitch, 'pitch', pReset);
+levelChips($('e-levels'), LVN.ear, 'ear', eReset);
+levelChips($('b-levels'), LVN.build, 'build', bNew);
+pReset(); eReset(); bNew(); relabel();
+showTab((location.hash || '').slice(1) || 'pitch');
+})();
+</script>
+</body>
+</html>

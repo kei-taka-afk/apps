@@ -1,0 +1,482 @@
+(function(){
+'use strict';
+const $=(s,r=document)=>r.querySelector(s);
+const app=$('#app');
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const pick=(a,n)=>shuffle(a).slice(0,n);
+
+/* ---------- 科目と問題 ---------- */
+const GS=['g','u','a'];
+const GR={g:{label:'文法',units:window.UNITS.g},u:{label:'語法',units:window.UNITS.u},a:{label:'発展',units:window.UNITS.a||[]}};
+const KIND={mc:'4択',o:'整序',e:'誤り指摘'};
+const corr=q=>q.kind==='e'?q.w:0;
+const fixed=(q,b)=>{let s='';let i=0;q.raw.replace(/\[([^\]]+)\]|([^\[]+)/g,(m,x,t)=>{if(x!==undefined){s+=(i===q.w?(q.fix?(b?'\u0001'+q.fix+'\u0002':q.fix):''):x);i++}else s+=t;return m});s=s.replace(/\s+/g,' ').replace(/ ([,.?])/g,'$1').trim();return s[0].toUpperCase()+s.slice(1)};
+const full=q=>{const s=q.ch.join(' ');return s[0].toUpperCase()+s.slice(1)+q.end};
+const ansText=q=>q.kind==='o'?full(q):q.kind==='e'?q.p[q.w]+' → '+(q.fix||'（削除）'):q.o[0];
+const QS={}, BYUNIT={};
+for(const g of GS) for(const u of GR[g].units){
+  u.grade=g; BYUNIT[u.id]=[];
+  u.qs.forEach((x,i)=>{const q=Object.assign({id:u.id+'-'+i,unit:u.id,grade:g,kind:x.t},x);QS[q.id]=q;BYUNIT[u.id].push(q)});
+}
+
+/* ---------- 記録（この端末＋サインイン時はクラウド） ---------- */
+const KEY='egram_v1';
+let P={}, AIQ={}, ui={grade:'g',unit:{g:'all',u:'all',a:'all'}}, cloud=false;
+try{const o=JSON.parse(localStorage.getItem(KEY)||'{}');P=o.p||{};AIQ=o.ai||{};if(o.ui)Object.assign(ui,o.ui)}catch(e){}
+if(!GS.includes(ui.grade))ui.grade='g';
+let dbDoc=null, saveT=null;
+function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify({p:P,ai:AIQ,ui}))}catch(e){}}
+function save(){saveLocal();clearTimeout(saveT);saveT=setTimeout(flush,1500)}
+function flush(){clearTimeout(saveT);if(!dbDoc)return;dbDoc.set({p:JSON.stringify(P),ai:JSON.stringify(AIQ),t:Date.now()}).catch(()=>{})}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)flush()});
+async function cap(name){try{if(!window.claude||!window.claude.use)return null;return await window.claude.use(name)}catch(e){return null}}
+(async()=>{
+  const db=await cap('db'), user=await cap('user'); if(!db||!user)return;
+  let id=null;try{id=await user.id()}catch(e){} if(!id)return;
+  const ref=db.doc('data/users/'+id+'/state');
+  try{
+    const snap=await Promise.race([ref.get(),new Promise((_,r)=>setTimeout(()=>r('t'),10000))]);
+    if(snap&&snap.exists){const d=snap.data()||{};
+      try{const rp=JSON.parse(d.p||'{}');for(const k in rp){if(!P[k]||(rp[k].n||0)>(P[k].n||0))P[k]=rp[k]}}catch(e){}
+      try{const ra=JSON.parse(d.ai||'{}');for(const k in ra){if(!AIQ[k]||ra[k].length>AIQ[k].length)AIQ[k]=ra[k]}}catch(e){}
+      saveLocal();
+    }
+    dbDoc=ref; cloud=true; refresh(); flush();
+  }catch(e){}
+})();
+
+/* ---------- 共通 ---------- */
+const unitsOf=g=>GR[g].units;
+const unitById=id=>GS.flatMap(unitsOf).find(u=>u.id===id);
+const LV=['未学習','わからない','要復習','完了'];
+const level=id=>{const p=P[id];return p&&p.g?p.g:0};
+const ORDER={g:[],u:[],a:[]};
+for(const g of GS)unitsOf(g).forEach(u=>BYUNIT[u.id].forEach(q=>{ORDER[g].push(q);q.no=String(ORDER[g].length).padStart(3,'0')}));
+const aiCards=uid=>(AIQ[uid]||[]).map((a,i)=>Object.assign({},a,{unit:uid,grade:unitById(uid).grade,kind:'mc',isAi:true,no:'AI'+(i+1)}));
+const scopeCards=g=>{const u=ui.unit[g]||'all';return u==='all'?[...ORDER[g],...unitsOf(g).flatMap(x=>aiCards(x.id))]:[...(BYUNIT[u]||[]),...aiCards(u)]};
+const uno=u=>u.id.split('-')[1].padStart(2,'0');
+Object.assign(ui,Object.assign({view:'home',sf:{g:['0','1','2'],u:['0','1','2'],a:['0','1','2']},order:'seq',round:10,ar:true,rs:{g:null,u:null,a:null},sp:{g:null,u:null,a:null}},ui));
+for(const g of GS){if(!ui.sf[g])ui.sf[g]=['0','1','2'];if(!(g in ui.rs))ui.rs[g]=null;if(!(g in ui.sp))ui.sp[g]=null;if(!ui.unit[g]||(ui.unit[g]!=='all'&&!BYUNIT[ui.unit[g]]))ui.unit[g]='all'}
+if(!['home','study','list','settings'].includes(ui.view))ui.view='home';
+const sfList=()=>{const f=(ui.sf[ui.grade]||[]).filter(x=>['0','1','2','3'].includes(x));return f.length?f:['0','1','2']};
+
+/* ---------- 骨組み ---------- */
+const VIEWS=[['home','Home'],['study','Study'],['list','Cards'],['settings','Setting']];
+app.innerHTML=`
+<header><div class="brand"><b>英文法</b><div class="seg" role="group" aria-label="科目">${GS.map(x=>`<button data-g="${x}">${GR[x].label}</button>`).join('')}</div></div>
+  <div class="hrow"><nav aria-label="画面">${VIEWS.map(v=>`<button data-view="${v[0]}">${v[1]}</button>`).join('')}</nav><button class="askhd" id="askhd" type="button">AIに質問</button></div></header>
+<div class="sync" id="sync">記録はこの端末に保存されます</div>
+<section id="v-home"></section><section id="v-study" hidden></section><section id="v-list" hidden></section><section id="v-settings" hidden></section>
+<section id="v-ai" hidden><div class="askp aiview"><div class="askhead" id="ai-head"></div><div class="asklog" id="ai-log"></div>
+  <form class="askin" id="ai-form"><input type="text" id="ai-in" placeholder="質問を入力" aria-label="質問" autocomplete="off"><button type="submit" id="ai-send">送信</button></form></div></section>`;
+let view='home';
+function show(v){
+  if(view==='ai'&&v!=='ai'&&askCtl){askCtl.abort();askCtl=null}
+  if(v!=='study'&&view==='study'&&cur)keepId=cur.id;
+  view=v; if(v!=='ai'){ui.view=v;saveLocal()}
+  document.querySelectorAll('header [data-view]').forEach(b=>b.toggleAttribute('aria-current',b.dataset.view===v));
+  $('#askhd').toggleAttribute('aria-current',v==='ai');
+  ['home','study','list','settings','ai'].forEach(x=>$('#v-'+x).hidden=x!==v);
+  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.g===ui.grade)));
+  if(v==='home')renderHome(); if(v==='study')renderStudy(); if(v==='list')renderList(); if(v==='settings')renderSettings();
+  window.scrollTo(0,0);
+}
+function refresh(){ $('#sync').textContent=cloud?'記録はあなたのアカウントに保存されています':'記録はこの端末に保存されます'; if(MK)return; if(view==='study'&&cur)keepId=cur.id; if(view!=='ai')show(view) }
+document.querySelectorAll('header [data-view]').forEach(b=>b.onclick=()=>{if(MK)MK=null;show(b.dataset.view)});
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{ui.grade=b.dataset.g;MK=null;cur=null;keepId=null;againQ=[];deck=[];used.clear();HIST.length=0;saveLocal();show(view==='ai'?'home':view)});
+$('#askhd').onclick=()=>openAI(null);
+
+/* ---------- Home ---------- */
+function renderHome(){
+  const g=ui.grade, all=ORDER[g], k=[0,0,0,0]; all.forEach(q=>k[level(q.id)]++);
+  const kinds={mc:0,o:0,e:0}; all.forEach(q=>kinds[q.kind]++);
+  $('#v-home').innerHTML=`
+  <div class="today"><div><small>未完了</small><strong>${all.length-k[3]}</strong></div><div><small>完了</small><strong style="color:var(--good)">${k[3]}</strong></div></div>
+  <div class="start"><button class="btn primary" id="go">Study</button><span class="hint">${GR[g].label}・全${all.length}枚（4択${kinds.mc}・整序${kinds.o}${kinds.e?'・誤り指摘'+kinds.e:''}）</span></div>
+  <div class="panel lvp"><h2>理解度別に復習</h2>
+    ${[1,2,3].map(n=>`<div class="lvrow"><span class="lvdot l${n}"></span><b>${LV[n]}</b><strong>${k[n]}</strong><button class="btn" data-lv="${n}" ${k[n]?'':'disabled'}>復習</button></div>`).join('')}
+    <p class="hint">最後に選んだ理解度でまとめています。「復習」を押すと、その理解度のカードだけでStudyを始めます。</p></div>
+  <div class="panel"><h2>単元ごとの進み具合</h2><div class="ulist">${unitsOf(g).map(u=>{const qs=BYUNIT[u.id],d=qs.filter(q=>level(q.id)===3).length;return `<button class="urow" data-u="${u.id}"><span class="nm"><span class="num">${uno(u)}</span>${esc(u.name)}</span><span class="num ct">${d}/${qs.length}</span><span class="bar"><i style="width:${d/qs.length*100}%"></i></span></button>`}).join('')}</div></div>
+  <div class="panel"><h2>模擬試験</h2><p class="hint">文法10枚・語法8枚・発展7枚の計25枚を、全単元からまんべんなく出します。4択・誤り指摘と、最後まで並べた整序は自動で採点します。8割が目標です。</p><div><button class="btn" id="mock">模擬試験を始める</button></div></div>
+  <div class="panel"><h2>このドリルについて</h2><table class="exam"><tbody>
+    <tr><th>文法</th><td>時制・完了形・態・助動詞・仮定法・準動詞・比較・関係詞・接続詞・前置詞・一致・否定・倒置・名詞・代名詞</td><td class="num">${ORDER.g.length}枚</td></tr>
+    <tr><th>語法</th><td>動詞の語法（目的語・SVOC・自動詞と他動詞・前置詞との結びつき）、形容詞・副詞・名詞の語法、紛らわしい語</td><td class="num">${ORDER.u.length}枚</td></tr>
+    <tr><th>発展</th><td>英検1級・IELTS・TOEFLの読解と作文で使う構文：仮定法と倒置の発展、準動詞・関係詞・比較の発展、名詞構文、論理をつなぐ表現、冠詞と一致の精度、誤り指摘、文の組み立て</td><td class="num">${ORDER.a.length}枚</td></tr></tbody></table>
+    <p class="hint">大学入試の文法問題集と同じ「1問1ポイント」の粒度で、単元ごとに頻出の論点を並べています。問題文はすべてこのドリルのために書いたものです。Cardsで単元を選ぶと、AIで類題を足せます。</p>
+    <p class="hint">英検1級・IELTS・TOEFLには文法だけを問う大問はなく、文法は読解と作文の中で問われます。「発展」は、TOEFLの語句並べ替え（Build a Sentence）、IELTSライティングの「文法の幅と正確さ」、英検1級の長文と英作文・要約で必要になる構文に絞っています。</p></div>`;
+  $('#go').onclick=()=>show('study');
+  document.querySelectorAll('[data-lv]').forEach(b=>b.onclick=()=>{ui.sf[g]=[b.dataset.lv];resetDeck();show('study')});
+  document.querySelectorAll('.urow').forEach(b=>b.onclick=()=>{ui.unit[g]=b.dataset.u;resetDeck();show('study')});
+  $('#mock').onclick=mockStart;
+}
+
+/* ---------- Study ---------- */
+let cur=null, opened=false, keepId=null, againQ=[], sess=0, lastId=null, deck=[], used=new Set();
+const HIST=[];
+function resetDeck(){cur=null;keepId=null;deck=[];used.clear();againQ=[];saveLocal()}
+function inPool(q){return sfList().includes(String(level(q.id)))}
+function nextStudy(){
+  const g=ui.grade, rs=ui.rs[g], list=scopeCards(g);
+  if(rs&&rs.on&&rs.w.length>=ui.round){ if(againQ.length){return list.find(q=>q.id===againQ.shift().id)||null} return null }
+  const k=againQ.findIndex(a=>a.at<=sess&&a.id!==lastId);
+  if(k>=0){const a=againQ.splice(k,1)[0];const q=list.find(x=>x.id===a.id);if(q)return q}
+  const wait=new Set(againQ.map(a=>a.id));
+  const pool=list.filter(q=>q.id!==lastId&&!wait.has(q.id)&&inPool(q));
+  if(!pool.length){ if(againQ.length){const a=againQ.shift();return list.find(q=>q.id===a.id)||null} const l=list.find(q=>q.id===lastId);return l&&inPool(l)?l:null }
+  if(ui.order==='rand'){
+    deck=deck.filter(id=>pool.some(q=>q.id===id));
+    const inDeck=new Set(deck); for(const q of pool) if(!inDeck.has(q.id)&&!used.has(q.id)) deck.splice(Math.floor(Math.random()*(deck.length+1)),0,q.id);
+    if(!deck.length){used.clear();deck=shuffle(pool.map(q=>q.id))}
+    return pool.find(q=>q.id===deck[0]);
+  }
+  const sp=ui.sp[g], idx=sp?list.findIndex(q=>q.id===sp):-1;
+  return list.slice(idx+1).find(q=>pool.includes(q))||pool[0];
+}
+function renderStudy(){
+  const g=ui.grade, f=sfList(), list=scopeCards(g), cnt=[0,0,0,0]; list.forEach(q=>cnt[level(q.id)]++);
+  const rs=ui.rs[g], n=list.filter(inPool).length, uid=ui.unit[g]||'all';
+  $('#v-study').innerHTML=`
+  <div class="progress">
+    <label class="usel"><span>単元</span><select id="selUnit"><option value="all">すべての単元</option>${unitsOf(g).map(u=>`<option value="${u.id}"${uid===u.id?' selected':''}>${uno(u)} ${esc(u.name)}</option>`).join('')}</select></label>
+    <div class="stf" id="sf" role="group" aria-label="出題する理解度">${[0,1,2,3].map(k=>`<button data-sf="${k}" class="l${k}" aria-pressed="${f.includes(String(k))}">${LV[k]} <span class="num">${cnt[k]}</span></button>`).join('')}</div>
+    <div class="sessrow"><span class="hint">${rs&&rs.on?`${Math.min(rs.w.length,ui.round)}/${ui.round}`+(rs.w.length>=ui.round&&againQ.length?` ・ リトライ ${againQ.length}`:''):`${n}枚`}</span>
+      <button class="btn sm" id="reshuffle" type="button">⇄ シャッフル</button><button class="btn sm" id="againre" type="button" aria-pressed="${ui.ar!==false}">↻ リトライ: ${ui.ar!==false?'ON':'OFF'}</button></div>
+    <span class="keys">Space: 答えを見る ・ 1–3 または ← ↓ →: 理解度 ・ ⌫: 取り消し</span>
+    <span class="swhint">カードをスワイプ： ← わからない ・ ↓ 要復習 ・ 完了 →</span>
+  </div>
+  <div id="stage"></div>
+  <div class="undorow"><button class="btn" id="undo" ${HIST.length?'':'hidden'}>↶ 直前の評価を取り消す</button></div>`;
+  $('#selUnit').onchange=e=>{ui.unit[g]=e.target.value;resetDeck();renderStudy()};
+  document.querySelectorAll('#sf [data-sf]').forEach(b=>b.onclick=()=>{const v=b.dataset.sf;let s=sfList();s=s.includes(v)?s.filter(x=>x!==v):[...s,v];if(!s.length)return;ui.sf[g]=s;if(!opened){cur=null;keepId=null}saveLocal();renderStudy()});
+  $('#reshuffle').onclick=()=>{ui.order='rand';deck=[];used.clear();cur=null;keepId=null;lastId=null;saveLocal();flash(0,'⇄ シャッフルしました');renderStudy()};
+  $('#againre').onclick=()=>{ui.ar=ui.ar===false;if(ui.ar===false)againQ=[];saveLocal();renderStudy()};
+  $('#undo').onclick=undo;
+  bindSwipe();
+  renderCard();
+}
+function setPanel(){
+  cur=null; opened=false;
+  const g=ui.grade, r=ui.rs[g], done=r&&r.n&&!r.on, pool=scopeCards(g).filter(inPool).length;
+  let body;
+  if(done){const k=[0,0,0,0];for(const id of r.w)k[level(id)]++;
+    body=`<p>${r.w.length}枚おわりました。</p><div class="setsum"><span class="tag lvchip l1">わからない ${k[1]}</span><span class="tag lvchip l2">要復習 ${k[2]}</span><span class="tag lvchip l3">完了 ${k[3]}</span></div>
+      <div class="setbtns"><button class="btn primary" id="set-go" ${pool?'':'disabled'}>次の${ui.round}枚 →</button></div>`}
+  else body=`<div class="setbtns" style="margin:0"><button class="btn primary" id="set-go" ${pool?'':'disabled'}>▶ スタート</button></div>${pool?`<p class="hint">${ui.round}枚ずつ学習します。答えを選ぶ前に、なぜそうなるかを一言で言えるか確かめると力がつきます。</p>`:'<p class="hint">選んだ理解度のカードがありません。上のボタンで理解度を選び直してください。</p>'}`;
+  $('#stage').innerHTML=`<div class="panel done">${body}</div>`;
+  $('#set-go').onclick=()=>{ui.rs[g]={n:((r&&r.n)||0)+1,w:[],on:true};againQ=[];keepId=null;saveLocal();renderStudy()};
+}
+function renderCard(){
+  const g=ui.grade, rs=ui.rs[g];
+  if(!rs||!rs.on)return setPanel();
+  if(!keepId&&rs.w.length>=ui.round&&!againQ.length){ui.rs[g]={...rs,on:false};saveLocal();return setPanel()}
+  let q=null;
+  if(keepId&&cur&&cur.id===keepId){keepId=null;cur.revealed=false;cur.chosen=null;opened=false;drawCard($('#stage'),false);return}
+  if(keepId)q=scopeCards(g).find(x=>x.id===keepId)||null; keepId=null;
+  if(!q)q=nextStudy();
+  if(!q){cur=null;$('#stage').innerHTML=`<div class="panel done"><p>選んだ理解度のカードがありません。上のボタンで理解度を選び直してください。</p></div>`;return}
+  cur=newCS(q); opened=false;
+  drawCard($('#stage'),false);
+}
+
+/* ---------- カード ---------- */
+function newCS(q){
+  const c={q,id:q.id,revealed:false,chosen:null};
+  if(q.kind==='mc')c.order=shuffle(q.o.map((_,k)=>k));
+  else if(q.kind==='o'){c.sel=[];do{c.order=shuffle(q.ch.map((_,k)=>k))}while(q.ch.length>1&&c.order.every((k,i)=>k===i))}
+  return c;
+}
+const blank=s=>esc(s).replace('( )','<span class="bl">(　　　)</span>');
+function cardParts(c){
+  const q=c.q; let body,opts='',ans='',hint='';
+  if(q.kind==='mc'){
+    body=blank(q.q);
+    opts=`<div class="opts">${c.order.map((k,j)=>`<button class="opt" data-k="${k}"><span class="k">${'ABCD'[j]}</span><span>${esc(q.o[k])}</span></button>`).join('')}</div>`;
+    ans=`<p class="ja">${'ABCD'[c.order.indexOf(0)]}　${esc(q.o[0])}</p>${q.q.includes('( )')?`<p class="en">${esc(q.q).replace('( )','<b>'+esc(q.o[0])+'</b>')}</p>`:''}${q.ja?`<p class="tr">${esc(q.ja)}</p>`:''}`;
+  }else if(q.kind==='e'){
+    let i=0; body=esc(q.raw).replace(/\[([^\]]+)\]/g,(m,x)=>`<span class="ep"><sup>${'ABCD'[i++]}</sup>${x}</span>`);
+    hint='<p class="hint task">下線部 A〜D のうち、誤りを含むものを1つ選びましょう。</p>';
+    opts=`<div class="opts">${q.p.map((x,k)=>`<button class="opt" data-k="${k}"><span class="k">${'ABCD'[k]}</span><span>${esc(x)}</span></button>`).join('')}</div>`;
+    ans=`<p class="ja">${'ABCD'[q.w]}　${esc(q.p[q.w])} → ${q.fix?esc(q.fix):'（削除）'}</p><p class="en">${esc(fixed(q,true)).replace('\u0001','<b>').replace('\u0002','</b>')}</p><p class="tr">${esc(q.ja)}</p>`;
+  }else{
+    body=(q.pre?`<span class="pre" lang="en">${esc(q.pre)}</span>`:'')+esc(q.ja);
+    hint='<p class="hint task">'+(q.pre?'上の発言への返答になるように、':'')+'語句をタップして、正しい順に並べましょう。</p>';
+    opts='<div class="obox"><div class="oline" id="oline"></div><div class="ochips" id="ochips"></div></div>';
+    ans=`<p class="ja en1">${esc(full(q))}</p>`;
+  }
+  ans+=`<p class="exp">${esc(q.e)}</p>${q.isAi?'<p class="aiwarn">AIが作成し、AIが確認した問題です。疑問があれば「AIに質問」で確認してください。</p>':''}`;
+  return {body,opts,ans,hint};
+}
+function drawOrder(){
+  const c=cur; if(!c||c.q.kind!=='o')return; const q=c.q,line=$('#oline'),box=$('#ochips'); if(!line||!box)return;
+  line.innerHTML=c.sel.length?c.sel.map((k,i)=>`<button type="button" class="chip on" data-i="${i}">${esc(q.ch[k])}</button>`).join(''):'<span class="ph">ここに並びます</span>';
+  box.innerHTML=c.order.map(k=>`<button type="button" class="chip" data-k="${k}"${c.sel.includes(k)?' disabled':''}>${esc(q.ch[k])}</button>`).join('');
+  if(c.revealed){document.querySelectorAll('#stage .chip').forEach(b=>b.disabled=true);return}
+  box.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{c.sel.push(+b.dataset.k);drawOrder();if(c.sel.length===q.ch.length)reveal(c.sel.map(k=>q.ch[k]).join(' ')===q.ch.join(' '),!!MK)});
+  line.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{c.sel.splice(+b.dataset.i,1);drawOrder()});
+}
+function drawCard(el,mock){
+  const c=cur,q=c.q,u=unitById(q.unit),k=level(q.id);
+  const {body,opts,ans,hint}=cardParts(c);
+  el.innerHTML=`
+  <article class="card">${mock?'':'<button class="askcard" type="button" data-askai>AIに質問</button>'}
+    <div class="meta"><span class="num">No.${q.no||''}</span><span class="tag kd k-${q.kind}">${KIND[q.kind]}</span><span class="tag">${esc(u?u.name:'')}</span>${q.isAi?'<span class="tag ai">AI作成</span>':''}${mock?'':`<span class="tag lvchip l${k}">${LV[k]}</span>`}</div>
+    <p class="qtext"${(q.kind==='mc'&&!q.isAi)||q.kind==='e'?' lang="en"':''}>${body}</p>${hint}${opts}
+    <div class="answer${mock?' mock':''}" id="ans">${ans}${mock?'':'<button class="sheet" id="sheet">答えを見る<small>タップまたはSpace</small></button>'}</div>
+  </article>
+  ${mock?'<div id="nextWrap"></div>':`<div class="grades" id="grades">${[1,2,3].map(n=>`<button class="g${n}" data-g="${n}">${LV[n]}<kbd>${n}</kbd></button>`).join('')}</div>`}`;
+  el.querySelectorAll('.opt').forEach(b=>b.onclick=()=>choose(b,mock));
+  if(q.kind==='o')drawOrder();
+  if(mock){ if(q.kind!=='mc'){$('#nextWrap').innerHTML='<button class="btn primary wide" id="see">答えを見る</button>';$('#see').onclick=()=>reveal(undefined,true)} }
+  else{$('#sheet').onclick=()=>reveal();el.querySelectorAll('#grades button').forEach(b=>b.onclick=()=>grade(+b.dataset.g))}
+}
+function choose(btn,mock){
+  if(cur.revealed)return;
+  const q=cur.q,k=+btn.dataset.k,ok=k===corr(q); cur.chosen=q.kind==='e'?q.p[k]:q.o[k];
+  btn.classList.add(ok?'ok':'ng');
+  reveal(ok,mock);
+}
+function reveal(ok,mock){
+  if(!cur||cur.revealed)return; cur.revealed=true; opened=true;
+  const q=cur.q;
+  if(q.kind==='o'){if(cur.sel.length)cur.chosen=cur.sel.map(k=>q.ch[k]).join(' ');drawOrder();const l=$('#oline');if(l&&ok!==undefined)l.classList.add(ok?'ok':'ng')}
+  document.querySelectorAll('#stage .opt').forEach(b=>{b.disabled=true;if(+b.dataset.k===corr(q))b.classList.add('ok')});
+  const a=$('#ans'); a.classList.add('open');
+  if(ok!==undefined)a.insertAdjacentHTML('afterbegin',`<p class="verdict ${ok?'v-ok':'v-ng'}">${ok?'正解':'不正解'}</p>`);
+  if(mock){
+    const last=MK.i===MK.list.length-1;
+    const fin=r=>{if(r)MK.score++;else MK.miss.push(q);setLevel(q.id,r?3:1);if(last)mockResult();else{MK.i++;mockShow()}};
+    if(ok!==undefined){$('#nextWrap').innerHTML=`<button class="btn primary wide" id="next">${last?'結果を見る':'次の問題'}</button>`;$('#next').onclick=()=>fin(ok);$('#next').focus({preventScroll:true})}
+    else{$('#nextWrap').innerHTML=`<div class="selfck"><button class="btn" id="ng">✕ 間違えた</button><button class="btn primary" id="okb">○ 合っていた</button></div>`;$('#ng').onclick=()=>fin(false);$('#okb').onclick=()=>fin(true)}
+  }else{const b=$(ok===false?'#grades .g1':'#grades .g3');if(b)b.focus({preventScroll:true})}
+}
+function setLevel(id,g){const p=P[id]||{n:0};p.n=(p.n||0)+1;p.g=g;p.t=Date.now();P[id]=p;save()}
+function grade(g){
+  if(!cur)return;
+  const gr=ui.grade, id=cur.id;
+  HIST.push({id,p:P[id]?JSON.parse(JSON.stringify(P[id])):undefined,rs:JSON.parse(JSON.stringify(ui.rs[gr])),aq:againQ.slice(),sess,lastId,sp:ui.sp[gr],deck:deck.slice(),used:[...used]}); if(HIST.length>30)HIST.shift();
+  deck=deck.filter(x=>x!==id); used.add(id);
+  setLevel(id,g); lastId=id;
+  if(ui.order!=='rand'&&!cur.q.isAi)ui.sp[gr]=id;
+  sess++; againQ=againQ.filter(a=>a.id!==id);
+  const rs=ui.rs[gr]; if(rs&&rs.on&&!rs.w.includes(id))ui.rs[gr]={...rs,w:[...rs.w,id]};
+  if(g===1&&ui.ar!==false)againQ.push({id,at:sess+5});
+  saveLocal(); cur=null; renderStudy();
+}
+function undo(){
+  const h=HIST.pop(); if(!h)return; const gr=ui.grade;
+  if(h.p===undefined)delete P[h.id]; else P[h.id]=h.p;
+  ui.rs[gr]=h.rs; againQ=h.aq; sess=h.sess; lastId=h.lastId; ui.sp[gr]=h.sp; deck=h.deck; used=new Set(h.used); keepId=h.id;
+  save(); if(view!=='study')show('study'); else renderStudy();
+}
+function flash(g,t){const d=document.createElement('div');d.className='swflash l'+g;d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),650)}
+const SWIPE_KEY={ArrowLeft:1,ArrowDown:2,ArrowRight:3};
+const SWIPE_RGB=['','179,38,30','161,98,10','31,107,74'];
+function tintCard(card,g,k){if(!card)return;if(!g||k<=0){card.style.boxShadow='';card.style.borderColor='';return}
+  const a=Math.min(1,k);card.style.boxShadow=`inset 0 0 0 2000px rgba(${SWIPE_RGB[g]},${(0.16*a).toFixed(3)})`;card.style.borderColor=`rgba(${SWIPE_RGB[g]},${(0.25+0.5*a).toFixed(2)})`}
+function rateBySwipe(g){
+  if(!cur)return;
+  const card=$('#stage .card');
+  flash(g,['','← わからない','↓ 要復習','完了 →'][g]); tintCard(card,g,1);
+  if(card){card.style.transition='transform .18s ease, opacity .18s ease';card.style.transform=g===1?'translateX(-40%) rotate(-4deg)':g===2?'translateY(30%)':'translateX(40%) rotate(4deg)';card.style.opacity='0'}
+  setTimeout(()=>grade(g),170);
+}
+function bindSwipe(){
+  const stage=$('#stage'); let sx=0,sy=0,on=false,card=null,mode='',canDown=false;
+  const reset=()=>{tintCard(card,0,0);if(card){card.style.transition='transform .15s ease';card.style.transform='';const c=card;setTimeout(()=>{c.style.transition=''},160)}};
+  stage.addEventListener('touchstart',e=>{
+    card=e.target.closest('.card'); on=!!card&&!!cur&&e.touches.length===1&&!e.target.closest('input,select,textarea,.askcard,.obox');
+    if(!on)return; const t=e.touches[0]; sx=t.clientX; sy=t.clientY; mode='';
+    canDown=card.getBoundingClientRect().top>=-4; card.style.transition='';
+  },{passive:true});
+  stage.addEventListener('touchmove',e=>{
+    if(!on)return; const t=e.touches[0], dx=t.clientX-sx, dy=t.clientY-sy;
+    if(!mode){if(Math.abs(dx)<8&&Math.abs(dy)<8)return; mode=Math.abs(dx)>Math.abs(dy)?'x':(dy>0&&canDown?'down':'scroll')}
+    if(mode==='scroll')return;
+    if(e.cancelable)e.preventDefault();
+    if(mode==='x'){const m=Math.max(-140,Math.min(140,dx));card.style.transform=`translateX(${m}px) rotate(${m/60}deg)`;tintCard(card,m<0?1:3,Math.abs(m)/70)}
+    else{const m=Math.max(0,Math.min(160,dy));card.style.transform=`translateY(${m}px)`;tintCard(card,2,m/80)}
+  },{passive:false});
+  stage.addEventListener('touchend',e=>{
+    if(!on)return; on=false; const t=e.changedTouches[0], dx=t.clientX-sx, dy=t.clientY-sy;
+    if(mode==='x'&&Math.abs(dx)>70)return rateBySwipe(dx<0?1:3);
+    if(mode==='down'&&dy>80)return rateBySwipe(2);
+    reset();
+  },{passive:true});
+  stage.addEventListener('touchcancel',()=>{on=false;reset()},{passive:true});
+}
+document.addEventListener('keydown',e=>{
+  if(view!=='study'||MK||e.target.closest('input,select,textarea'))return;
+  if(e.code==='Space'||e.key==='Enter'){if(cur&&!opened){e.preventDefault();reveal()}}
+  else if(/^[1-3]$/.test(e.key)&&cur){e.preventDefault();grade(+e.key)}
+  else if(SWIPE_KEY[e.key]&&cur){e.preventDefault();rateBySwipe(SWIPE_KEY[e.key])}
+  else if((e.key==='z'&&(e.metaKey||e.ctrlKey))||e.key==='Backspace'){if(HIST.length){e.preventDefault();undo()}}
+});
+
+/* ---------- AIに質問 ---------- */
+let askCtl=null, askFor=undefined, askTurns=[], aiBack='home', aiCard=null;
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-askai]');if(b){e.preventDefault();e.stopPropagation();openAI(b.dataset.askai||'cur')}},true);
+function cardContext(c){
+  const q=c.q, st=c.revealed?('答えを確認済み'+(c.chosen?'（受験者の答え: '+c.chosen+'）':'')):'まだ答えを見ていない。質問で求められない限り正解は明かさず、考え方のヒントにとどめること';
+  const body=q.kind==='e'?`誤り指摘問題（[ ]が候補の下線部）: ${q.raw}\n正解: ${q.p[q.w]} → ${q.fix||'（削除）'}\n正しい文: ${fixed(q)}\n和訳: ${q.ja}`:q.kind==='mc'?`空所補充問題: ${q.q}\n選択肢: ${q.o.join(' / ')}\n正解: ${q.o[0]}${q.ja?'\n和訳: '+q.ja:''}`:`整序問題（和訳）: ${q.ja}\n${q.pre?'相手の発言: '+q.pre+'\n':''}並べる語句: ${q.ch.slice().sort().join(' / ')}\n正解: ${full(q)}`;
+  return `${body}\n解説: ${q.e}\n受験者の状態: ${st}${q.isAi?'\n※この問題はAIが作成したもの。誤りがあれば率直に指摘すること。':''}`;
+}
+function progressSummary(){const lines=[];
+  for(const x of GS){lines.push(`【${GR[x].label}】`);
+    for(const u of unitsOf(x)){const k=[0,0,0,0];BYUNIT[u.id].forEach(q=>k[level(q.id)]++);lines.push(`${u.name}: 全${BYUNIT[u.id].length}枚／完了${k[3]}・要復習${k[2]}・わからない${k[1]}・未学習${k[0]}`)}}
+  return lines.join('\n')}
+function askRules(){
+  const head=`あなたは日本の高校生・大学受験生・社会人の学び直しに英文法を教える講師です。学習者の質問に日本語で答えてください。
+- スマホで読むので短く、結論から（長くても12行程度）
+- マークダウン記号（#、**、表）は使わず、箇条書きは「・」を使う。英文の例は1行ずつ書き、すぐ後ろに和訳を添える
+- 日本の学校文法の用語（仮定法過去、分詞構文、関係副詞など）で説明する。入試で正解とされる形と、実際の英語で許容される形が違う場合は、その両方を一言で伝える
+- なぜ他の選択肢が誤りなのかを聞かれたら、選択肢ごとに理由を言う
+- 不確かなことは断定しない。問題の正解や解説に誤りがあると判断したら、遠慮なく指摘する
+- 質問は音声入力で書かれていることがある。聞き間違いがありそうなら、文脈から意図をくみ取り、最初に「〜という質問ですね」と短く確認してから答える`;
+  if(aiCard)return head+'\n\n[受験者がいま見ているカード]\n'+cardContext(aiCard);
+  return head+`\n- このアプリ（Studyで単元と理解度を選んで学習、理解度3段階、Cards一覧、Homeの模擬試験、CardsでのAI類題、4択の空所補充と語句の整序）を使った学習の進め方も提案してよい\n\n[受験者の学習状況]\n${progressSummary()}\nいま選んでいる分野: ${GR[ui.grade].label}`;
+}
+function openAI(which){
+  if(view==='ai')return;
+  aiBack=view;
+  const c=which==='cur'?cur:(which?(()=>{const q=Object.values(QS).concat(...Object.keys(AIQ).map(aiCards)).find(x=>x.id===which);return q?Object.assign(newCS(q),{revealed:true}):null})():(view==='study'?cur:null));
+  const key=c?c.id:null;
+  if(key!==askFor){askFor=key;askTurns=[];$('#ai-log').innerHTML=''}
+  aiCard=c;
+  const lb=c?c.q.q:'';
+  $('#ai-head').innerHTML=(c?`<span>このカードについて：<b>${esc(lb.slice(0,40))}${lb.length>40?'…':''}</b></span>`:`<span>学習の進め方や、英文法のことを何でも</span>`)+`<button class="askx" type="button" id="ai-x" aria-label="閉じる">×</button>`;
+  $('#ai-x').onclick=()=>{if(aiBack==='study'&&cur)keepId=cur.id;show(aiBack)};
+  if(aiBack==='study'&&cur)keepId=cur.id;
+  show('ai'); setTimeout(()=>$('#ai-in').focus({preventScroll:true}),0);
+}
+async function askAI(qt){
+  qt=qt.trim(); if(!qt)return;
+  if(askCtl)askCtl.abort();
+  const log=$('#ai-log'), sendB=$('#ai-send');
+  const sample=await cap('sample');
+  if(!sample){log.innerHTML='<p class="aihint">AIへの質問はこの画面では使えません。claude.aiでこのページを開くと使えます。</p>';return}
+  log.insertAdjacentHTML('beforeend','<div class="msg u"></div><div class="msg a wait">考えています…</div>');
+  log.children[log.children.length-2].textContent=qt;
+  const out=log.lastElementChild; out.scrollIntoView({block:'nearest'});
+  askTurns.push({role:'user',content:qt});
+  const ctl=askCtl=new AbortController(); sendB.textContent='停止'; sendB.type='button'; sendB.onclick=()=>ctl.abort();
+  try{
+    const r=await sample([{role:'user',content:askRules()},{role:'assistant',content:'わかりました。質問をどうぞ。'},...askTurns.slice(-8)],{cache:false,signal:ctl.signal,onText:({text})=>{out.classList.remove('wait');out.textContent=text}});
+    out.classList.remove('wait'); out.textContent=r.text; askTurns.push({role:'assistant',content:r.text});
+  }catch(e){
+    askTurns.pop(); out.classList.remove('wait');
+    if(e&&e.code==='cancelled')out.textContent=e.text?e.text+'\n（停止しました）':'停止しました';
+    else if(e&&['not_granted','sampling_disabled','not_declared','capability_disabled','capability_removed'].includes(e.code))out.textContent='AIへの質問が許可されていないため使えません。';
+    else if(e&&e.code==='rate_limited')out.textContent='今は質問が多すぎます。少し時間をおいてからもう一度どうぞ。';
+    else out.textContent=(e&&e.text?e.text+'\n':'')+'うまく回答を受け取れませんでした。もう一度送ってください。';
+  }finally{if(askCtl===ctl)askCtl=null;sendB.textContent='送信';sendB.type='submit';sendB.onclick=null}
+}
+$('#ai-form').onsubmit=e=>{e.preventDefault();const t=$('#ai-in').value;$('#ai-in').value='';askAI(t)};
+
+/* ---------- Cards（一覧） ---------- */
+let listSt=[]; const OPEN=new Set();
+function renderList(){
+  const g=ui.grade, uid=ui.unit[g]||'all', all=scopeCards(g);
+  const cards=all.filter(q=>!listSt.length||listSt.includes(String(level(q.id))));
+  $('#v-list').innerHTML=`
+  <div class="tools"><label class="usel"><span>単元</span><select id="lUnit"><option value="all">すべての単元</option>${unitsOf(g).map(u=>`<option value="${u.id}"${uid===u.id?' selected':''}>${uno(u)} ${esc(u.name)}</option>`).join('')}</select></label></div>
+  <div class="listbar"><div class="stf" id="stf" role="group" aria-label="理解度で絞り込む">${[0,1,2,3].map(k=>`<button data-st="${k}" class="l${k}" aria-pressed="${listSt.includes(String(k))}">${LV[k]}</button>`).join('')}</div><span class="hint">${cards.length}枚</span></div>
+  <div class="table"><table class="lt"><colgroup><col class="c1"><col class="c2"><col class="c3"></colgroup><thead><tr><th>No.</th><th>問題</th><th>理解度</th></tr></thead><tbody>${cards.map(q=>{const k=level(q.id),op=OPEN.has(q.id);
+    return `<tr class="w" data-id="${q.id}" aria-expanded="${op}"><td class="num">${esc(q.no)}</td><td class="qt"><span class="kd k-${q.kind}">${KIND[q.kind]}</span>${esc(q.q)}</td><td class="st"><span class="lvdot l${k}"></span>${LV[k]}</td></tr>`+(op?detailRow(q):'')}).join('')}</tbody></table></div>
+  ${uid!=='all'?`<div class="panel"><h2>AIで類題を追加</h2><p class="hint">この単元の論点からAIが4択の空所補充を5問つくり、別のAIが正誤を確認してから、この単元のカードに追加します。</p><div><button class="btn" id="gen">類題を5問つくる</button></div><p class="hint" id="genMsg" role="status"></p></div>`:'<p class="hint">単元を選ぶと、その単元の類題をAIでつくれます。</p>'}`;
+  $('#lUnit').onchange=e=>{ui.unit[g]=e.target.value;resetDeck();renderList()};
+  document.querySelectorAll('#stf [data-st]').forEach(b=>b.onclick=()=>{const v=b.dataset.st;listSt=listSt.includes(v)?listSt.filter(x=>x!==v):[...listSt,v];renderList()});
+  document.querySelectorAll('tr.w').forEach(r=>r.onclick=()=>{const id=r.dataset.id;OPEN.has(id)?OPEN.delete(id):OPEN.add(id);renderList()});
+  document.querySelectorAll('[data-study]').forEach(b=>b.onclick=e=>{e.stopPropagation();const id=b.dataset.study;const q=all.find(x=>x.id===id);ui.unit[g]=q.unit;resetDeck();keepId=id;const rs=ui.rs[g];if(!rs||!rs.on)ui.rs[g]={n:((rs&&rs.n)||0)+1,w:[],on:true};show('study')});
+  if(uid!=='all')$('#gen').onclick=()=>genQs(unitById(uid));
+}
+function detailRow(q){
+  const c=Object.assign(newCS(q),{revealed:true}); const p=cardParts(c);
+  return `<tr class="det"><td colspan="3"><div class="detail"><button class="askcard in" type="button" data-askai="${q.id}">AIに質問</button>
+    <p class="qtext sm">${p.body}</p>${q.kind==='mc'?`<ul class="olist">${q.o.map((o,i)=>`<li class="${i===0?'right':''}">${esc(o)}</li>`).join('')}</ul>`:''}
+    <div class="answer open">${p.ans}</div><div><button class="btn sm" data-study="${q.id}">このカードから学習する</button></div></div></td></tr>`;
+}
+
+/* ---------- AI類題（作成→検証） ---------- */
+async function genQs(u){
+  const msg=$('#genMsg'), btn=$('#gen');
+  const sample=await cap('sample');
+  if(!sample){msg.textContent='この画面ではAI機能を使えません。claude.aiでこのページを開くと使えます。';return}
+  btn.disabled=true; msg.textContent='AIが問題をつくっています…';
+  const existing=pick(BYUNIT[u.id],12).map(q=>'・'+q.q).join('\n');
+  const valid=x=>x&&typeof x.q==='string'&&Array.isArray(x.choices)&&x.choices.length===4&&x.choices.every(c=>typeof c==='string'&&c.trim())&&new Set(x.choices).size===4&&typeof x.explanation==='string';
+  try{
+    const r1=await sample.json(`あなたは${u.grade==='a'?'英検1級・IELTS・TOEFL上級（CEFR C1）レベル':'大学入試レベル'}の英文法・語法問題の作成者です。
+分野「${GR[u.grade].label}」の単元「${u.name}」の論点（${u.topics}）から、4択の空所補充問題を5問つくってください。
+条件:
+- 問題文は自作の自然な英文1〜2文で、空所は ( ) で1か所だけ示す。既存の問題集や入試問題の英文を写さない
+- 1問につき論点は1つ。正解はただ1つに定まり、誤答3つは文法・語法上はっきり誤りであること（意味が変わるだけで文として成り立つ選択肢は誤答にしない）
+- jaに、正解を入れた英文の自然な和訳を書く
+- 解説は1〜3文の日本語で、決め手になる文法・語法のポイントと、紛らわしい誤答が誤りである理由
+- 次の既存問題とは違う英文・切り口にする
+${existing}
+JSONだけを出力: {"questions":[{"q":"英文","choices":["正解","誤答1","誤答2","誤答3"],"ja":"和訳","explanation":"解説"}]}
+choicesの先頭を必ず正解にすること。`,{modelTier:'default'});
+    const list=(r1&&r1.questions||[]).filter(valid);
+    if(!list.length)throw {code:'empty'};
+    msg.textContent='別のAIが正誤を確認しています…';
+    const r2=await sample.json(`あなたは英文法問題の校閲者です。次の4択の空所補充問題（choicesの先頭が正解とされている）を1問ずつ厳しく確認してください。
+確認すること: 正解を入れた英文が文法的に正しく自然か／誤答の中に、入れても文として成り立つものがないか／和訳と解説に誤りがないか／空所 ( ) がちょうど1か所あるか。
+- 正しく直せるなら修正し、直せない・確信が持てないものは除外する
+- 修正後もchoicesの先頭を正解にする
+問題: ${JSON.stringify(list)}
+JSONだけを出力: {"questions":[{"q":"","choices":["","","",""],"ja":"","explanation":""}],"removed":除外した数}`,{modelTier:'complex'});
+    const checked=(r2&&r2.questions||[]).filter(valid);
+    if(!checked.length)throw {code:'empty'};
+    const stamp=Date.now().toString(36);
+    AIQ[u.id]=[...(AIQ[u.id]||[]),...checked.map((x,i)=>({id:'ai-'+u.id+'-'+stamp+i,q:x.q,o:x.choices,ja:typeof x.ja==='string'?x.ja:'',e:x.explanation}))].slice(-60); save();
+    const removed=Math.max(0,list.length-checked.length);
+    renderList();
+    $('#genMsg').textContent=`${checked.length}問を追加しました${removed?`（確認で${removed}問を除外）`:''}。一覧の最後に「AI」の番号で並んでいます。`;
+  }catch(e){
+    btn.disabled=false;
+    msg.textContent=e&&e.code==='not_granted'?'AI機能の利用が許可されませんでした。':e&&e.code==='rate_limited'?'AIの利用が混み合っています。少し時間をおいてから試してください。':'問題をつくれませんでした。もう一度試してください。';
+  }
+}
+
+/* ---------- Setting ---------- */
+function renderSettings(){
+  const sel=(id,cv,list)=>`<select id="${id}">${list.map(o=>`<option value="${o[0]}"${String(cv)===String(o[0])?' selected':''}>${o[1]}</option>`).join('')}</select>`;
+  $('#v-settings').innerHTML=`<div class="panel">
+    <div class="field"><div><label for="s-round">1セットの枚数</label><p>Studyで1回に学習するカードの枚数。</p></div>${sel('s-round',ui.round,[[5,5],[10,10],[15,15],[20,20],[25,25]])}</div>
+    <div class="field"><div><label for="s-order">順番</label><p>Studyでのカードの順番。</p></div>${sel('s-order',ui.order,[['seq','番号順'],['rand','ランダム']])}</div>
+    <div class="field"><div><label for="s-ar">リトライ</label><p>「わからない」にしたカードを、5枚後にもう一度出します。</p></div>${sel('s-ar',ui.ar!==false?1:0,[[1,'ON'],[0,'OFF']])}</div>
+    <div class="field"><div><label>記録のリセット</label><p>文法・語法・発展のすべてのカードを未学習に戻し、AIでつくった類題も消します。元には戻せません。</p></div><div class="row"><button class="btn danger" id="reset">リセット</button></div></div>
+  </div>
+  <p class="hint">問題と解説は確認していますが、誤りが残っている可能性があります。気になる点はカードの「AIに質問」で確かめてください。AIが作成した類題や回答にも誤りが含まれることがあります。</p>`;
+  const on=(id,f)=>$(id).onchange=e=>{f(e.target.value);saveLocal()};
+  on('#s-round',v=>ui.round=+v); on('#s-order',v=>{ui.order=v;deck=[];used.clear()}); on('#s-ar',v=>{ui.ar=v==='1';if(!ui.ar)againQ=[]});
+  const r=$('#reset'); r.onclick=()=>{if(r.dataset.c){P={};AIQ={};HIST.length=0;ui.rs={g:null,u:null,a:null};ui.sp={g:null,u:null,a:null};resetDeck();save();r.textContent='リセットしました';r.disabled=true}else{r.dataset.c=1;r.textContent='もう一度押すと消去します'}};
+}
+
+/* ---------- 模擬試験 ---------- */
+let MK=null;
+function mockStart(){
+  const src=[];
+  const portion=(units,cnt)=>{const pool=units.map(u=>BYUNIT[u.id]);const sum=pool.reduce((a,b)=>a+b.length,0);const out=[];
+    pool.forEach(p=>out.push(...pick(p,Math.max(1,Math.round(cnt*p.length/sum)))));if(out.length<cnt){const has=new Set(out);out.push(...pick(pool.flat().filter(q=>!has.has(q)),cnt-out.length))}src.push(...shuffle(out).slice(0,cnt))};
+  portion(unitsOf('g'),10); portion(unitsOf('u'),8); portion(unitsOf('a'),7);
+  MK={list:src,i:0,score:0,miss:[],saved:cur};
+  show('home'); mockShow();
+}
+function mockShow(){
+  const n=MK.list.length; cur=newCS(MK.list[MK.i]);
+  $('#v-home').innerHTML=`<div class="sessrow"><button class="btn sm" id="quit">← 模擬試験をやめる</button><span class="hint num">${MK.i+1} / ${n}</span></div><div class="pbar"><i style="width:${MK.i/n*100}%"></i></div><div id="stage"></div>`;
+  $('#quit').onclick=mockExit; drawCard($('#stage'),true); window.scrollTo(0,0);
+}
+function mockExit(){cur=MK?MK.saved:null;MK=null;show('home')}
+function mockResult(){
+  const n=MK.list.length,pct=Math.round(MK.score/n*100);
+  $('#v-home').innerHTML=`<div class="panel done"><h2>模擬試験の結果</h2><p class="res"><span class="num big">${MK.score}</span> / ${n}（${pct}%）</p>
+  <p class="${pct>=80?'pass':'fail'}">${pct>=80?'目標の8割を超えています':`目標の8割まで、あと${Math.max(0,Math.ceil(n*.8)-MK.score)}問`}</p><div class="setbtns"><button class="btn primary" id="back">Homeに戻る</button></div></div>
+  ${MK.miss.length?`<div class="panel"><h2>間違えた問題（「わからない」としてStudyに出ます）</h2><div class="miss">${MK.miss.map(q=>`<div><b>${esc(q.q)}</b>正解：${esc(ansText(q))}</div>`).join('')}</div></div>`:''}`;
+  $('#back').onclick=mockExit; window.scrollTo(0,0);
+}
+
+show(ui.view);
+})();

@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Holy Bible</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+JP:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3efe7; --paper:#fffdf9; --ink:#22262e; --sub:#69655e; --line:#e1d9ca;
+  --navy:#2c3e63; --navy-soft:#e3e8f2; --gold:#a8842f; --gold-soft:#f5ecd6; --hl:#fbf1cf;
+  --en:"EB Garamond",Georgia,"Times New Roman",serif;
+  --ja:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--ja);background:var(--bg);color:var(--ink);line-height:1.8;min-height:100vh;padding-bottom:84px}
+.en{font-family:var(--en)}
+header{text-align:center;padding:20px 16px 8px}
+header h1{font-family:var(--en);font-size:28px;letter-spacing:.18em;font-weight:600}
+header p{font-size:12px;color:var(--sub);letter-spacing:.1em}
+main{max-width:660px;margin:0 auto;padding:0 14px}
+.view{display:none}.view.on{display:block}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px;margin:12px 0}
+h2{font-size:17px;margin-bottom:8px;letter-spacing:.06em}
+h2 .en{font-size:19px;font-weight:600;letter-spacing:.04em}
+h3{font-size:15px;margin:14px 0 6px;color:var(--navy)}
+p+p{margin-top:6px}
+.muted{color:var(--sub);font-size:13px}
+.kw{font-weight:700;color:var(--navy)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font:inherit;font-size:14.5px;padding:9px 17px;border-radius:999px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;letter-spacing:.03em}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.navy{background:var(--navy);border-color:var(--navy)}
+.btn.sm{font-size:13px;padding:6px 13px}
+.btn:disabled{opacity:.35;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{border-bottom:1px solid var(--line);padding:7px 4px;text-align:left;vertical-align:top}
+td:first-child{white-space:nowrap;color:var(--navy);font-weight:600;padding-right:10px}
+ruby rt{font-size:.5em;color:var(--sub)}
+/* today */
+.daily{text-align:center;padding:26px 20px}
+.daily .lbl{font-family:var(--en);font-size:13px;letter-spacing:.25em;color:var(--gold);text-transform:uppercase}
+.daily .date{font-size:12px;color:var(--sub);margin-bottom:12px}
+.daily .ven{font-family:var(--en);font-size:22px;line-height:1.55;margin:6px 0 10px}
+.daily .vja{font-size:15px;color:#3d3a35;white-space:pre-line;line-height:2}
+.daily .ref{font-family:var(--en);font-size:15px;color:var(--navy);font-weight:600;margin-top:12px}
+.daily .refj{font-size:12px;color:var(--sub)}
+.cont{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer}
+.cont .t{font-family:var(--en);font-size:18px;font-weight:600}
+/* reader */
+.rhead{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0 6px;display:flex;gap:6px;align-items:center}
+.rhead select{font:inherit;font-size:14px;padding:7px 8px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);min-width:0}
+.rhead #selBook{flex:1}
+.nb{font:inherit;font-size:18px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--paper);cursor:pointer;color:var(--ink);flex:none}
+.nb:disabled{opacity:.3}
+.opts{display:flex;gap:6px;justify-content:flex-end;margin:2px 0 4px;flex-wrap:wrap}
+.tog{font:inherit;font-size:12px;padding:3px 11px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;color:var(--sub)}
+.tog.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.chtitle{text-align:center;margin:8px 0 4px}
+.chtitle .en{font-size:24px;font-weight:600}
+.chtitle .jn{font-size:13px;color:var(--sub)}
+.pstitle{font-size:13px;color:var(--sub);font-style:italic;text-align:center;margin:4px 0 10px}
+.vs{padding:9px 10px;border-radius:10px;cursor:pointer;margin:0 -10px;transition:background .2s}
+.vs:hover{background:rgba(0,0,0,.025)}
+.vs.hl{background:var(--hl)}
+.vs.sel{background:var(--navy-soft)}
+.vs .num{font-family:var(--en);font-size:12px;color:var(--gold);font-weight:600;margin-right:6px;vertical-align:super}
+.vs .e{font-family:var(--en);font-size:18.5px;line-height:1.55}
+.vs .j{font-size:14px;color:#4a463f;margin-top:4px;white-space:pre-line;line-height:1.95;padding-left:2px}
+.hideja .vs .j{display:none}
+.vs .j.joined{color:var(--sub);font-size:12px}
+.selbar{position:fixed;left:50%;transform:translateX(-50%);bottom:76px;z-index:16;background:var(--ink);color:#fff;border-radius:999px;padding:6px 6px 6px 16px;display:none;align-items:center;gap:10px;font-size:13px;box-shadow:0 4px 14px rgba(0,0,0,.25);white-space:nowrap}
+.selbar.on{display:flex}
+.selbar button{font:inherit;font-size:13px;border:none;border-radius:999px;padding:7px 13px;cursor:pointer}
+.selbar .a{background:var(--gold);color:#fff}
+.selbar .x{background:transparent;color:#bbb;padding:7px 8px}
+.loading{text-align:center;color:var(--sub);padding:40px 0}
+.chnav{display:flex;justify-content:space-between;margin:18px 0 6px}
+/* timeline */
+.tl{position:relative;padding-left:20px}
+.tl:before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-i{position:relative;padding:4px 0 10px}
+.tl-i:before{content:"";position:absolute;left:-19px;top:11px;width:12px;height:12px;border-radius:50%;background:var(--paper);border:2px solid var(--gold)}
+.tl-i.nt:before{border-color:var(--navy);background:var(--navy-soft)}
+.tl-i .era{font-size:11px;color:var(--sub)}
+.tl-i .t{font-weight:700;font-size:15px}
+.tl-i .d{font-size:13.5px}
+/* books */
+.seg{display:flex;background:var(--line);border-radius:999px;padding:3px;margin-bottom:10px}
+.seg button{flex:1;font:inherit;font-size:14px;border:none;background:none;padding:6px;border-radius:999px;cursor:pointer;color:var(--sub)}
+.seg button.on{background:var(--paper);color:var(--ink);font-weight:700}
+.cat{font-size:13px;color:var(--gold);font-weight:700;margin:14px 0 6px;letter-spacing:.06em}
+.cat:first-child{margin-top:2px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.bk{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px 6px;text-align:center;cursor:pointer;position:relative}
+.bk:hover{border-color:var(--gold)}
+.bk .ne{font-family:var(--en);font-size:15.5px;font-weight:600;line-height:1.25}
+.bk .nm{font-size:10.5px;line-height:1.35;color:var(--sub)}
+.bk.done{background:var(--navy-soft);border-color:#c5cfe2}
+.bk.done:after{content:"✓";position:absolute;top:3px;right:6px;font-size:11px;color:var(--navy)}
+@media(min-width:520px){.grid{grid-template-columns:repeat(4,1fr)}}
+.tag{display:inline-block;font-size:11px;padding:1px 9px;border-radius:999px;background:var(--gold-soft);color:var(--gold);margin-bottom:4px}
+.bname{font-family:var(--en);font-size:27px;font-weight:600;letter-spacing:.02em;line-height:1.2}
+.bnj{font-size:14px;color:var(--sub)}
+.keys{list-style:none}
+.keys li{padding:7px 0;border-bottom:1px dashed var(--line);font-size:14px;display:flex;gap:10px;cursor:pointer}
+.keys li:last-child{border-bottom:none}
+.keys li:hover{color:var(--navy)}
+.keys .ref{color:var(--navy);font-weight:700;white-space:nowrap;min-width:64px;font-family:var(--en);font-size:15px}
+.keys .go{margin-left:auto;color:var(--gold);font-size:12px;white-space:nowrap}
+/* stories */
+.story{border-bottom:1px solid var(--line);padding:11px 0;cursor:pointer}
+.story:last-child{border-bottom:none}
+.story .st{font-weight:700;font-size:15.5px}
+.story .sr{font-size:12.5px;color:var(--sub);font-family:var(--en)}
+.story .sd{font-size:13.5px}
+/* progress */
+.bar{height:10px;background:var(--line);border-radius:999px;overflow:hidden;margin:8px 0 4px}
+.bar i{display:block;height:100%;background:var(--navy);border-radius:999px;transition:width .3s}
+.plist{list-style:none;counter-reset:p}
+.plist li{counter-increment:p;padding:6px 0;border-bottom:1px dashed var(--line);font-size:14px;display:flex;gap:8px;align-items:baseline;cursor:pointer}
+.plist li:before{content:counter(p);font-size:12px;color:var(--gold);font-weight:700;min-width:16px}
+.plist li.done{color:var(--sub);text-decoration:line-through}
+.chk{display:flex;align-items:center;gap:8px;font-size:15px;cursor:pointer;margin-top:12px;justify-content:center}
+.chk input{width:18px;height:18px;accent-color:var(--navy)}
+/* nav */
+nav{position:fixed;bottom:0;left:0;right:0;background:var(--paper);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);z-index:10}
+nav button{flex:1;max-width:130px;font:inherit;background:none;border:none;padding:8px 0 10px;font-size:11px;color:var(--sub);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px}
+nav button b{font-size:18px;font-weight:400}
+nav button.on{color:var(--navy)}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(20,24,32,.45);display:none;align-items:flex-end;justify-content:center;z-index:20}
+.modal.on{display:flex}
+.sheet{background:var(--bg);width:100%;max-width:660px;max-height:88vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 14px 30px}
+.close{float:right;font:inherit;font-size:22px;background:none;border:none;cursor:pointer;color:var(--sub)}
+/* AI */
+.fab{position:fixed;right:16px;bottom:86px;z-index:15;display:none;align-items:center;gap:6px;font:inherit;font-size:14px;padding:11px 16px;border-radius:999px;border:none;background:var(--navy);color:#fff;box-shadow:0 4px 14px rgba(30,45,80,.3);cursor:pointer}
+.fab.on{display:inline-flex}
+.reading .fab{display:none!important}
+.ai-only{display:none}.ai-ready .ai-only{display:inline-flex}
+#chat .sheet{display:flex;flex-direction:column;height:84vh;padding-bottom:12px}
+.ctx{font-size:12px;color:var(--sub);margin:-2px 0 6px;font-family:var(--en)}
+.msgs{flex:1;overflow:auto;padding:4px 2px}
+.msg{max-width:88%;padding:9px 13px;border-radius:14px;margin:6px 0;font-size:14.5px;white-space:pre-wrap;word-break:break-word}
+.msg.u{margin-left:auto;background:var(--ink);color:#fff;border-bottom-right-radius:4px}
+.msg.a{background:var(--paper);border:1px solid var(--line);border-bottom-left-radius:4px}
+.msg.a b{color:var(--navy)}
+.msg.err{background:#f6e3e0;color:#9a3528;font-size:13px}
+.chatin{display:flex;gap:8px;align-items:flex-end;border-top:1px solid var(--line);padding-top:10px}
+.chatin textarea{flex:1;min-height:44px;max-height:120px;font:inherit;font-size:15px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);resize:none}
+.chatin .btn{padding:10px 16px}
+.chip{font:inherit;font-size:13px;padding:4px 11px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;color:var(--ink)}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13px;padding:8px 16px;border-radius:999px;opacity:0;transition:.3s;pointer-events:none;z-index:30}
+.toast.on{opacity:1}
+.foot{font-size:11px;color:var(--sub);text-align:center;margin:18px 0 8px;line-height:1.6}
+</style>
+</head>
+<body>
+<header><h1>HOLY BIBLE</h1><p>World English Bible ・ 口語訳</p></header>
+<main>
+
+<!-- Today -->
+<section class="view on" id="v-today">
+  <div class="card daily" id="daily"></div>
+  <div class="card cont" id="contCard" style="display:none"></div>
+  <p class="foot">English: World English Bible (Public Domain)<br>日本語：口語訳「聖書」1954/1955年版（著作権保護期間満了）</p>
+</section>
+
+<!-- Read -->
+<section class="view" id="v-read">
+  <div class="rhead">
+    <button class="nb" id="prevCh" aria-label="Previous chapter">‹</button>
+    <select id="selBook"></select>
+    <select id="selCh"></select>
+    <button class="nb" id="nextCh" aria-label="Next chapter">›</button>
+  </div>
+  <div class="opts">
+    <button class="tog on" id="togJa">和訳</button>
+    <button class="tog" id="togRuby">ふりがな</button>
+  </div>
+  <div id="reader"><div class="loading">Loading…</div></div>
+</section>
+
+<!-- Books -->
+<section class="view" id="v-books">
+  <div class="card">
+    <div class="seg" id="testSeg"><button data-t="ot" class="on">Old Testament 旧約</button><button data-t="nt">New Testament 新約</button></div>
+    <div id="bookList"></div>
+  </div>
+</section>
+
+<!-- Learn -->
+<section class="view" id="v-learn">
+  <div class="card">
+    <h2>聖書とは</h2>
+    <p>聖書は1冊の本ではなく、<span class="kw">66巻</span>（プロテスタントの場合）の書物を集めた「図書館」のようなものです。1000年以上にわたって、多くの書き手により書かれました。</p>
+    <table style="margin-top:8px"><tbody>
+      <tr><td>旧約聖書<br><span class="en" style="font-weight:400">Old Testament</span></td><td>39巻。イエス以前の、神とイスラエルの民の歴史・律法・詩・預言。主にヘブライ語（一部アラム語）。ユダヤ教の聖典でもあります。</td></tr>
+      <tr><td>新約聖書<br><span class="en" style="font-weight:400">New Testament</span></td><td>27巻。イエス・キリストの生涯と教え、初代教会の歩みと手紙。ギリシア語（コイネー）。紀元1世紀に成立。</td></tr>
+    </tbody></table>
+    <p class="muted" style="margin-top:8px">「約」は「契約」の約。英語の Testament も「契約」の意味です。</p>
+  </div>
+
+  <div class="card">
+    <h2>章と節の読み方</h2>
+    <p>「<span class="kw en" style="font-size:16px">John 3:16</span>」は「ヨハネによる福音書 3章16節」。「Psalm 23」は詩篇第23篇です。章と節は後の時代（中世〜16世紀）に付けられた区切りです。</p>
+    <p class="muted">このアプリの節番号は英語訳・口語訳の番号です（新共同訳とは一部の書でずれます。例：ヨエル書2:28＝新共同訳3:1）。</p>
+  </div>
+
+  <div class="card">
+    <h2>聖書の名場面</h2>
+    <p class="muted">まず知っておきたい有名な物語。タップで詳しく。</p>
+    <div id="storyList"></div>
+  </div>
+
+  <div class="card">
+    <h2>聖書の大きな流れ</h2>
+    <div class="tl" id="timeline"></div>
+  </div>
+
+  <div class="card">
+    <h2>初めて読むなら</h2>
+    <p class="muted">最初から順に読むと、レビ記あたりで挫折しがち。物語から入るのがおすすめです。</p>
+    <ol class="plist" id="starter" style="margin-top:6px"></ol>
+  </div>
+
+  <div class="card">
+    <h2>教派による違い</h2>
+    <table><tbody>
+      <tr><td>プロテスタント</td><td>旧約39＋新約27＝66巻。</td></tr>
+      <tr><td>カトリック</td><td>旧約に「第二正典」（トビト記・マカバイ記など）を含む73巻。</td></tr>
+      <tr><td>正教会</td><td>カトリックよりさらにいくつか多い書を含みます。</td></tr>
+      <tr><td>ユダヤ教</td><td>旧約にあたる部分のみ（タナハ）。律法・預言者・諸書の順に並びます。</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="card">
+    <h2>翻訳について</h2>
+    <table><tbody>
+      <tr><td class="en">WEB</td><td>World English Bible。読みやすい現代英語の訳で、パブリックドメイン。神の名（YHWH）は "LORD" と表記。</td></tr>
+      <tr><td class="en">KJV</td><td>欽定訳（1611年）。英語文学に大きな影響を与えた古典的な訳。</td></tr>
+      <tr><td>口語訳</td><td>1954/55年、日本聖書協会。戦後最初の口語体の訳で、このアプリの和訳。</td></tr>
+      <tr><td>新改訳</td><td>1970年〜。福音派中心。最新版は新改訳2017。</td></tr>
+      <tr><td>新共同訳</td><td>1987年。カトリックとプロテスタントの共同訳。</td></tr>
+      <tr><td>聖書協会共同訳</td><td>2018年。新共同訳の後継。</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- Progress -->
+<section class="view" id="v-prog">
+  <div class="card">
+    <h2><span class="en">Reading Progress</span>　通読の記録</h2>
+    <p class="muted">読み終えた書をタップして記録（このブラウザに保存）。</p>
+    <div id="progSum"></div>
+  </div>
+  <div class="card" id="progDetail"></div>
+</section>
+</main>
+
+<nav>
+  <button data-v="today" class="on"><b>☀</b>Today</button>
+  <button data-v="read"><b>📖</b>Read</button>
+  <button data-v="books"><b>☰</b>Books</button>
+  <button data-v="learn"><b>✦</b>Learn</button>
+  <button data-v="prog"><b>✓</b>Progress</button>
+</nav>
+
+<div class="selbar" id="selbar"><span id="selLbl"></span><button class="a ai-only" id="selAsk">💬 AIに質問</button><button class="x" id="selX">×</button></div>
+<div class="modal" id="modal"><div class="sheet"><button class="close" id="mclose">×</button><div id="mbody"></div></div></div>
+<button class="fab" id="fab">💬 AIに質問</button>
+<div class="modal" id="chat"><div class="sheet">
+  <div><button class="close" id="cclose">×</button><h2>AIに質問</h2><div class="ctx" id="ctxLabel"></div></div>
+  <div class="msgs" id="msgs"></div>
+  <div class="chatin">
+    <textarea id="chatText" rows="1" placeholder="Type..."></textarea>
+    <button class="btn navy" id="sendBtn">送信</button>
+  </div>
+  <div class="row" style="margin-top:6px"><button class="chip" id="newChat">会話をリセット</button></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== Books: [English, 口語訳名, 区分, 章数, 概要, [[箇所, 内容], ...]] =====
+const BOOKS=[
+["Genesis","創世記","律法",50,"天地創造から人類の始まり、そしてアブラハム・イサク・ヤコブ・ヨセフへと続く族長たちの物語。神と人との関係の出発点です。",[["1–2","天地創造"],["3","エデンの園と堕落"],["6–9","ノアの洪水"],["12","アブラハムの召命"],["37–50","ヨセフ物語"]]],
+["Exodus","出エジプト記","律法",40,"エジプトで奴隷となっていたイスラエルの民が、モーセに率いられて脱出し、シナイ山で神と契約を結びます。",[["3","燃える柴とモーセの召命"],["12","過越の始まり"],["14","海を渡る"],["20","十戒"]]],
+["Leviticus","レビ記","律法",27,"献げ物・祭司・清さなど礼拝と生活の規定集。「聖なる者となれ」がテーマです。",[["16","贖罪日"],["19:18","隣人を自分のように愛しなさい"]]],
+["Numbers","民数記","律法",36,"荒れ野での40年の旅。人口調査、民の不平や反逆、そして次の世代への引き継ぎ。",[["6:24–26","祭司の祝福"],["13–14","偵察と民の不信仰"]]],
+["Deuteronomy","申命記","律法",34,"約束の地を目前にしたモーセの告別説教。律法をもう一度語り、神への愛と従順を説きます。",[["6:4–5","シェマ「聞け、イスラエルよ」"],["30:19","命を選びなさい"],["34","モーセの死"]]],
+["Joshua","ヨシュア記","歴史",24,"モーセの後継者ヨシュアのもと、民がカナンの地に入り、土地を分け合います。",[["1:9","強く、また雄々しくあれ"],["6","エリコの陥落"],["24:15","わたしとわたしの家とは主に仕えます"]]],
+["Judges","士師記","歴史",21,"王のいない時代。背信→苦難→救い手（士師）の登場、というサイクルが繰り返されます。",[["4–5","デボラ"],["6–8","ギデオン"],["13–16","サムソン"]]],
+["Ruth","ルツ記","歴史",4,"モアブ人の女性ルツが姑ナオミに誠実を尽くし、やがてダビデ王の曾祖母となる短い物語。",[["1:16","あなたの民はわたしの民"]]],
+["1 Samuel","サムエル記上","歴史",31,"最後の士師サムエル、初代の王サウル、そして若きダビデの登場。",[["3","少年サムエルの召命"],["16","ダビデが油を注がれる"],["17","ダビデとゴリアテ"]]],
+["2 Samuel","サムエル記下","歴史",24,"ダビデ王の治世。王国の確立と、彼自身の大きな罪と悔い改め。",[["7","ダビデへの約束（ダビデ契約）"],["11–12","バテシバ事件と預言者ナタン"]]],
+["1 Kings","列王紀上","歴史",22,"ソロモンの栄華と神殿建設、王国の南北分裂、預言者エリヤの活躍。",[["3","ソロモンの知恵"],["8","神殿の奉献"],["18–19","エリヤとバアルの預言者"]]],
+["2 Kings","列王紀下","歴史",25,"北王国イスラエルの滅亡（前722年）と、南王国ユダのバビロン捕囚（前587年頃）まで。",[["2","エリヤの昇天"],["22–23","ヨシヤ王の改革"],["25","エルサレム陥落"]]],
+["1 Chronicles","歴代志上","歴史",29,"アダムからの系図と、ダビデの治世を神殿礼拝の視点から語り直します。",[["17","ダビデへの約束"]]],
+["2 Chronicles","歴代志下","歴史",36,"ソロモンから捕囚まで、南王国ユダの歴史を神殿中心に描きます。",[["7:14","民がへりくだって祈るなら"],["36:22–23","クロス王の帰還命令"]]],
+["Ezra","エズラ記","歴史",10,"ペルシア時代、捕囚からの帰還と神殿の再建。律法による共同体の立て直し。",[["3","神殿の基礎"],["7","律法学者エズラ"]]],
+["Nehemiah","ネヘミヤ記","歴史",13,"エルサレムの城壁再建と、民の信仰の刷新。",[["2","ネヘミヤの帰還"],["8","律法の朗読"]]],
+["Esther","エステル記","歴史",10,"ペルシア王妃となったエステルが、ユダヤ人を絶滅の危機から救う物語。神の名が一度も出てこない書です。",[["4:14","この時のためにこそ"],["9","プリムの祭りの由来"]]],
+["Job","ヨブ記","詩歌",42,"正しい人がなぜ苦しむのか。ヨブと友人たちの激しい対話と、嵐の中からの神の応答。",[["1–2","ヨブの試練"],["38–41","神の応答"],["42","結末"]]],
+["Psalms","詩篇","詩歌",150,"150篇の祈りと賛美の歌。嘆き・感謝・怒り・信頼など、人間のあらゆる感情が神に向けられています。",[["1","二つの道"],["23","主はわたしの牧者"],["51","悔い改めの祈り"],["139","すべてを知る神"]]],
+["Proverbs","箴言","詩歌",31,"日常生活の知恵を集めた格言集。言葉づかい、勤勉、友人、家庭など。",[["1:7","主を恐れることは知識のはじめ"],["3:5–6","心をつくして主に信頼せよ"]]],
+["Ecclesiastes","伝道の書","詩歌",12,"「空の空」と人生の限界を見つめる知恵文学。新共同訳では「コヘレトの言葉」。",[["1:2","空の空"],["3:1–8","すべての事には時がある"],["12:1","若い日に造り主を覚えよ"]]],
+["Song of Solomon","雅歌","詩歌",8,"男女の愛をうたう詩。神と民の愛の比喩としても読まれてきました。",[["8:6","愛は死のように強く"]]],
+["Isaiah","イザヤ書","大預言書",66,"裁きと慰めの預言。メシア（救い主）と「苦難の僕」の預言は新約で繰り返し引用されます。",[["6","イザヤの召命"],["7:14","インマヌエル"],["9:6","ひとりのみどりご"],["40","慰めよ、わが民を"],["53","苦難の僕"]]],
+["Jeremiah","エレミヤ書","大預言書",52,"滅亡直前のユダに悔い改めを迫った「涙の預言者」。新しい契約を約束します。",[["1","召命"],["29:11","平安を与える計画"],["31:31–34","新しい契約"]]],
+["Lamentations","哀歌","大預言書",5,"エルサレム陥落を嘆く5つの詩。",[["3:22–23","主のいつくしみは絶えない"]]],
+["Ezekiel","エゼキエル書","大預言書",48,"捕囚の地バビロンで語られた預言と、壮大な幻。",[["1","神の栄光の幻"],["37","枯れた骨の谷"]]],
+["Daniel","ダニエル書","大預言書",12,"異国の宮廷で信仰を守ったダニエルたちの物語と、終末の幻。",[["3","燃える炉"],["6","ししの穴"],["7","人の子のような者"]]],
+["Hosea","ホセア書","小預言書",14,"不実な妻を愛し続ける預言者の姿に、裏切る民を愛し続ける神の愛が重ねられます。",[["11","わたしはエフライムに歩むことを教えた"]]],
+["Joel","ヨエル書","小預言書",3,"いなごの災いを「主の日」のしるしとして語り、すべての人への霊の注ぎを約束します。",[["2:28","わが霊をすべての肉なる者に"]]],
+["Amos","アモス書","小預言書",9,"羊飼い出身の預言者による、社会正義の訴え。",[["5:24","公道を水のように"]]],
+["Obadiah","オバデヤ書","小預言書",1,"隣国エドムへの裁き。旧約でいちばん短い書です。",[]],
+["Jonah","ヨナ書","小預言書",4,"神の命令から逃げた預言者ヨナが大魚に飲み込まれ、敵国ニネベに神の憐れみが及ぶ物語。",[["1–2","嵐と大魚"],["4","神の憐れみとヨナの怒り"]]],
+["Micah","ミカ書","小預言書",7,"正義と憐れみを求め、ベツレヘムから出る支配者を預言します。",[["5:2","ベツレヘムから"],["6:8","公義を行い、いつくしみを愛し"]]],
+["Nahum","ナホム書","小預言書",3,"アッシリアの都ニネベの滅亡を告げます。",[]],
+["Habakkuk","ハバクク書","小預言書",3,"「なぜ悪が栄えるのか」と神に問いかける預言者。",[["2:4","義人はその信仰によって生きる"]]],
+["Zephaniah","ゼパニヤ書","小預言書",3,"主の日の裁きと、残りの者の回復。",[["3:17","主はあなたのために喜び楽しまれる"]]],
+["Haggai","ハガイ書","小預言書",2,"捕囚から帰った民に、神殿の再建を励まします。",[]],
+["Zechariah","ゼカリヤ書","小預言書",14,"神殿再建期の幻と、柔和な王の到来の預言。",[["9:9","ろばに乗って来る王"]]],
+["Malachi","マラキ書","小預言書",4,"旧約の最後の書。形だけの礼拝を批判し、預言者エリヤの再来を約束します。",[["4:5","エリヤをつかわす"]]],
+["Matthew","マタイによる福音書","福音書",28,"ユダヤ人の読者を意識し、イエスを旧約の約束の成就として描きます。教えのまとまりが多いのが特徴。",[["1–2","系図と誕生"],["5–7","山上の説教"],["6:9–13","主の祈り"],["28:19–20","すべての国民を弟子とせよ"]]],
+["Mark","マルコによる福音書","福音書",16,"最も短く、最も早く書かれたとされる福音書。行動するイエスをテンポよく描き、初めて読むのにおすすめです。",[["1:15","時は満ちた、神の国は近づいた"],["8:29","ペテロの告白"],["10:45","仕えるために来た"],["15–16","十字架と復活"]]],
+["Luke","ルカによる福音書","福音書",24,"貧しい人・女性・社会の周縁にいる人への関心が強く、たとえ話が豊かな福音書。",[["2","降誕"],["10:25–37","よきサマリヤ人"],["15","失われた羊・放蕩息子"],["24","エマオへの道"]]],
+["John","ヨハネによる福音書","福音書",21,"「わたしは命のパンである」などの言葉を通して、イエスが誰なのかを深く掘り下げます。",[["1:1–14","初めに言があった"],["3:16","神はそのひとり子を賜わったほどに"],["11","ラザロの復活"],["14:6","わたしは道であり、真理であり、命である"]]],
+["Acts","使徒行伝","歴史",28,"聖霊が降り、教会がエルサレムからローマへと広がっていく物語。ルカ福音書の続編。",[["2","聖霊降臨（ペンテコステ）"],["9","パウロの回心"],["15","エルサレム会議"],["17","アテネでの説教"]]],
+["Romans","ローマ人への手紙","パウロ書簡",16,"パウロの思想の集大成。人は信仰によって義とされる、という中心テーマ。",[["3:23–24","恵みにより価なしに義とされる"],["5:8","まだ罪人であった時"],["8:28","万事が益となるように"],["8:38–39","神の愛から引き離すものはない"],["12:1–2","心を新たにして"]]],
+["1 Corinthians","コリント人への第一の手紙","パウロ書簡",16,"分裂や様々な問題を抱えた教会への具体的な助言。",[["12","一つのからだ、多くの肢体"],["13","愛の賛歌"],["15","復活"]]],
+["2 Corinthians","コリント人への第二の手紙","パウロ書簡",13,"苦難の中のパウロが、弱さと使徒としての務めを語ります。",[["5:17","新しく造られた者"],["12:9","力は弱いところに完全にあらわれる"]]],
+["Galatians","ガラテヤ人への手紙","パウロ書簡",6,"律法の行いではなく信仰によって義とされる。キリスト者の自由を力強く語ります。",[["2:20","キリストがわたしのうちに生きておられる"],["3:28","キリスト・イエスにあって一つ"],["5:22–23","御霊の実"]]],
+["Ephesians","エペソ人への手紙","パウロ書簡",6,"キリストにある教会の一致と、新しい生き方。",[["2:8–9","恵みにより、信仰によって救われた"],["6:10–17","神の武具"]]],
+["Philippians","ピリピ人への手紙","パウロ書簡",4,"獄中から書かれた「喜びの手紙」。",[["2:6–11","キリスト賛歌"],["4:4","主にあっていつも喜びなさい"],["4:13","わたしを強くして下さるかたによって"]]],
+["Colossians","コロサイ人への手紙","パウロ書簡",4,"万物に先立つキリストの卓越性を語ります。",[["1:15–20","キリスト賛歌"]]],
+["1 Thessalonians","テサロニケ人への第一の手紙","パウロ書簡",5,"現存する最も古いパウロの手紙とされます。再臨への希望。",[["4:13–18","主の来臨"],["5:16–18","いつも喜び、絶えず祈り、すべての事について感謝"]]],
+["2 Thessalonians","テサロニケ人への第二の手紙","パウロ書簡",3,"再臨をめぐる混乱を正し、落ち着いて働くよう勧めます。",[["3:10","働こうとしない者は食べることもしてはならない"]]],
+["1 Timothy","テモテヘの第一の手紙","パウロ書簡",6,"教会の指導者や秩序についての指示（牧会書簡）。",[["6:10","金銭を愛することは、すべての悪の根"]]],
+["2 Timothy","テモテヘの第二の手紙","パウロ書簡",4,"パウロの最後の言葉とされる、愛弟子への励まし。",[["3:16","聖書は、すべて神の霊感を受けて書かれた"],["4:7","わたしは戦いをりっぱに戦いぬき"]]],
+["Titus","テトスヘの手紙","パウロ書簡",3,"クレタ島の教会を整えるための指示。",[]],
+["Philemon","ピレモンヘの手紙","パウロ書簡",1,"逃げ出した奴隷オネシモを「兄弟」として迎えるよう頼む、短い私信。",[]],
+["Hebrews","ヘブル人への手紙","公同書簡",13,"イエスを真の大祭司として描き、旧約の祭儀がイエスによって完成したと語ります。",[["4:15","わたしたちの弱さを思いやることのできる大祭司"],["11","信仰の人々"],["12:1–2","信仰の導き手であり完成者"]]],
+["James","ヤコブの手紙","公同書簡",5,"行いの伴う信仰を強調する、実践的な手紙。",[["1:22","御言を行う人になりなさい"],["2:17","行いを伴わなければ、信仰は死んだもの"]]],
+["1 Peter","ペテロの第一の手紙","公同書簡",5,"迫害の中にある信徒への、希望と励まし。",[["2:9","選ばれた種族、祭司の国"],["5:7","思いわずらいを、いっさい神にゆだねなさい"]]],
+["2 Peter","ペテロの第二の手紙","公同書簡",3,"偽教師への警告と、再臨の約束。",[["3:8–9","一日は千年のようであり"]]],
+["1 John","ヨハネの第一の手紙","公同書簡",5,"「神は愛である」。愛と真理の中に生きることを説きます。",[["1:9","自分の罪を告白するならば"],["4:8","神は愛である"],["4:19","神がまずわたしたちを愛して下さった"]]],
+["2 John","ヨハネの第二の手紙","公同書簡",1,"真理と愛の中を歩むよう勧める短い手紙。",[]],
+["3 John","ヨハネの第三の手紙","公同書簡",1,"旅する伝道者たちをもてなしたガイオへの手紙。",[]],
+["Jude","ユダの手紙","公同書簡",1,"偽教師への警告と、信仰を守り抜く勧め。",[]],
+["Revelation","ヨハネの黙示録","預言",22,"迫害下の教会に向けた象徴に満ちた幻の書。最後に神が勝利し、新しい天と地が来ることを告げます。",[["1–3","七つの教会への手紙"],["4–5","天の礼拝"],["21:1–4","新しい天と新しい地"]]]
+];
+const CAT_LABEL={"律法":"Law ・ 律法（モーセ五書）","歴史":"History ・ 歴史書","詩歌":"Poetry & Wisdom ・ 詩歌・知恵文学","大預言書":"Major Prophets ・ 大預言書","小預言書":"Minor Prophets ・ 小預言書","福音書":"Gospels ・ 福音書","パウロ書簡":"Pauline Epistles ・ パウロの手紙","公同書簡":"General Epistles ・ その他の手紙","預言":"Prophecy ・ 預言"};
+const isOT=i=>i<39;
+const TIMELINE=[
+ ["ot","はじまり","天地創造と原初史","創造、エデンの園、ノアの洪水、バベルの塔（創世記1–11章）"],
+ ["ot","前2000年頃？","族長時代","アブラハムが召され、イサク・ヤコブ・ヨセフへと続く"],
+ ["ot","前13世紀頃？","出エジプトと荒野","モーセがエジプトから民を導き、シナイ山で十戒"],
+ ["ot","","カナン定住と士師","ヨシュアのもとで約束の地へ。士師が民を救う時代"],
+ ["ot","前1000年頃","統一王国","サウル、ダビデ、ソロモン。エルサレム神殿の建設"],
+ ["ot","前930年頃","王国の分裂","北イスラエルと南ユダに分かれる。預言者たちの活動"],
+ ["ot","前722 / 前587年頃","滅亡とバビロン捕囚","北はアッシリアに、南はバビロンに滅ぼされる"],
+ ["ot","前539年〜","帰還と再建","ペルシアのもとで帰還し、神殿と城壁を再建"],
+ ["ot","","中間時代","ギリシア・ローマの支配。旧約と新約の間の約400年"],
+ ["nt","前4年頃〜後30年頃","イエスの生涯","誕生、宣教、十字架、復活（福音書）"],
+ ["nt","後30年頃〜","教会の誕生と広がり","聖霊降臨、パウロの宣教旅行（使徒行伝・手紙）"],
+ ["nt","1世紀末","黙示録","迫害の中で、神の最終的な勝利を告げる"]
+];
+const STARTER=[41,42,44,1,2,19,43,45]; // book numbers (1-based)
+// [名前, 表示参照, 本番号, 章, 概要]
+const STORIES=[
+ ["天地創造","Genesis 1–2",1,1,"神が六日で世界を造り、七日目に休まれた。人は神のかたちに造られた。"],
+ ["エデンの園","Genesis 3",1,3,"アダムとエバが禁じられた木の実を食べ、楽園を出る。「罪」の始まりの物語。"],
+ ["ノアの箱舟","Genesis 6–9",1,6,"洪水から箱舟で救われたノアの家族と動物たち。虹は神の契約のしるし。"],
+ ["バベルの塔","Genesis 11",1,11,"天まで届く塔を建てようとした人々の言葉が乱される。"],
+ ["アブラハムの旅立ち","Genesis 12",1,12,"「あなたは祝福の基となる」と約束され、故郷を離れる。信仰の父。"],
+ ["ヨセフ物語","Genesis 37–50",1,37,"兄たちに売られたヨセフがエジプトの宰相となり、家族と和解する。"],
+ ["出エジプト","Exodus 1–15",2,14,"モーセと十の災い、過越、そして海が分かれる奇跡。"],
+ ["十戒","Exodus 20",2,20,"シナイ山で与えられた、神と民の契約の中心となる十の戒め。"],
+ ["ダビデとゴリアテ","1 Samuel 17",9,17,"羊飼いの少年ダビデが、石投げ一つで巨人を倒す。"],
+ ["ヨナと大魚","Jonah 1–4",32,1,"神から逃げた預言者が大魚に飲み込まれ、敵の町に憐れみを伝える。"],
+ ["ししの穴のダニエル","Daniel 6",27,6,"祈りをやめなかったダニエルが、ししの穴から守られる。"],
+ ["イエスの誕生","Luke 2",42,2,"ベツレヘムでの誕生。羊飼いと東方の博士たち（Matthew 2）。"],
+ ["山上の説教","Matthew 5–7",40,5,"「心の貧しい人たちは、さいわいである」に始まるイエスの教えの集大成。"],
+ ["よきサマリヤ人","Luke 10:25–37",42,10,"「隣り人とは誰か」に答えるたとえ話。敵とされた人が倒れた人を助ける。"],
+ ["放蕩息子","Luke 15:11–32",42,15,"財産を使い果たして帰ってきた息子を、父が走り寄って迎える。"],
+ ["五千人の給食","Mark 6:30–44",41,6,"五つのパンと二匹の魚で大勢の人が満たされる。四福音書すべてにある奇跡。"],
+ ["最後の晩餐","Mark 14",41,14,"十字架の前夜、イエスが弟子たちとパンと杯を分かち合う。聖餐の起源。"],
+ ["十字架と復活","Mark 15–16",41,15,"イエスがゴルゴタで十字架にかけられ、三日目に墓が空になっていた。"],
+ ["聖霊降臨","Acts 2",44,2,"弟子たちに聖霊が降り、さまざまな言葉で語り出す。教会の誕生日。"],
+ ["パウロの回心","Acts 9",44,9,"教会を迫害していたサウロが、ダマスコへの途上で光に打たれる。"]
+];
+// [本番号, 章, 節開始, 節終了, English, 口語訳]
+const DAILY=[[1,1,1,1,"In the beginning, God created the heavens and the earth.","はじめに{神|かみ}は{天|てん}と{地|ち}とを{創造|そうぞう}された。"],[1,1,27,27,"God created man in his own image. In God’s image he created him; male and female he created them.","{神|かみ}は{自分|じぶん}のかたちに{人|ひと}を{創造|そうぞう}された。すなわち、{神|かみ}のかたちに{創造|そうぞう}し、{男|おとこ}と{女|おんな}とに{創造|そうぞう}された。"],[1,12,2,2,"I will make of you a great nation. I will bless you and make your name great. You will be a blessing.","わたしはあなたを{大|おお}いなる{国民|こくみん}とし、あなたを{祝福|しゅくふく}し、あなたの{名|な}を{大|おお}きくしよう。あなたは{祝福|しゅくふく}の{基|もとい}となるであろう。"],[1,50,20,20,"As for you, you meant evil against me, but God meant it for good, to save many people alive, as is happening today.","あなたがたはわたしに{対|たい}して{悪|あく}をたくらんだが、{神|かみ}はそれを{良|よ}きに{変|かわ}らせて、{今日|こんにち}のように{多|おお}くの{民|たみ}の{命|いのち}を{救|すく}おうと{計|はか}らわれました。"],[2,14,14,14,"The LORD will fight for you, and you shall be still.”","{主|しゅ}があなたがたのために{戦|たたか}われるから、あなたがたは{黙|もく}していなさい」。"],[4,6,24,26,"‘The LORD bless you, and keep you. The LORD make his face to shine on you, and be gracious to you. The LORD lift up his face toward you, and give you peace.’","「{願|ねが}わくは{主|しゅ}があなたを{祝福|しゅくふく}し、\nあなたを{守|まも}られるように。\n{願|ねが}わくは{主|しゅ}がみ{顔|かお}をもってあなたを{照|てら}し、\nあなたを{恵|めぐ}まれるように。\n{願|ねが}わくは{主|しゅ}がみ{顔|かお}をあなたに{向|む}け、\nあなたに{平安|へいあん}を{賜|たま}わるように」』。"],[5,6,5,5,"You shall love the LORD your God with all your heart, with all your soul, and with all your might.","あなたは{心|こころ}をつくし、{精神|せいしん}をつくし、{力|ちから}をつくして、あなたの{神|かみ}、{主|しゅ}を{愛|あい}さなければならない。"],[5,31,6,6,"Be strong and courageous. Don’t be afraid or scared of them, for the LORD your God himself is who goes with you. He will not fail you nor forsake you.”","あなたがたは{強|つよ}く、かつ{勇|いさ}ましくなければならない。{彼|かれ}らを{恐|おそ}れ、おののいてはならない。あなたの{神|かみ}、{主|しゅ}があなたと{共|とも}に{行|い}かれるからである。{主|しゅ}は{決|けっ}してあなたを{見放|みはな}さず、またあなたを{見捨|みす}てられないであろう」。"],[6,1,9,9,"Haven’t I commanded you? Be strong and courageous. Don’t be afraid. Don’t be dismayed, for the LORD your God is with you wherever you go.”","わたしはあなたに{命|めい}じたではないか。{強|つよ}く、また{雄々|おお}しくあれ。あなたがどこへ{行|い}くにも、あなたの{神|かみ}、{主|しゅ}が{共|とも}におられるゆえ、{恐|おそ}れてはならない、おののいてはならない」。"],[8,1,16,16,"Ruth said, “Don’t urge me to leave you, and to return from following you, for where you go, I will go; and where you stay, I will stay. Your people will be my people, and your God my God.","しかしルツは{言|い}った、「あなたを{捨|す}て、あなたを{離|はな}れて{帰|かえ}ることをわたしに{勧|すす}めないでください。わたしはあなたの{行|い}かれる{所|ところ}へ{行|い}き、またあなたの{宿|やど}られる{所|ところ}に{宿|やど}ります。あなたの{民|たみ}はわたしの{民|たみ}、あなたの{神|かみ}はわたしの{神|かみ}です。"],[9,16,7,7,"But the LORD said to Samuel, “Don’t look on his face, or on the height of his stature, because I have rejected him; for I don’t see as man sees. For man looks at the outward appearance, but the LORD looks at the heart.”","しかし{主|しゅ}はサムエルに{言|い}われた、「{顔|かお}かたちや{身|み}のたけを{見|み}てはならない。わたしはすでにその{人|ひと}を{捨|す}てた。わたしが{見|み}るところは{人|ひと}とは{異|こと}なる。{人|ひと}は{外|そと}の{顔|かお}かたちを{見|み}、{主|しゅ}は{心|こころ}を{見|み}る」。"],[14,7,14,14,"if my people who are called by my name will humble themselves, pray, seek my face, and turn from their wicked ways, then I will hear from heaven, will forgive their sin, and will heal their land.","わたしの{名|な}をもってとなえられるわたしの{民|たみ}が、もしへりくだり、{祈|いの}って、わたしの{顔|かお}を{求|もと}め、その{悪|わる}い{道|みち}を{離|はな}れるならば、わたしは{天|てん}から{聞|き}いて、その{罪|つみ}をゆるし、その{地|ち}をいやす。"],[16,8,10,10,"Then he said to them, “Go your way. Eat the fat, drink the sweet, and send portions to him for whom nothing is prepared, for today is holy to our Lord. Don’t be grieved, for the joy of the LORD is your strength.”","そして{彼|かれ}らに{言|い}った、「あなたがたは{去|さ}って、{肥|こ}えたものを{食|た}べ、{甘|あま}いものを{飲|の}みなさい。その{備|そな}えのないものには{分|わ}けてやりなさい。この{日|ひ}はわれわれの{主|しゅ}の{聖|せい}なる{日|ひ}です。{憂|うれ}えてはならない。{主|しゅ}を{喜|よろこ}ぶことはあなたがたの{力|ちから}です」。"],[18,19,25,25,"But as for me, I know that my Redeemer lives. In the end, he will stand upon the earth.","わたしは{知|し}る、\nわたしをあがなう{者|もの}は{生|い}きておられる、\n{後|のち}の{日|ひ}に{彼|かれ}は{必|かなら}ず{地|ち}の{上|うえ}に{立|た}たれる。"],[19,1,3,3,"He will be like a tree planted by the streams of water, that produces its fruit in its season, whose leaf also does not wither. Whatever he does shall prosper.","このような{人|ひと}は{流|なが}れのほとりに{植|う}えられた{木|き}の\n{時|とき}が{来|く}ると{実|み}を{結|むす}び、\nその{葉|は}もしぼまないように、\nそのなすところは{皆|みな}{栄|さか}える。"],[19,16,11,11,"You will show me the path of life. In your presence is fullness of joy. In your right hand there are pleasures forever more.","あなたはいのちの{道|みち}をわたしに{示|しめ}される。\nあなたの{前|まえ}には{満|み}ちあふれる{喜|よろこ}びがあり、\nあなたの{右|みぎ}には、とこしえにもろもろの{楽|たの}しみがある。"],[19,19,1,1,"For the Chief Musician. A Psalm by David. The heavens declare the glory of God. The expanse shows his handiwork.","もろもろの{天|てん}は{神|かみ}の{栄光|えいこう}をあらわし、\n{大空|おおぞら}はみ{手|て}のわざをしめす。"],[19,23,1,1,"A Psalm by David. The LORD is my shepherd; I shall lack nothing.","{主|しゅ}はわたしの{牧者|ぼくしゃ}であって、\nわたしには{乏|とぼ}しいことがない。"],[19,23,4,4,"Even though I walk through the valley of the shadow of death, I will fear no evil, for you are with me. Your rod and your staff, they comfort me.","たといわたしは{死|し}の{陰|かげ}の{谷|たに}を{歩|あゆ}むとも、\nわざわいを{恐|おそ}れません。\nあなたがわたしと{共|とも}におられるからです。\nあなたのむちと、あなたのつえはわたしを{慰|なぐさ}めます。"],[19,27,1,1,"By David. The LORD is my light and my salvation. Whom shall I fear? The LORD is the strength of my life. Of whom shall I be afraid?","{主|しゅ}はわたしの{光|ひかり}、わたしの{救|すくい}だ、\nわたしはだれを{恐|おそ}れよう。\n{主|しゅ}はわたしの{命|いのち}のとりでだ。\nわたしはだれをおじ{恐|おそ}れよう。"],[19,34,8,8,"Oh taste and see that the LORD is good. Blessed is the man who takes refuge in him.","{主|しゅ}の{恵|めぐ}みふかきことを{味|あじ}わい{知|し}れ、\n{主|しゅ}に{寄|よ}り{頼|たの}む{人|ひと}はさいわいである。"],[19,37,4,4,"Also delight yourself in the LORD, and he will give you the desires of your heart.","{主|しゅ}によって{喜|よろこ}びをなせ。\n{主|しゅ}はあなたの{心|こころ}の{願|ねが}いをかなえられる。"],[19,46,1,1,"For the Chief Musician. By the sons of Korah. According to Alamoth. God is our refuge and strength, a very present help in trouble.","{神|かみ}はわれらの{避|さ}け{所|どころ}また{力|ちから}である。\n{悩|なや}める{時|とき}のいと{近|ちか}き{助|たす}けである。"],[19,46,10,10,"“Be still, and know that I am God. I will be exalted among the nations. I will be exalted on the earth.”","「{静|しず}まって、わたしこそ{神|かみ}であることを{知|し}れ。\nわたしはもろもろの{国民|くにたみ}のうちにあがめられ、\n{全|ぜん}{地|ち}にあがめられる」。"],[19,51,10,10,"Create in me a clean heart, O God. Renew a right spirit within me.","{神|かみ}よ、わたしのために{清|きよ}い{心|こころ}をつくり、\nわたしのうちに{新|あたら}しい、{正|ただ}しい{霊|れい}を{与|あた}えてください。"],[19,55,22,22,"Cast your burden on the LORD and he will sustain you. He will never allow the righteous to be moved.","あなたの{荷|に}を{主|しゅ}にゆだねよ。\n{主|しゅ}はあなたをささえられる。\n{主|しゅ}は{正|ただ}しい{人|ひと}の{動|うご}かされるのを{決|けっ}してゆるされない。"],[19,90,12,12,"So teach us to count our days, that we may gain a heart of wisdom.","われらにおのが{日|ひ}を{数|かぞ}えることを{教|おし}えて、\n{知恵|ちえ}の{心|こころ}を{得|え}させてください。"],[19,91,1,1,"He who dwells in the secret place of the Most High will rest in the shadow of the Almighty.","いと{高|たか}き{者|もの}のもとにある\n{隠|かく}れ{場|ば}に{住|す}む{人|ひと}、{全能者|ぜんのうしゃ}の{陰|かげ}にやどる{人|ひと}は"],[19,103,2,2,"Praise the LORD, my soul, and don’t forget all his benefits,","わがたましいよ、{主|しゅ}をほめよ。\nそのすべてのめぐみを{心|こころ}にとめよ。"],[19,118,24,24,"This is the day that the LORD has made. We will rejoice and be glad in it!","これは{主|しゅ}が{設|もう}けられた{日|ひ}であって、\nわれらはこの{日|ひ}に{喜|よろこ}び{楽|たの}しむであろう。"],[19,119,105,105,"Your word is a lamp to my feet, and a light for my path.","あなたのみ{言葉|ことば}はわが{足|あし}のともしび、\nわが{道|みち}の{光|ひかり}です。"],[19,121,1,2,"A Song of Ascents. I will lift up my eyes to the hills. Where does my help come from? My help comes from the LORD, who made heaven and earth.","わたしは{山|やま}にむかって{目|め}をあげる。\nわが{助|たす}けは、どこから{来|く}るであろうか。\nわが{助|たす}けは、{天|てん}と{地|ち}を{造|つく}られた{主|しゅ}から{来|く}る。"],[19,127,1,1,"A Song of Ascents. By Solomon. Unless the LORD builds the house, they who build it labor in vain. Unless the LORD watches over the city, the watchman guards it in vain.","{主|しゅ}が{家|いえ}を{建|た}てられるのでなければ、\n{建|た}てる{者|もの}の{勤労|きんろう}はむなしい。\n{主|しゅ}が{町|まち}を{守|まも}られるのでなければ、\n{守|まも}る{者|もの}のさめているのはむなしい。"],[19,139,14,14,"I will give thanks to you, for I am fearfully and wonderfully made. Your works are wonderful. My soul knows that very well.","わたしはあなたをほめたたえます。\nあなたは{恐|おそれ}るべく、くすしき{方|かた}だからです。\nあなたのみわざはくすしく、\nあなたは{最|もっと}もよくわたしを{知|し}っておられます。"],[19,145,18,18,"The LORD is near to all those who call on him, to all who call on him in truth.","すべて{主|しゅ}を{呼|よ}ぶ{者|もの}、{誠|まこと}をもって{主|しゅ}を{呼|よ}ぶ{者|もの}に\n{主|しゅ}は{近|ちか}いのです。"],[19,147,3,3,"He heals the broken in heart, and binds up their wounds.","{主|しゅ}は{心|こころ}の{打|う}ち{砕|くだ}かれた{者|もの}をいやし、\nその{傷|きず}を{包|つつ}まれる。"],[20,3,5,6,"Trust in the LORD with all your heart, and don’t lean on your own understanding. In all your ways acknowledge him, and he will make your paths straight.","{心|こころ}をつくして{主|しゅ}に{信頼|しんらい}せよ、\n{自分|じぶん}の{知識|ちしき}にたよってはならない。\nすべての{道|みち}で{主|しゅ}を{認|みと}めよ、\nそうすれば、{主|しゅ}はあなたの{道|みち}をまっすぐにされる。"],[20,4,23,23,"Keep your heart with all diligence, for out of it is the wellspring of life.","{油断|ゆだん}することなく、あなたの{心|こころ}を{守|まも}れ、\n{命|いのち}の{泉|いずみ}は、これから{流|なが}れ{出|で}るからである。"],[20,16,3,3,"Commit your deeds to the LORD, and your plans shall succeed.","あなたのなすべき{事|こと}を{主|しゅ}にゆだねよ、\nそうすれば、あなたの{計|はか}るところは{必|かなら}ず{成|な}る。"],[20,16,9,9,"A man’s heart plans his course, but the LORD directs his steps.","{人|ひと}は{心|こころ}に{自分|じぶん}の{道|みち}を{考|かんが}え{計|はか}る、\nしかし、その{歩|あゆ}みを{導|みちび}く{者|もの}は{主|しゅ}である。"],[20,17,17,17,"A friend loves at all times; and a brother is born for adversity.","{友|とも}はいずれの{時|とき}にも{愛|あい}する、\n{兄弟|きょうだい}はなやみの{時|とき}のために{生|うま}れる。"],[20,18,10,10,"The LORD’s name is a strong tower: the righteous run to him, and are safe.","{主|しゅ}の{名|な}は{堅固|けんご}なやぐらのようだ、\n{正|ただ}しい{者|もの}はその{中|なか}に{走|はし}りこんで{救|すくい}を{得|え}る。"],[20,22,6,6,"Train up a child in the way he should go, and when he is old he will not depart from it.","{子|こ}をその{行|い}くべき{道|みち}に{従|したが}って{教|おし}えよ、\nそうすれば{年老|としお}いても、それを{離|はな}れることがない。"],[21,3,1,1,"For everything there is a season, and a time for every purpose under heaven:","{天|あめ}が{下|した}のすべての{事|こと}には{季節|きせつ}があり、\nすべてのわざには{時|とき}がある。"],[21,4,9,9,"Two are better than one, because they have a good reward for their labor.","ふたりはひとりにまさる。{彼|かれ}らはその{労苦|ろうく}によって{良|よ}い{報|むく}いを{得|え}るからである。"],[23,9,6,6,"For a child is born to us. A son is given to us; and the government will be on his shoulders. His name will be called Wonderful Counselor, Mighty God, Everlasting Father, Prince of Peace.","ひとりのみどりごがわれわれのために{生|うま}れた、\nひとりの{男|おとこ}の{子|こ}がわれわれに{与|あた}えられた。\nまつりごとはその{肩|かた}にあり、\nその{名|な}は、「{霊妙|れいみょう}なる{議|ぎ}{士|し}、{大能|たいのう}の{神|かみ}、\nとこしえの{父|ちち}、{平和|へいわ}の{君|きみ}」ととなえられる。"],[23,26,3,3,"You will keep whoever’s mind is steadfast in perfect peace, because he trusts in you.","あなたは{全|まった}き{平安|へいあん}をもって\nこころざしの{堅固|けんご}なものを{守|まも}られる。\n{彼|かれ}はあなたに{信頼|しんらい}しているからである。"],[23,40,8,8,"The grass withers, the flower fades; but the word of our God stands forever.”","{草|くさ}は{枯|か}れ、{花|はな}はしぼむ。\nしかし、われわれの{神|かみ}の{言葉|ことば}は\nとこしえに{変|かわ}ることはない」。"],[23,40,31,31,"but those who wait for the LORD will renew their strength. They will mount up with wings like eagles. They will run, and not be weary. They will walk, and not faint.","しかし{主|しゅ}を{待|ま}ち{望|のぞ}む{者|もの}は{新|あら}たなる{力|ちから}を{得|え}、\nわしのように{翼|つばさ}をはって、のぼることができる。\n{走|はし}っても{疲|つか}れることなく、\n{歩|ある}いても{弱|よわ}ることはない。"],[23,41,10,10,"Don’t you be afraid, for I am with you. Don’t be dismayed, for I am your God. I will strengthen you. Yes, I will help you. Yes, I will uphold you with the right hand of my righteousness.","{恐|おそ}れてはならない、わたしはあなたと{共|とも}にいる。\n{驚|おどろ}いてはならない、わたしはあなたの{神|かみ}である。\nわたしはあなたを{強|つよ}くし、あなたを{助|たす}け、\nわが{勝利|しょうり}の{右|みぎ}の{手|て}をもって、あなたをささえる。"],[23,43,2,2,"When you pass through the waters, I will be with you, and through the rivers, they will not overflow you. When you walk through the fire, you will not be burned, and flame will not scorch you.","あなたが{水|みず}の{中|なか}を{過|す}ぎるとき、\nわたしはあなたと{共|とも}におる。\n{川|かわ}の{中|なか}を{過|す}ぎるとき、\n{水|みず}はあなたの{上|うえ}にあふれることがない。\nあなたが{火|ひ}の{中|なか}を{行|い}くとき、{焼|や}かれることもなく、\n{炎|ほのお}もあなたに{燃|も}えつくことがない。"],[23,53,5,5,"But he was pierced for our transgressions. He was crushed for our iniquities. The punishment that brought our peace was on him; and by his wounds we are healed.","しかし{彼|かれ}はわれわれのとがのために{傷|きず}つけられ、\nわれわれの{不義|ふぎ}のために{砕|くだ}かれたのだ。\n{彼|かれ}はみずから{懲|こら}しめをうけて、\nわれわれに{平安|へいあん}を{与|あた}え、\nその{打|う}たれた{傷|きず}によって、\nわれわれはいやされたのだ。"],[23,55,8,8,"“For my thoughts are not your thoughts, and your ways are not my ways,” says the LORD.","わが{思|おも}いは、あなたがたの{思|おも}いとは{異|こと}なり、\nわが{道|みち}は、あなたがたの{道|みち}とは{異|こと}なっていると\n{主|しゅ}は{言|い}われる。"],[24,29,11,11,"For I know the thoughts that I think toward you,” says the LORD, “thoughts of peace, and not of evil, to give you hope and a future.","{主|しゅ}は{言|い}われる、わたしがあなたがたに{対|たい}していだいている{計画|けいかく}はわたしが{知|し}っている。それは{災|わざわい}を{与|あた}えようというのではなく、{平安|へいあん}を{与|あた}えようとするものであり、あなたがたに{将来|しょうらい}を{与|あた}え、{希望|きぼう}を{与|あた}えようとするものである。"],[24,33,3,3,"‘Call to me, and I will answer you, and will show you great and difficult things, which you don’t know.’","わたしに{呼|よ}び{求|もと}めよ、そうすれば、わたしはあなたに{答|こた}える。そしてあなたの{知|し}らない{大|おお}きな{隠|かく}されている{事|こと}を、あなたに{示|しめ}す。"],[25,3,22,23,"It is because of the LORD’s loving kindnesses that we are not consumed, because his mercies don’t fail. They are new every morning. Great is your faithfulness.","{主|しゅ}のいつくしみは{絶|た}えることがなく、\nそのあわれみは{尽|つ}きることがない。\nこれは{朝|あさ}ごとに{新|あたら}しく、\nあなたの{真実|しんじつ}は{大|おお}きい。"],[33,6,8,8,"He has shown you, O man, what is good. What does the LORD require of you, but to act justly, to love mercy, and to walk humbly with your God?","{人|ひと}よ、{彼|かれ}はさきによい{事|こと}のなんであるかを\nあなたに{告|つ}げられた。\n{主|しゅ}のあなたに{求|もと}められることは、\nただ{公義|こうぎ}をおこない、いつくしみを{愛|あい}し、\nへりくだってあなたの{神|かみ}と{共|とも}に{歩|あゆ}むことではないか。"],[36,3,17,17,"The LORD, your God, is among you, a mighty one who will save. He will rejoice over you with joy. He will calm you in his love. He will rejoice over you with singing.","あなたの{神|かみ}、{主|しゅ}はあなたのうちにいまし、\n{勇士|ゆうし}であって、{勝利|しょうり}を{与|あた}えられる。\n{彼|かれ}はあなたのために{喜|よろこ}び{楽|たの}しみ、\nその{愛|あい}によってあなたを{新|あらた}にし、\n{祭|まつり}の{日|ひ}のようにあなたのために{喜|よろこ}び{呼|よ}ばわられる」。"],[40,5,3,3,"“Blessed are the poor in spirit, for theirs is the Kingdom of Heaven.","「こころの{貧|まず}しい{人|ひと}たちは、さいわいである、\n{天国|てんごく}は{彼|かれ}らのものである。"],[40,5,9,9,"Blessed are the peacemakers, for they shall be called children of God.","{平和|へいわ}をつくり{出|だ}す{人|ひと}たちは、さいわいである、\n{彼|かれ}らは{神|かみ}の{子|こ}と{呼|よ}ばれるであろう。"],[40,5,14,14,"“You are the light of the world. A city located on a hill can’t be hidden.","あなたがたは、{世|よ}の{光|ひかり}である。{山|やま}の{上|うえ}にある{町|まち}は{隠|かく}れることができない。"],[40,6,33,33,"But seek first God’s Kingdom and his righteousness; and all these things will be given to you as well.","まず{神|かみ}の{国|くに}と{神|かみ}の{義|ぎ}とを{求|もと}めなさい。そうすれば、これらのものは、すべて{添|そ}えて{与|あた}えられるであろう。"],[40,6,34,34,"Therefore don’t be anxious for tomorrow, for tomorrow will be anxious for itself. Each day’s own evil is sufficient.","だから、あすのことを{思|おも}いわずらうな。あすのことは、あす{自身|じしん}が{思|おも}いわずらうであろう。一{日|にち}の{苦労|くろう}は、その{日|ひ}一{日|にち}だけで{十分|じゅうぶん}である。"],[40,7,7,7,"“Ask, and it will be given you. Seek, and you will find. Knock, and it will be opened for you.","{求|もと}めよ、そうすれば、{与|あた}えられるであろう。{捜|さが}せ、そうすれば、{見|み}いだすであろう。{門|もん}をたたけ、そうすれば、あけてもらえるであろう。"],[40,7,12,12,"Therefore, whatever you desire for men to do to you, you shall also do to them; for this is the law and the prophets.","だから、{何事|なにごと}でも{人々|ひとびと}からしてほしいと{望|のぞ}むことは、{人々|ひとびと}にもそのとおりにせよ。これが{律法|りっぽう}であり{預言者|よげんしゃ}である。"],[40,11,28,28,"“Come to me, all you who labor and are heavily burdened, and I will give you rest.","すべて{重荷|おもに}を{負|お}うて{苦労|くろう}している{者|もの}は、わたしのもとにきなさい。あなたがたを{休|やす}ませてあげよう。"],[40,22,37,39,"Jesus said to him, “‘You shall love the Lord your God with all your heart, with all your soul, and with all your mind.’ This is the first and great commandment. A second likewise is this, ‘You shall love your neighbor as yourself.’","イエスは{言|い}われた、「『{心|こころ}をつくし、{精神|せいしん}をつくし、{思|おも}いをつくして、{主|しゅ}なるあなたの{神|かみ}を{愛|あい}せよ』。\nこれがいちばん{大切|たいせつ}な、{第|だい}一のいましめである。\n{第|だい}二もこれと{同様|どうよう}である、『{自分|じぶん}を{愛|あい}するようにあなたの{隣|とな}り{人|びと}を{愛|あい}せよ』。"],[40,28,20,20,"teaching them to observe all things that I commanded you. Behold, I am with you always, even to the end of the age.” Amen.","あなたがたに{命|めい}じておいたいっさいのことを{守|まも}るように{教|おし}えよ。{見|み}よ、わたしは{世|よ}の{終|おわ}りまで、いつもあなたがたと{共|とも}にいるのである」。"],[41,9,23,23,"Jesus said to him, “If you can believe, all things are possible to him who believes.”","イエスは{彼|かれ}に{言|い}われた、「もしできれば、と{言|い}うのか。{信|しん}ずる{者|もの}には、どんな{事|こと}でもできる」。"],[41,10,45,45,"For the Son of Man also came not to be served but to serve, and to give his life as a ransom for many.”","{人|ひと}の{子|こ}がきたのも、{仕|つか}えられるためではなく、{仕|つか}えるためであり、また{多|おお}くの{人|ひと}のあがないとして、{自分|じぶん}の{命|いのち}を{与|あた}えるためである」。"],[42,1,37,37,"For nothing spoken by God is impossible.”","{神|かみ}には、なんでもできないことはありません」。"],[42,6,31,31,"“As you would like people to do to you, do exactly so to them.","{人々|ひとびと}にしてほしいと、あなたがたの{望|のぞ}むことを、{人々|ひとびと}にもそのとおりにせよ。"],[42,6,38,38,"“Give, and it will be given to you: good measure, pressed down, shaken together, and running over, will be given to you. For with the same measure you measure it will be measured back to you.”","{与|あた}えよ。そうすれば、{自分|じぶん}にも{与|あた}えられるであろう。{人々|ひとびと}はおし{入|い}れ、ゆすり{入|い}れ、あふれ{出|で}るまでに{量|りょう}をよくして、あなたがたのふところに{入|い}れてくれるであろう。あなたがたの{量|はか}るその{量|はか}りで、{自分|じぶん}にも{量|はか}りかえされるであろうから」。"],[43,1,1,1,"In the beginning was the Word, and the Word was with God, and the Word was God.","{初|はじ}めに{言|ことば}があった。{言|ことば}は{神|かみ}と{共|とも}にあった。{言|ことば}は{神|かみ}であった。"],[43,1,14,14,"The Word became flesh and lived among us. We saw his glory, such glory as of the only born Son of the Father, full of grace and truth.","そして{言|ことば}は{肉体|にくたい}となり、わたしたちのうちに{宿|やど}った。わたしたちはその{栄光|えいこう}を{見|み}た。それは{父|ちち}のひとり{子|こ}としての{栄光|えいこう}であって、めぐみとまこととに{満|み}ちていた。"],[43,3,16,16,"For God so loved the world, that he gave his only born Son, that whoever believes in him should not perish, but have eternal life.","{神|かみ}はそのひとり{子|こ}を{賜|たま}わったほどに、この{世|よ}を{愛|あい}して{下|くだ}さった。それは{御子|みこ}を{信|しん}じる{者|もの}がひとりも{滅|ほろ}びないで、{永遠|えいえん}の{命|いのち}を{得|え}るためである。"],[43,8,12,12,"Again, therefore, Jesus spoke to them, saying, “I am the light of the world. He who follows me will not walk in the darkness, but will have the light of life.”","イエスは、また{人々|ひとびと}に{語|かた}ってこう{言|い}われた、「わたしは{世|よ}の{光|ひかり}である。わたしに{従|したが}って{来|く}る{者|もの}は、やみのうちを{歩|ある}くことがなく、{命|いのち}の{光|ひかり}をもつであろう」。"],[43,8,32,32,"You will know the truth, and the truth will make you free.”","また{真理|しんり}を{知|し}るであろう。そして{真理|しんり}は、あなたがたに{自由|じゆう}を{得|え}させるであろう」。"],[43,10,10,10,"The thief only comes to steal, kill, and destroy. I came that they may have life, and may have it abundantly.","{盗人|ぬすびと}が{来|く}るのは、{盗|ぬす}んだり、{殺|ころ}したり、{滅|ほろ}ぼしたりするためにほかならない。わたしがきたのは、{羊|ひつじ}に{命|いのち}を{得|え}させ、{豊|ゆた}かに{得|え}させるためである。"],[43,11,25,25,"Jesus said to her, “I am the resurrection and the life. He who believes in me will still live, even if he dies.","イエスは{彼女|かのじょ}に{言|い}われた、「わたしはよみがえりであり、{命|いのち}である。わたしを{信|しん}じる{者|もの}は、たとい{死|し}んでも{生|い}きる。"],[43,13,34,34,"A new commandment I give to you, that you love one another. Just as I have loved you, you also love one another.","わたしは、{新|あたら}しいいましめをあなたがたに{与|あた}える、{互|たがい}に{愛|あい}し{合|あ}いなさい。わたしがあなたがたを{愛|あい}したように、あなたがたも{互|たがい}に{愛|あい}し{合|あ}いなさい。"],[43,14,6,6,"Jesus said to him, “I am the way, the truth, and the life. No one comes to the Father, except through me.","イエスは{彼|かれ}に{言|い}われた、「わたしは{道|みち}であり、{真理|しんり}であり、{命|いのち}である。だれでもわたしによらないでは、{父|ちち}のみもとに{行|い}くことはできない。"],[43,14,27,27,"Peace I leave with you. My peace I give to you; not as the world gives, I give to you. Don’t let your heart be troubled, neither let it be fearful.","わたしは{平安|へいあん}をあなたがたに{残|のこ}して{行|い}く。わたしの{平安|へいあん}をあなたがたに{与|あた}える。わたしが{与|あた}えるのは、{世|よ}が{与|あた}えるようなものとは{異|こと}なる。あなたがたは{心|こころ}を{騒|さわ}がせるな、またおじけるな。"],[43,15,5,5,"I am the vine. You are the branches. He who remains in me and I in him bears much fruit, for apart from me you can do nothing.","わたしはぶどうの{木|き}、あなたがたはその{枝|えだ}である。もし{人|ひと}がわたしにつながっており、またわたしがその{人|ひと}とつながっておれば、その{人|ひと}は{実|み}を{豊|ゆた}かに{結|むす}ぶようになる。わたしから{離|はな}れては、あなたがたは{何一|なにひと}つできないからである。"],[43,15,13,13,"Greater love has no one than this, that someone lay down his life for his friends.","{人|ひと}がその{友|とも}のために{自分|じぶん}の{命|いのち}を{捨|す}てること、これよりも{大|おお}きな{愛|あい}はない。"],[43,16,33,33,"I have told you these things, that in me you may have peace. In the world you have trouble; but cheer up! I have overcome the world.”","これらのことをあなたがたに{話|はな}したのは、わたしにあって{平安|へいあん}を{得|え}るためである。あなたがたは、この{世|よ}ではなやみがある。しかし、{勇気|ゆうき}を{出|だ}しなさい。わたしはすでに{世|よ}に{勝|か}っている」。"],[44,1,8,8,"But you will receive power when the Holy Spirit has come upon you. You will be witnesses to me in Jerusalem, in all Judea and Samaria, and to the uttermost parts of the earth.”","ただ、{聖霊|せいれい}があなたがたにくだる{時|とき}、あなたがたは{力|ちから}を{受|う}けて、エルサレム、ユダヤとサマリヤの{全土|ぜんど}、さらに{地|ち}のはてまで、わたしの{証人|しょうにん}となるであろう」。"],[44,20,35,35,"In all things I gave you an example, that so laboring you ought to help the weak, and to remember the words of the Lord Jesus, that he himself said, ‘It is more blessed to give than to receive.’ ”","わたしは、あなたがたもこのように{働|はたら}いて、{弱|よわ}い{者|もの}を{助|たす}けなければならないこと、また『{受|う}けるよりは{与|あた}える{方|ほう}が、さいわいである』と{言|い}われた{主|しゅ}イエスの{言葉|ことば}を{記憶|きおく}しているべきことを、{万事|ばんじ}について{教|おし}え{示|しめ}したのである」。"],[45,5,8,8,"But God commends his own love toward us, in that while we were yet sinners, Christ died for us.","しかし、まだ{罪人|つみびと}であった{時|とき}、わたしたちのためにキリストが{死|し}んで{下|くだ}さったことによって、{神|かみ}はわたしたちに{対|たい}する{愛|あい}を{示|しめ}されたのである。"],[45,8,28,28,"We know that all things work together for good for those who love God, for those who are called according to his purpose.","{神|かみ}は、{神|かみ}を{愛|あい}する{者|もの}たち、すなわち、ご{計画|けいかく}に{従|したが}って{召|め}された{者|もの}たちと{共|とも}に{働|はたら}いて、{万事|ばんじ}を{益|えき}となるようにして{下|くだ}さることを、わたしたちは{知|し}っている。"],[45,8,38,39,"For I am persuaded that neither death, nor life, nor angels, nor principalities, nor things present, nor things to come, nor powers, nor height, nor depth, nor any other created thing will be able to separate us from God’s love which is in Christ Jesus our Lord.","わたしは{確信|かくしん}する。{死|し}も{生|せい}も、{天使|てんし}も{支配者|しはいしゃ}も、{現在|げんざい}のものも{将来|しょうらい}のものも、{力|ちから}あるものも、\n{高|たか}いものも{深|ふか}いものも、その{他|た}どんな{被|ひ}{造物|ぞうぶつ}も、わたしたちの{主|しゅ}キリスト・イエスにおける{神|かみ}の{愛|あい}から、わたしたちを{引|ひ}き{離|はな}すことはできないのである。"],[45,12,2,2,"Don’t be conformed to this world, but be transformed by the renewing of your mind, so that you may prove what is the good, well-pleasing, and perfect will of God.","あなたがたは、この{世|よ}と{妥協|だきょう}してはならない。むしろ、{心|こころ}を{新|あら}たにすることによって、{造|つく}りかえられ、{何|なに}が{神|かみ}の{御旨|みむね}であるか、{何|なに}が{善|ぜん}であって、{神|かみ}に{喜|よろこ}ばれ、かつ{全|まった}きことであるかを、わきまえ{知|し}るべきである。"],[45,12,12,12,"rejoicing in hope, enduring in troubles, continuing steadfastly in prayer,","{望|のぞ}みをいだいて{喜|よろこ}び、{患難|かんなん}に{耐|た}え、{常|つね}に{祈|いの}りなさい。"],[45,12,21,21,"Don’t be overcome by evil, but overcome evil with good.","{悪|あく}に{負|ま}けてはいけない。かえって、{善|ぜん}をもって{悪|あく}に{勝|か}ちなさい。"],[45,15,13,13,"Now may the God of hope fill you with all joy and peace in believing, that you may abound in hope in the power of the Holy Spirit.","どうか、{望|のぞ}みの{神|かみ}が、{信仰|しんこう}から{来|く}るあらゆる{喜|よろこ}びと{平安|へいあん}とを、あなたがたに{満|み}たし、{聖霊|せいれい}の{力|ちから}によって、あなたがたを、{望|のぞ}みにあふれさせて{下|くだ}さるように。"],[46,10,13,13,"No temptation has taken you except what is common to man. God is faithful, who will not allow you to be tempted above what you are able, but will with the temptation also make the way of escape, that you may be able to endure it.","あなたがたの{会|あ}った{試錬|しれん}で、{世|よ}の{常|つね}でないものはない。{神|かみ}は{真実|しんじつ}である。あなたがたを{耐|た}えられないような{試錬|しれん}に{会|あ}わせることはないばかりか、{試錬|しれん}と{同時|どうじ}に、それに{耐|た}えられるように、のがれる{道|みち}も{備|そな}えて{下|くだ}さるのである。"],[46,13,4,4,"Love is patient and is kind. Love doesn’t envy. Love doesn’t brag, is not proud,","{愛|あい}は{寛容|かんよう}であり、{愛|あい}は{情深|なさけぶか}い。また、ねたむことをしない。{愛|あい}は{高|たか}ぶらない、{誇|ほこ}らない、"],[46,13,13,13,"But now faith, hope, and love remain—these three. The greatest of these is love.","このように、いつまでも{存続|そんぞく}するものは、{信仰|しんこう}と{希望|きぼう}と{愛|あい}と、この三つである。このうちで{最|もっと}も{大|おお}いなるものは、{愛|あい}である。"],[46,16,14,14,"Let all that you do be done in love.","いっさいのことを、{愛|あい}をもって{行|おこな}いなさい。"],[47,5,17,17,"Therefore if anyone is in Christ, he is a new creation. The old things have passed away. Behold, all things have become new.","だれでもキリストにあるならば、その{人|ひと}は{新|あたら}しく{造|つく}られた{者|もの}である。{古|ふる}いものは{過|す}ぎ{去|さ}った、{見|み}よ、すべてが{新|あたら}しくなったのである。"],[47,12,9,9,"He has said to me, “My grace is sufficient for you, for my power is made perfect in weakness.” Most gladly therefore I will rather glory in my weaknesses, that the power of Christ may rest on me.","ところが、{主|しゅ}が{言|い}われた、「わたしの{恵|めぐ}みはあなたに{対|たい}して{十分|じゅうぶん}である。わたしの{力|ちから}は{弱|よわ}いところに{完全|かんぜん}にあらわれる」。それだから、キリストの{力|ちから}がわたしに{宿|やど}るように、むしろ、{喜|よろこ}んで{自分|じぶん}の{弱|よわ}さを{誇|ほこ}ろう。"],[48,5,22,23,"But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faith, gentleness, and self-control. Against such things there is no law.","しかし、{御霊|みたま}の{実|み}は、{愛|あい}、{喜|よろこ}び、{平和|へいわ}、{寛容|かんよう}、{慈愛|じあい}、{善意|ぜんい}、{忠実|ちゅうじつ}、\n{柔和|にゅうわ}、{自制|じせい}であって、これらを{否定|ひてい}する{律法|りっぽう}はない。"],[48,6,9,9,"Let’s not be weary in doing good, for we will reap in due season if we don’t give up.","わたしたちは、{善|ぜん}を{行|おこな}うことに、うみ{疲|つか}れてはならない。たゆまないでいると、{時|とき}が{来|く}れば{刈|か}り{取|と}るようになる。"],[49,2,8,8,"for by grace you have been saved through faith, and that not of yourselves; it is the gift of God,","あなたがたの{救|すく}われたのは、{実|じつ}に、{恵|めぐ}みにより、{信仰|しんこう}によるのである。それは、あなたがた{自身|じしん}から{出|で}たものではなく、{神|かみ}の{賜物|たまもの}である。"],[49,4,32,32,"And be kind to one another, tender hearted, forgiving each other, just as God also in Christ forgave you.","{互|たがい}に{情深|なさけぶか}く、あわれみ{深|ぶか}い{者|もの}となり、{神|かみ}がキリストにあってあなたがたをゆるして{下|くだ}さったように、あなたがたも{互|たがい}にゆるし{合|あ}いなさい。"],[50,4,6,6,"In nothing be anxious, but in everything, by prayer and petition with thanksgiving, let your requests be made known to God.","{何事|なにごと}も{思|おも}い{煩|わずら}ってはならない。ただ、{事|こと}ごとに、{感謝|かんしゃ}をもって{祈|いのり}と{願|ねが}いとをささげ、あなたがたの{求|もと}めるところを{神|かみ}に{申|もう}し{上|あ}げるがよい。"],[50,4,7,7,"And the peace of God, which surpasses all understanding, will guard your hearts and your thoughts in Christ Jesus.","そうすれば、{人知|じんち}ではとうてい{測|はか}り{知|し}ることのできない{神|かみ}の{平安|へいあん}が、あなたがたの{心|こころ}と{思|おも}いとを、キリスト・イエスにあって{守|まも}るであろう。"],[50,4,13,13,"I can do all things through Christ who strengthens me.","わたしを{強|つよ}くして{下|くだ}さるかたによって、{何事|なにごと}でもすることができる。"],[51,3,23,23,"And whatever you do, work heartily, as for the Lord and not for men,","{何|なに}をするにも、{人|ひと}に{対|たい}してではなく、{主|しゅ}に{対|たい}してするように、{心|こころ}から{働|はたら}きなさい。"],[52,5,16,18,"Always rejoice. Pray without ceasing. In everything give thanks, for this is the will of God in Christ Jesus toward you.","いつも{喜|よろこ}んでいなさい。\n{絶|た}えず{祈|いの}りなさい。\nすべての{事|こと}について、{感謝|かんしゃ}しなさい。これが、キリスト・イエスにあって、{神|かみ}があなたがたに{求|もと}めておられることである。"],[55,1,7,7,"For God didn’t give us a spirit of fear, but of power, love, and self-control.","というのは、{神|かみ}がわたしたちに{下|くだ}さったのは、{臆|おく}する{霊|れい}ではなく、{力|ちから}と{愛|あい}と{慎|つつし}みとの{霊|れい}なのである。"],[55,3,16,16,"Every Scripture is God-breathed and profitable for teaching, for reproof, for correction, and for instruction in righteousness,","{聖書|せいしょ}は、すべて{神|かみ}の{霊|れい}{感|かん}を{受|う}けて{書|か}かれたものであって、{人|ひと}を{教|おし}え、{戒|いまし}め、{正|ただ}しくし、{義|ぎ}に{導|みちび}くのに{有益|ゆうえき}である。"],[58,11,1,1,"Now faith is assurance of things hoped for, proof of things not seen.","さて、{信仰|しんこう}とは、{望|のぞ}んでいる{事|こと}がらを{確信|かくしん}し、まだ{見|み}ていない{事実|じじつ}を{確認|かくにん}することである。"],[58,13,8,8,"Jesus Christ is the same yesterday, today, and forever.","イエス・キリストは、きのうも、きょうも、いつまでも{変|かわ}ることがない。"],[59,1,5,5,"But if any of you lacks wisdom, let him ask of God, who gives to all liberally and without reproach, and it will be given to him.","あなたがたのうち、{知恵|ちえ}に{不足|ふそく}している{者|もの}があれば、その{人|ひと}は、とがめもせずに{惜|お}しみなくすべての{人|ひと}に{与|あた}える{神|かみ}に、{願|ねが}い{求|もと}めるがよい。そうすれば、{与|あた}えられるであろう。"],[59,1,22,22,"But be doers of the word, and not only hearers, deluding your own selves.","そして、{御言|みことば}を{行|おこな}う{人|ひと}になりなさい。おのれを{欺|あざむ}いて、ただ{聞|き}くだけの{者|もの}となってはいけない。"],[60,5,7,7,"casting all your worries on him, because he cares for you.","{神|かみ}はあなたがたをかえりみていて{下|くだ}さるのであるから、{自分|じぶん}の{思|おも}いわずらいを、いっさい{神|かみ}にゆだねるがよい。"],[62,1,9,9,"If we confess our sins, he is faithful and righteous to forgive us the sins and to cleanse us from all unrighteousness.","もし、わたしたちが{自分|じぶん}の{罪|つみ}を{告白|こくはく}するならば、{神|かみ}は{真実|しんじつ}で{正|ただ}しいかたであるから、その{罪|つみ}をゆるし、すべての{不義|ふぎ}からわたしたちをきよめて{下|くだ}さる。"],[62,4,8,8,"He who doesn’t love doesn’t know God, for God is love.","{愛|あい}さない{者|もの}は、{神|かみ}を{知|し}らない。{神|かみ}は{愛|あい}である。"],[62,4,18,18,"There is no fear in love; but perfect love casts out fear, because fear has punishment. He who fears is not made perfect in love.","{愛|あい}には{恐|おそ}れがない。{完全|かんぜん}な{愛|あい}は{恐|おそ}れをとり{除|のぞ}く。{恐|おそ}れには{懲|こ}らしめが伴い、かつ{恐|おそ}れる{者|もの}には、{愛|あい}が{全|まっと}うされていないからである。"],[62,4,19,19,"We love him, because he first loved us.","わたしたちが{愛|あい}し{合|あ}うのは、{神|かみ}がまずわたしたちを{愛|あい}して{下|くだ}さったからである。"],[66,3,20,20,"Behold, I stand at the door and knock. If anyone hears my voice and opens the door, then I will come in to him and will dine with him, and he with me.","{見|み}よ、わたしは{戸|と}の{外|そと}に{立|た}って、たたいている。だれでもわたしの{声|こえ}を{聞|き}いて{戸|と}をあけるなら、わたしはその{中|なか}にはいって{彼|かれ}と{食|しょく}を{共|とも}にし、{彼|かれ}もまたわたしと{食|しょく}を{共|とも}にするであろう。"],[66,21,4,4,"He will wipe away every tear from their eyes. Death will be no more; neither will there be mourning, nor crying, nor pain any more. The first things have passed away.”","{人|ひと}の{目|め}から{涙|なみだ}を{全|まった}くぬぐいとって{下|くだ}さる。もはや、{死|し}もなく、{悲|かな}しみも、{叫|さけ}びも、{痛|いた}みもない。{先|さき}のものが、すでに{過|す}ぎ{去|さ}ったからである」。"]];
+
+// ===== util =====
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+const plain=s=>s.replace(/\{([^|}]*)\|[^}]*\}/g,"$1");
+const ruby=s=>esc(s).replace(/\{([^|}]*)\|([^}]*)\}/g,"<ruby>$1<rt>$2</rt></ruby>");
+const B=n=>BOOKS[n-1];
+const refEn=(n,c,a,z)=>`${B(n)[0]} ${c}${a?":"+a+(z&&z!==a?"–"+z:""):""}`;
+const refJa=(n,c,a,z)=>`${B(n)[1]} ${c}${n===19?"篇":"章"}${a?a+(z&&z!==a?"–"+z:"")+"節":""}`;
+let modalCtx=null;
+function openModal(h,c){document.getElementById("mbody").innerHTML=h;modalCtx=c||null;document.getElementById("modal").classList.add("on");}
+function closeModal(){document.getElementById("modal").classList.remove("on");}
+document.getElementById("mclose").onclick=closeModal;
+document.getElementById("modal").onclick=e=>{if(e.target.id==="modal")closeModal();};
+let tt;function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),2000);}
+function store(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
+
+// ===== navigation =====
+let curView="today";
+function show(v){
+  curView=v;
+  document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x.dataset.v===v));
+  document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));
+  document.body.classList.toggle("reading",v==="read");
+  if(v!=="read")clearSel();
+  if(v==="prog")renderProg(); if(v==="books")renderBooks(); if(v==="today")renderToday(); if(v==="read"&&!readerLoaded)openRead(pos.b,pos.c);
+  window.scrollTo(0,0);
+}
+document.querySelector("nav").onclick=e=>{const b=e.target.closest("button");if(b)show(b.dataset.v);};
+
+// ===== settings & state =====
+const S=load("hb-settings",{ja:true,ruby:false});
+let pos=load("hb-pos",{b:43,c:1});
+const readSet=()=>load("hb-read",{});
+function toggleRead(n,v){const o=readSet();if(v)o[n]=Date.now();else delete o[n];store("hb-read",o);}
+
+// ===== Today =====
+function todayIdx(){const d=new Date();const day=Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()))/864e5);return day%DAILY.length;}
+let dailyOffset=0;
+function renderToday(){
+  const i=(todayIdx()+dailyOffset+DAILY.length)%DAILY.length, d=DAILY[i];
+  const dt=new Date(); dt.setDate(dt.getDate()+dailyOffset);
+  document.getElementById("daily").innerHTML=`<div class="lbl">${dailyOffset===0?"Verse of the Day":"Verse"}</div>
+   <div class="date">${dt.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"})}・今日の一節</div>
+   <div class="ven">${esc(d[4])}</div>
+   <div class="vja">${S.ruby?ruby(d[5]):esc(plain(d[5]))}</div>
+   <div class="ref">— ${refEn(d[0],d[1],d[2],d[3])}</div><div class="refj">${refJa(d[0],d[1],d[2],d[3])}</div>
+   <div class="row"><button class="btn navy sm" id="dRead">📖 前後を読む</button><button class="btn sm ai-only" id="dAsk">💬 AIに質問</button></div>
+   <div class="row" style="margin-top:8px"><button class="chip" id="dPrev">‹ 前日</button><button class="chip" id="dNext" ${dailyOffset>=0?"disabled style='opacity:.35'":""}>翌日 ›</button></div>`;
+  document.getElementById("dRead").onclick=()=>openRead(d[0],d[1],[d[2],d[3]]);
+  document.getElementById("dAsk").onclick=()=>openChat({type:"verse",b:d[0],c:d[1],a:d[2],z:d[3],en:d[4],ja:plain(d[5])});
+  document.getElementById("dPrev").onclick=()=>{dailyOffset--;renderToday();};
+  document.getElementById("dNext").onclick=()=>{if(dailyOffset<0){dailyOffset++;renderToday();}};
+  const cc=document.getElementById("contCard");
+  cc.style.display="flex";
+  cc.innerHTML=`<div><div class="muted">Continue reading・続きを読む</div><div class="t">${refEn(pos.b,pos.c)}</div><div class="muted">${refJa(pos.b,pos.c)}</div></div><div style="font-size:22px;color:var(--gold)">›</div>`;
+  cc.onclick=()=>openRead(pos.b,pos.c);
+}
+
+// ===== Reader =====
+const cache={}; let readerLoaded=false, sel=null;
+async function getBook(n){
+  if(cache[n])return cache[n];
+  const r=await fetch(`b/${n}.json`); if(!r.ok)throw new Error("load");
+  return cache[n]=await r.json();
+}
+const selBook=document.getElementById("selBook"), selCh=document.getElementById("selCh");
+selBook.innerHTML=BOOKS.map((b,i)=>`${i===0?'<optgroup label="Old Testament">':i===39?'</optgroup><optgroup label="New Testament">':""}<option value="${i+1}">${b[0]}（${b[1]}）</option>`).join("")+"</optgroup>";
+function fillCh(n){selCh.innerHTML=Array.from({length:B(n)[3]},(_,i)=>`<option value="${i+1}">${n===19?"Ps ":"Ch "}${i+1}</option>`).join("");}
+selBook.onchange=()=>openRead(+selBook.value,1);
+selCh.onchange=()=>openRead(+selBook.value,+selCh.value);
+document.getElementById("prevCh").onclick=()=>step(-1);
+document.getElementById("nextCh").onclick=()=>step(1);
+function step(d){let b=pos.b,c=pos.c+d;if(c<1){if(b===1)return;b--;c=B(b)[3];}else if(c>B(b)[3]){if(b===66)return;b++;c=1;}openRead(b,c);}
+function applyOpts(){
+  document.getElementById("togJa").classList.toggle("on",S.ja);
+  document.getElementById("togRuby").classList.toggle("on",S.ruby);
+  document.getElementById("reader").classList.toggle("hideja",!S.ja);
+}
+document.getElementById("togJa").onclick=()=>{S.ja=!S.ja;store("hb-settings",S);applyOpts();};
+document.getElementById("togRuby").onclick=()=>{S.ruby=!S.ruby;store("hb-settings",S);renderChapter();};
+let curData=null, hlRange=null;
+async function openRead(b,c,hl){
+  if(curView!=="read"){curView="read";document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x.dataset.v==="read"));document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-read"));document.body.classList.add("reading");}
+  closeModal(); clearSel();
+  pos={b,c}; store("hb-pos",pos); hlRange=hl||null; readerLoaded=true;
+  selBook.value=b; fillCh(b); selCh.value=c;
+  document.getElementById("prevCh").disabled=(b===1&&c===1);
+  document.getElementById("nextCh").disabled=(b===66&&c===B(66)[3]);
+  const el=document.getElementById("reader");
+  if(!cache[b])el.innerHTML='<div class="loading">Loading…</div>';
+  try{curData=await getBook(b);}catch(e){el.innerHTML='<div class="loading">読み込めませんでした。もう一度お試しください。</div>';return;}
+  if(pos.b!==b||pos.c!==c)return;
+  renderChapter();
+  if(hlRange){const t=document.getElementById("v"+hlRange[0]);if(t)setTimeout(()=>t.scrollIntoView({block:"center"}),30);}
+  else window.scrollTo(0,0);
+}
+function renderChapter(){
+  if(!curData)return;
+  const {b,c}=pos, ch=curData.c[c-1]; if(!ch)return;
+  let h=`<div class="chtitle"><div class="en">${b===19?"Psalm":B(b)[0]} ${b===19?c:"<span style='font-size:16px;color:var(--sub)'>Chapter</span> "+c}</div><div class="jn">${refJa(b,c)}</div></div>`;
+  if(ch.t)h+=`<div class="pstitle">${S.ruby?ruby(ch.t):esc(plain(ch.t))}</div>`;
+  ch.v.forEach((v,i)=>{const n=i+1;const hl=hlRange&&n>=hlRange[0]&&n<=hlRange[1];
+    const j=v[1]==="↑"?`<div class="j joined">（前の節に含まれます）</div>`:v[1]?`<div class="j">${S.ruby?ruby(v[1]):esc(plain(v[1]))}</div>`:"";
+    h+=`<div class="vs${hl?" hl":""}" id="v${n}" data-n="${n}"><div class="e"><span class="num">${n}</span>${v[0]?esc(v[0]):'<span class="muted">—</span>'}</div>${j}</div>`;});
+  h+=`<div class="row"><button class="btn sm ai-only" id="cAsk">💬 この章についてAIに質問</button></div>`;
+  h+=`<div class="chnav"><button class="btn ghost sm" id="cPrev" ${b===1&&c===1?"disabled":""}>‹ Prev</button><button class="btn navy sm" id="cNext" ${b===66&&c===B(66)[3]?"disabled":""}>Next ›</button></div>`;
+  if(c===B(b)[3])h+=`<label class="chk"><input type="checkbox" data-readchk="${b}" ${readSet()[b]?"checked":""}>${B(b)[1]}を読み終えた</label>`;
+  const el=document.getElementById("reader"); el.innerHTML=h; applyOpts();
+  document.getElementById("cPrev").onclick=()=>step(-1);
+  document.getElementById("cNext").onclick=()=>step(1);
+  document.getElementById("cAsk").onclick=()=>openChat({type:"chapter",b,c});
+}
+document.getElementById("reader").addEventListener("click",e=>{
+  const v=e.target.closest(".vs");if(!v)return;
+  const n=+v.dataset.n;
+  if(sel&&sel.b===pos.b&&sel.c===pos.c){
+    if(n>=sel.a&&n<=sel.z&&sel.a===sel.z){clearSel();return;}
+    if(n===sel.z+1||n===sel.a-1){sel.a=Math.min(sel.a,n);sel.z=Math.max(sel.z,n);}else{sel.a=sel.z=n;}
+  }else sel={b:pos.b,c:pos.c,a:n,z:n};
+  document.querySelectorAll(".vs.sel").forEach(x=>x.classList.remove("sel"));
+  for(let i=sel.a;i<=sel.z;i++)document.getElementById("v"+i)?.classList.add("sel");
+  document.getElementById("selLbl").textContent=refEn(sel.b,sel.c,sel.a,sel.z);
+  document.getElementById("selbar").classList.add("on");
+});
+function clearSel(){sel=null;document.querySelectorAll(".vs.sel").forEach(x=>x.classList.remove("sel"));document.getElementById("selbar").classList.remove("on");}
+document.getElementById("selX").onclick=clearSel;
+document.getElementById("selAsk").onclick=()=>{
+  if(!sel||!curData)return;const ch=curData.c[sel.c-1].v;let en=[],ja=[];
+  for(let i=sel.a;i<=sel.z;i++){en.push(ch[i-1][0]);if(ch[i-1][1]&&ch[i-1][1]!=="↑")ja.push(plain(ch[i-1][1]));}
+  openChat({type:"verse",b:sel.b,c:sel.c,a:sel.a,z:sel.z,en:en.join(" "),ja:ja.join("\n")});
+};
+
+// ===== Books =====
+let testament="ot";
+document.getElementById("testSeg").onclick=e=>{const b=e.target.closest("button");if(!b)return;testament=b.dataset.t;
+  document.querySelectorAll("#testSeg button").forEach(x=>x.classList.toggle("on",x===b));renderBooks();};
+function gridHTML(from,to){
+  const rs=readSet(); let h="",cat=null,open=false;
+  for(let i=from;i<to;i++){const b=BOOKS[i];
+    if(b[2]!==cat){if(open)h+="</div>";cat=b[2];h+=`<div class="cat">${CAT_LABEL[cat]}</div><div class="grid">`;open=true;}
+    h+=`<div class="bk ${rs[i+1]?"done":""}" data-book="${i+1}"><div class="ne">${b[0]}</div><div class="nm">${b[1]}・${b[3]}章</div></div>`;}
+  return h+(open?"</div>":"");
+}
+function renderBooks(){document.getElementById("bookList").innerHTML=testament==="ot"?gridHTML(0,39):gridHTML(39,66);}
+function parseRef(r){const m=r.match(/^(\d+)(?::(\d+)(?:–(\d+))?)?(?:–(\d+))?/);return m?{c:+m[1],a:m[2]?+m[2]:null,z:m[3]?+m[3]:(m[2]?+m[2]:null)}:null;}
+function bookHTML(n){const b=B(n);
+  return `<div class="card"><span class="tag">${isOT(n-1)?"Old Testament 旧約":"New Testament 新約"}・${CAT_LABEL[b[2]].split(" ・ ")[1]}</span>
+  <div class="bname">${b[0]}</div><div class="bnj">${b[1]}・全${b[3]}${n===19?"篇":"章"}</div>
+  <h3>どんな書？</h3><p>${b[4]}</p>
+  ${b[5].length?`<h3>注目の箇所</h3><ul class="keys">${b[5].map(k=>`<li data-jump="${n}|${k[0]}"><span class="ref">${k[0]}</span><span>${k[1]}</span><span class="go">読む ›</span></li>`).join("")}</ul>`:""}
+  <label class="chk"><input type="checkbox" data-readchk="${n}" ${readSet()[n]?"checked":""}>読み終えた</label>
+  <div class="row"><button class="btn navy" data-readbook="${n}">📖 1章から読む</button><button class="btn ai-only" data-askbook="${n}">💬 AIに質問</button></div></div>`;
+}
+document.addEventListener("click",e=>{
+  const bk=e.target.closest("[data-book]"); if(bk){const n=+bk.dataset.book;openModal(bookHTML(n),{type:"book",b:n});return;}
+  const j=e.target.closest("[data-jump]"); if(j){const [n,r]=j.dataset.jump.split("|");const p=parseRef(r);if(p)openRead(+n,p.c,p.a?[p.a,p.z]:null);return;}
+  const rb=e.target.closest("[data-readbook]"); if(rb){openRead(+rb.dataset.readbook,1);return;}
+  const st=e.target.closest("[data-story]"); if(st){const s=STORIES[+st.dataset.story];
+    openModal(`<div class="card"><span class="tag">名場面</span><div class="bname" style="font-family:var(--ja);font-size:23px">${s[0]}</div><p class="ctx" style="font-size:15px">${s[1]}</p><p style="margin-top:8px">${s[4]}</p>
+    <div class="row"><button class="btn navy" data-jump="${s[2]}|${s[3]}">📖 本文を読む</button><button class="btn ai-only" data-askstory="${st.dataset.story}">💬 AIに質問</button></div></div>`,{type:"story",s});}
+});
+document.addEventListener("change",e=>{const c=e.target.closest("[data-readchk]");if(!c)return;
+  toggleRead(+c.dataset.readchk,c.checked);toast(c.checked?"読了にしました":"読了を外しました");renderBooks();renderStarter();if(curView==="prog")renderProg();});
+
+// ===== Learn =====
+document.getElementById("timeline").innerHTML=TIMELINE.map(t=>`<div class="tl-i ${t[0]}">${t[1]?`<div class="era">${t[1]}</div>`:""}<div class="t">${t[2]}</div><div class="d">${t[3]}</div></div>`).join("")+`<p class="muted" style="margin-top:4px">年代は目安です。特に古い時代は学説に幅があります。</p>`;
+function renderStarter(){const rs=readSet();document.getElementById("starter").innerHTML=STARTER.map(n=>`<li class="${rs[n]?"done":""}" data-book="${n}"><span class="en" style="font-size:16px">${B(n)[0]}</span>　<span class="muted">${B(n)[1]}</span></li>`).join("");}
+renderStarter();
+document.getElementById("storyList").innerHTML=STORIES.map((s,i)=>`<div class="story" data-story="${i}"><div class="st">${s[0]}</div><div class="sr">${s[1]}</div><div class="sd">${s[4]}</div></div>`).join("");
+
+// ===== Progress =====
+function renderProg(){
+  const o=readSet(),ot=BOOKS.slice(0,39).filter((b,i)=>o[i+1]).length,nt=BOOKS.slice(39).filter((b,i)=>o[i+40]).length;
+  const ch=BOOKS.reduce((a,b,i)=>a+(o[i+1]?b[3]:0),0),tot=BOOKS.reduce((a,b)=>a+b[3],0),pct=Math.round(ch/tot*100);
+  document.getElementById("progSum").innerHTML=`<div class="bar"><i style="width:${pct}%"></i></div>
+  <p><b style="font-size:20px">${pct}%</b> <span class="muted">（章数ベース ${ch} / ${tot}章）</span></p>
+  <p class="muted">Old Testament ${ot} / 39　New Testament ${nt} / 27</p>`;
+  document.getElementById("progDetail").innerHTML=`<h3 style="margin-top:0">Old Testament 旧約</h3>${gridHTML(0,39)}<h3>New Testament 新約</h3>${gridHTML(39,66)}`;
+}
+
+// ===== AI chat =====
+let sampleFn=null, thread=[], threadKey=null, ctx={type:"general"}, busy=false, abortCtl=null;
+const BASE=`あなたは聖書に詳しい、親しみやすい先生です。ユーザーは日本語話者で、英語の聖書（World English Bible）を中心に、和訳（口語訳）を参照しながら聖書を学んでいます。教養として、また英語学習も兼ねて理解を深めたいと思っています。
+- 日本語で、やさしく簡潔に答えてください（長くても400字程度。求められたら詳しく）。
+- 英語の表現・単語・言い回しについて聞かれたら、意味やニュアンス、他の英訳（KJVなど）との違いも説明してください。
+- 聖書の箇所に触れるときは「John 3:16（ヨハネ3:16）」のように示してください（節番号は英語訳・口語訳の番号）。
+- 歴史的・文化的な背景や、原語（ヘブライ語・ギリシア語）の意味が理解を助けるときは、さりげなく添えてください。
+- 教派やユダヤ教、学術研究で解釈が分かれる点は、特定の立場を押しつけず公平に紹介してください。信仰を勧めたり否定したりせず、ユーザーが自分で考えられるように答えてください。
+- 見出しや表は使わず、強調は **太字** だけにしてください。`;
+function ctxText(c){
+  if(c.type==="verse")return `【いま見ている箇所】${refEn(c.b,c.c,c.a,c.z)}（${refJa(c.b,c.c,c.a,c.z)}）\nWEB: ${c.en}\n口語訳: ${c.ja}`;
+  if(c.type==="book"){const b=B(c.b);return `【いま見ている書】${b[0]}（${b[1]}・全${b[3]}章）`;}
+  if(c.type==="story")return `【いま見ている物語】${c.s[0]}（${c.s[1]}）`;
+  if(c.type==="chapter")return `【いま読んでいる章】${refEn(c.b,c.c)}（${refJa(c.b,c.c)}）`;
+  return "【聖書全般についての質問です】";
+}
+function ctxLabel(c){if(c.type==="verse")return refEn(c.b,c.c,c.a,c.z);if(c.type==="book")return B(c.b)[0];if(c.type==="story")return `${c.s[0]}（${c.s[1]}）`;if(c.type==="chapter")return refEn(c.b,c.c);return "";}
+function ctxKey(c){return c.type==="verse"?`v${c.b}.${c.c}.${c.a}-${c.z}`:c.type==="book"?"b"+c.b:c.type==="story"?"s"+c.s[0]:c.type==="chapter"?`c${c.b}.${c.c}`:"general";}
+function guessCtx(){if(modalCtx&&document.getElementById("modal").classList.contains("on"))return modalCtx;return {type:"general"};}
+function openChat(c){
+  ctx=c||guessCtx(); const k=ctxKey(ctx); if(k!==threadKey){thread=[];threadKey=k;}
+  document.getElementById("ctxLabel").textContent=ctxLabel(ctx);
+  renderMsgs(); document.getElementById("chat").classList.add("on");
+  setTimeout(()=>document.getElementById("chatText").focus(),50);
+}
+function md(s){return esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");}
+function renderMsgs(){
+  const el=document.getElementById("msgs");
+  el.innerHTML=thread.map(m=>`<div class="msg ${m.role==="user"?"u":m.err?"a err":"a"}">${m.role==="user"?esc(m.content):md(m.content)}</div>`).join("");
+  el.scrollTop=el.scrollHeight;
+}
+async function send(text){
+  text=(text||"").trim(); if(!text||busy||!sampleFn)return;
+  busy=true; document.getElementById("sendBtn").disabled=true;
+  thread.push({role:"user",content:text});
+  const ans={role:"assistant",content:"考えています…"}; thread.push(ans); renderMsgs();
+  const msgs=thread.filter(m=>!m.err&&m!==ans).map((m,i)=>({role:m.role,content:i===0?`${BASE}\n\n${ctxText(ctx)}\n\n【質問】${m.content}`:m.content}));
+  abortCtl=new AbortController();
+  const bubble=()=>document.querySelector("#msgs .msg:last-child");
+  try{
+    const res=await sampleFn(msgs,{cache:false,signal:abortCtl.signal,onText:({text})=>{ans.content=text;const b=bubble();if(b){b.innerHTML=md(text);document.getElementById("msgs").scrollTop=1e9;}}});
+    ans.content=res.text||ans.content;
+  }catch(e){
+    ans.err=true;
+    ans.content=e&&e.code==="rate_limited"?"少し混み合っています。しばらくしてからもう一度どうぞ。":e&&e.code==="not_granted"?"AIの利用が許可されていません。":(e&&e.text)?e.text:"うまく答えられませんでした。もう一度お試しください。";
+  }
+  busy=false; document.getElementById("sendBtn").disabled=false; renderMsgs();
+}
+const chatText=document.getElementById("chatText");
+document.getElementById("sendBtn").onclick=()=>{const t=chatText.value;chatText.value="";send(t);};
+chatText.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();document.getElementById("sendBtn").click();}});
+document.getElementById("cclose").onclick=()=>{if(abortCtl&&busy)abortCtl.abort();document.getElementById("chat").classList.remove("on");};
+document.getElementById("chat").onclick=e=>{if(e.target.id==="chat")document.getElementById("cclose").click();};
+document.getElementById("newChat").onclick=()=>{if(busy)return;thread=[];openChat(ctx);};
+document.getElementById("fab").onclick=()=>openChat();
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-askbook]"); if(b){openChat({type:"book",b:+b.dataset.askbook});return;}
+  const s=e.target.closest("[data-askstory]"); if(s)openChat({type:"story",s:STORIES[+s.dataset.askstory]});
+});
+
+renderToday(); applyOpts();
+(async()=>{try{sampleFn=await window.claude?.use?.("sample");}catch(e){sampleFn=null;}
+  if(sampleFn){document.body.classList.add("ai-ready");document.getElementById("fab").classList.add("on");}})();
+</script>
+</body>
+</html>

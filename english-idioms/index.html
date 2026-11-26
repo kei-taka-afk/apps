@@ -1,0 +1,1106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>English Idioms</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;padding:0}
+.bkrow{display:flex;align-items:center;gap:8px;margin-top:6px}
+.booksel{display:block;margin:0;width:230px;max-width:100%;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;font:inherit;font-size:12px;font-weight:600;color:var(--muted);background:transparent;border:1px solid transparent;border-radius:6px;padding:3px 22px 3px 0;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 11px) 55%,calc(100% - 6px) 55%;background-size:5px 5px;background-repeat:no-repeat;cursor:pointer}
+/* Layout: one centered study column; a ring-bound vocabulary card with a white sheet over the answer. */
+:root{--bg:#eef1f4; --surface:#ffffff; --ink:#1c2633; --muted:#5d6b7c; --line:#d5dce4;
+  --accent:#27466e; --accent-ink:#ffffff; --sheet:#ffffff; --sheet-ink:#5d6b7c; --red:#c62828;
+  --again:#b3261e; --hard:#a1620a; --good:#1f6b4a; --easy:#27466e;
+  --chip:#e3e9f0; --hole:#eef1f4;
+  --f-en:"Literata",Georgia,"Times New Roman",serif;
+  --f-ui:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#12171d; --surface:#1b222b; --ink:#e4e9ef; --muted:#93a1b2; --line:#2e3844;
+  --accent:#8fb2e0; --accent-ink:#0f1620; --sheet:#ffffff; --sheet-ink:#5d6b7c; --red:#ff7a70;
+  --again:#ff8a80; --hard:#e8b35a; --good:#6fcf9f; --easy:#8fb2e0;
+  --chip:#26303b; --hole:#12171d; color-scheme:dark}
+}
+:root[data-theme="dark"]{--bg:#12171d; --surface:#1b222b; --ink:#e4e9ef; --muted:#93a1b2; --line:#2e3844;
+  --accent:#8fb2e0; --accent-ink:#0f1620; --sheet:#ffffff; --sheet-ink:#5d6b7c; --red:#ff7a70;
+  --again:#ff8a80; --hard:#e8b35a; --good:#6fcf9f; --easy:#8fb2e0;
+  --chip:#26303b; --hole:#12171d; color-scheme:dark}
+html,body{background:var(--bg);max-width:100%}
+html{overflow-x:hidden}
+body{overflow-x:clip}
+.card{overflow:hidden}
+body{color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.7;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 40px}
+.wrap{max-width:720px;margin:0 auto}
+.sesshint{display:flex;align-items:baseline;gap:10px;width:100%;flex-wrap:wrap}
+.sesshint #sess{font-weight:700;color:var(--ink);flex:none}
+.progress .sessrow{justify-content:flex-start;gap:6px}
+section[id^="v-"]{max-width:720px;margin-inline:auto}
+button{font:inherit;color:inherit;cursor:pointer}
+.booksel:hover,.booksel:focus{border-color:var(--line)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:18px 10px}
+.brand b{font-family:var(--f-en);font-size:22px;letter-spacing:.01em}
+.hrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+nav{display:flex;gap:4px;background:var(--chip);padding:4px;border-radius:10px}
+nav button{border:0;background:none;padding:6px 12px;border-radius:7px;font-size:14px;color:var(--muted)}
+nav button[aria-current="page"]{background:var(--surface);color:var(--ink);font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.sync{font-size:12px;color:var(--muted)}
+[hidden]{display:none!important}
+section{display:flex;flex-direction:column;gap:18px;padding-top:8px}
+h2{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
+/* home */
+.today{display:grid;grid-template-columns:repeat(2,1fr);border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.today div{padding:16px 18px;display:flex;flex-direction:column;gap:2px}
+.today div+div{border-left:1px solid var(--line)}
+.today small{color:var(--muted);font-size:12px}
+.today strong{font-family:var(--f-mono);font-size:30px;font-weight:500;line-height:1.2}
+.btn{border:1px solid var(--line);background:var(--surface);padding:10px 18px;border-radius:9px;font-weight:700}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);padding:12px 26px;font-size:16px}
+.btn:disabled{opacity:.45;cursor:default}
+.hint{color:var(--muted);font-size:13px}
+/* study */
+#stf{flex-wrap:nowrap;gap:3px;overflow-x:auto;scrollbar-width:none}
+#stf button{padding:3px 9px;font-size:12px;white-space:nowrap;flex:none}
+.tools{flex-wrap:nowrap}
+.tools input[type=search]{min-width:0}
+.tools select{flex:none;max-width:42%}
+.listbar{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.btn.sm{padding:5px 12px;font-size:12px}
+.swhint{display:none;font-size:12px;color:var(--muted)}
+@media (hover:none){
+  .swhint{display:block}
+}
+.swflash{position:fixed;left:50%;top:42%;transform:translate(-50%,-50%);z-index:60;padding:10px 20px;border-radius:999px;font-weight:700;font-size:16px;color:#fff;pointer-events:none;animation:swf .65s ease forwards;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.setbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.setsum{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:6px 0 0}
+.sessrow{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%}
+.sessrow .hint{flex:1;min-width:0}
+#spos{flex-wrap:nowrap;gap:3px;overflow-x:auto;width:100%;scrollbar-width:none}
+#spos button{padding:2px 7px;font-size:11.5px;white-space:nowrap;flex:none;min-height:0;font-weight:600}
+#spos button .num{opacity:.6;font-weight:500;margin-left:2px}
+.swflash.l0{background:var(--accent);color:var(--accent-ink)}
+.swflash.l1{background:var(--again)}
+.swflash.l2{background:var(--hard)}
+.swflash.l3{background:var(--good)}
+@keyframes swf{0%{opacity:0;transform:translate(-50%,-40%)}20%{opacity:1;transform:translate(-50%,-50%)}80%{opacity:1}100%{opacity:0}}
+#stage .card{will-change:transform}
+html{overscroll-behavior-y:none}
+.tag.lvchip{font-weight:700;color:#fff;background:var(--muted)}
+.tag.lvchip.l1{background:var(--again)}
+.tag.lvchip.l2{background:var(--hard)}
+.tag.lvchip.l3{background:var(--good)}
+.stf .num{font-weight:400;opacity:.8;font-size:11px}
+#sf{flex-wrap:nowrap;gap:3px;overflow-x:auto;width:100%;scrollbar-width:none}
+#sf button{padding:3px 7px;font-size:12px;white-space:nowrap;flex:none;min-height:0}
+@media (hover:none){
+  .keys{display:none}
+}
+@media (max-width:560px){
+  .hrow{flex-wrap:nowrap}
+}
+.progress{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);gap:10px;flex-wrap:wrap}
+.card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:30px 26px 24px 54px;box-shadow:0 2px 0 var(--line);min-height:320px;display:flex;flex-direction:column;gap:16px}
+.card::before{content:"";position:absolute;left:18px;top:26px;width:16px;height:16px;border-radius:50%;background:var(--hole);border:1px solid var(--line)}
+.card .meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.tag{background:var(--chip);padding:1px 9px;border-radius:999px;font-size:12px;color:var(--ink)}
+/* part-of-speech colours: verb red, noun blue, adjective yellow, adverb green, conjunction purple, phrase grey */
+.tag.pos{font-weight:700}
+.pos-v{background:#fde3e1;color:#a3191b}
+.pos-n{background:#dce8fb;color:#1d4f91}
+.pos-adj{background:#fbefb5;color:#735400}
+.pos-adv{background:#daf1e3;color:#17663f}
+.pos-conj{background:#ece1fa;color:#5a2f90}
+.pos-phr{background:var(--chip);color:var(--ink)}
+.tag.vt{background:none;border:1px solid var(--again);color:var(--again);font-weight:500}
+.tag.vt-I{border-style:dashed}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .pos-v{background:#4a1f1f;color:#ffb3ad}
+  :root:not([data-theme="light"]) .pos-n{background:#1d3150;color:#a9c8f5}
+  :root:not([data-theme="light"]) .pos-adj{background:#463a12;color:#f3d77a}
+  :root:not([data-theme="light"]) .pos-adv{background:#173d2a;color:#93dcb3}
+  :root:not([data-theme="light"]) .pos-conj{background:#352450;color:#cdb2f2}
+}
+:root[data-theme="dark"] .pos-v{background:#4a1f1f;color:#ffb3ad}
+:root[data-theme="dark"] .pos-n{background:#1d3150;color:#a9c8f5}
+:root[data-theme="dark"] .pos-adj{background:#463a12;color:#f3d77a}
+:root[data-theme="dark"] .pos-adv{background:#173d2a;color:#93dcb3}
+:root[data-theme="dark"] .pos-conj{background:#352450;color:#cdb2f2}
+.word{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.word h3{font-family:var(--f-en);font-size:clamp(30px,7vw,44px);font-weight:700;margin:0;line-height:1.15;overflow-wrap:anywhere}
+.speak{border:1px solid var(--line);background:var(--surface);border-radius:50%;width:36px;height:36px;display:grid;place-items:center;color:var(--muted);flex:none;padding:0}
+.speak.sm{width:30px;height:30px}
+.speak svg{width:18px;height:18px}
+.speak.sm svg{width:15px;height:15px}
+.speak:hover{color:var(--accent);border-color:var(--accent)}
+.acc{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;flex:none}
+.acc button{border:0;background:none;padding:4px 10px;font-size:12px;font-weight:700;color:var(--muted);font-family:var(--f-mono)}
+.acc button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.exrow{display:flex;gap:10px;align-items:flex-start}
+.exrow .ex{flex:1;min-width:0}
+.ex{font-family:var(--f-en);font-size:17px;line-height:1.55;margin:0}
+.ex mark{background:none;color:inherit;border-bottom:2px solid var(--accent);padding-bottom:1px}
+.answer{position:relative;display:flex;flex-direction:column;gap:12px;border-top:1px dashed var(--line);padding-top:16px}
+.ja{font-size:22px;font-weight:700;color:var(--red);margin:0;line-height:1.5}
+.core{margin:0;font-size:14px}
+.ety{font-family:var(--f-ui)}
+.cimg.has{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cihint{font-weight:500;text-transform:none;letter-spacing:0;opacity:.8}
+.cpic{display:block;text-align:center}
+svg.ci{width:100%;max-width:260px;height:auto;fill:none;stroke:var(--ink);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.ci .a{stroke:var(--accent)}
+.ci .f{fill:color-mix(in srgb,var(--accent) 16%,transparent)}
+.ci .m{stroke:var(--muted);stroke-width:3}
+.ci .t{stroke:none;fill:var(--ink);font:700 15px system-ui,sans-serif;text-anchor:middle}
+.ci .t.a{fill:var(--accent)}
+.ci .big{font-size:36px}
+.word .ipa{flex-basis:100%;margin:-8px 0 -2px}
+.ipa{margin:-6px 0 2px;font-family:"Charis SIL","Doulos SIL","Gentium Plus","Lucida Sans Unicode","Arial Unicode MS",system-ui,sans-serif;font-size:15px;color:var(--muted);letter-spacing:.01em}
+html[data-ipa="uk"] .ipa [data-ipa="us"],html:not([data-ipa="uk"]) .ipa [data-ipa="uk"]{display:none}
+.core b{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;font-weight:700}
+.exja{margin:0;font-size:14px;color:var(--muted)}
+.def{margin:0;font-family:var(--f-en);font-size:16px;font-weight:500;line-height:1.55}
+.answer .ja,.detail .ja{font-size:16px}
+.answer .core,.detail .core{font-size:16px;line-height:1.6}
+.def b{font-family:var(--f-ui);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;font-weight:700}
+.sheet{position:absolute;inset:6px -12px -10px -12px;z-index:2;background:var(--sheet);color:var(--sheet-ink);border:0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;font-weight:700;font-size:15px;box-shadow:0 2px 6px rgba(0,0,0,.18);transition:transform .28s ease,opacity .28s ease,top .25s ease}
+.sheet small{font-weight:400;opacity:.9;font-size:12px}
+.sheet{border:1px solid #d5dce4;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.answer.open .sheet{transform:translateX(70%);opacity:0;pointer-events:none}
+@media (prefers-reduced-motion:reduce){
+  .sheet{transition:none}
+}
+.grades{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.lvp{display:flex;flex-direction:column;gap:10px}
+.undorow{display:flex;justify-content:center}
+#undo{font-size:13px}
+.lvrow{display:grid;grid-template-columns:12px 1fr auto auto;gap:12px;align-items:center}
+.lvdot{width:10px;height:10px;border-radius:50%}
+.lvdot.l0{background:none;box-shadow:inset 0 0 0 1.5px var(--line)}
+.lvdot.l1{background:var(--again)}
+.lvdot.l2{background:var(--hard)}
+.lvdot.l3{background:var(--good)}
+.lvrow strong{font-family:var(--f-mono);font-weight:500;font-size:20px;min-width:3ch;text-align:right}
+.lvp p{margin:0}
+.stf{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.stf .hint{margin-right:2px}
+.stf button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;color:var(--muted)}
+.stf button.l1{color:var(--again)}
+.stf button.l2{color:var(--hard)}
+.stf button.l3{color:var(--good)}
+.stf button[aria-pressed="true"]{background:var(--muted);border-color:var(--muted);color:#fff}
+.stf button.l1[aria-pressed="true"]{background:var(--again);border-color:var(--again)}
+.stf button.l2[aria-pressed="true"]{background:var(--hard);border-color:var(--hard)}
+.stf button.l3[aria-pressed="true"]{background:var(--good);border-color:var(--good)}
+td.st .lvdot{display:inline-block;width:8px;height:8px;margin-right:6px;vertical-align:1px}
+.lvset{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0}
+.lvset button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 4px;font-size:13px;font-weight:700;color:var(--muted);min-height:36px}
+.lvset button.l1{color:var(--again)}
+.lvset button.l2{color:var(--hard)}
+.lvset button.l3{color:var(--good)}
+.lvset button.l1[aria-pressed="true"]{background:var(--again);border-color:var(--again);color:#fff}
+.lvset button.l2[aria-pressed="true"]{background:var(--hard);border-color:var(--hard);color:#fff}
+.lvset button.l3[aria-pressed="true"]{background:var(--good);border-color:var(--good);color:#fff}
+.grades button{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;font-weight:700}
+.grades button small{font-family:var(--f-mono);font-weight:400;font-size:12px;color:var(--muted)}
+.grades button kbd{font-family:var(--f-mono);font-size:10px;color:var(--muted);font-weight:400}
+.g1{color:var(--again)}
+.g2{color:var(--hard)}
+.g3{color:var(--good)}
+.grades button:hover{border-color:currentColor}
+.done{text-align:center;padding:40px 20px}
+.done h3{font-family:var(--f-en);font-size:28px;margin:0 0 6px}
+/* list */
+.tools{display:flex;gap:10px;flex-wrap:wrap}
+.tools input,.tools select,.field select,.field input{font:inherit;padding:8px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink)}
+.tools input[type=search]{flex:1;min-width:160px}
+.table{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--muted);font-weight:700;background:var(--surface)}
+td.en{font-family:var(--f-en);font-weight:700;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.st{font-size:12px;white-space:nowrap}
+tr.w{cursor:pointer}
+tr.w:hover td,tr.w[aria-expanded="true"] td{background:var(--chip)}
+tr.w td.en::after{content:" ▸";font-family:var(--f-ui);font-weight:400;color:var(--muted);font-size:11px}
+tr.w[aria-expanded="true"] td.en::after{content:" ▾"}
+tr.det td{background:var(--surface);padding:4px 12px 16px}
+.detail{display:flex;flex-direction:column;gap:10px;padding:10px 0 0 6px;border-left:3px solid var(--accent);padding-left:14px;white-space:normal}
+.detail .word h3{font-size:26px}
+.detail .ja{font-size:18px}
+.detail .ex{font-size:16px}
+.detail{box-sizing:border-box;min-width:0}
+table{table-layout:fixed}
+thead th:nth-child(1){width:60px}
+thead th:nth-child(3){width:90px}
+thead th:nth-child(4){width:130px}
+td.en{white-space:nowrap;overflow:hidden}
+@media (max-width:560px){
+  th,td{padding:8px 8px}
+  thead th:nth-child(3){width:38px;padding-left:2px;padding-right:2px}
+  tr.w td.en::after{content:none}
+  thead th:nth-child(4){width:96px;padding-left:4px;padding-right:6px}
+  td.st{padding-left:4px;padding-right:6px}
+  td.st{font-size:11px}
+  td.pcell{padding-left:2px;padding-right:2px}
+}
+tr.det td{overflow-wrap:anywhere}
+.pmini{display:flex;gap:3px;flex-wrap:wrap}
+td.pcell{padding-left:4px;padding-right:4px}
+.pmini .tag{white-space:nowrap;font-size:10px;padding:0 6px;line-height:16px;font-family:var(--f-mono);font-weight:500}
+tr.grp{cursor:pointer}
+tr.grp td{background:var(--chip);padding:12px;border-bottom:1px solid var(--line)}
+tr.grp td b{font-weight:500;margin-right:8px;font-size:10px;color:var(--muted)}
+tr.grp:hover td{filter:brightness(0.97)}
+.gchev{display:inline-block;width:16px;color:var(--muted)}
+/* the word list scrolls inside its own frame; the column headings sit above it, outside the scrolling part */
+#v-list .tframe{height:max(360px,calc(100dvh - 120px));border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden;display:flex;flex-direction:column}
+#v-list .thead{flex:none;border-bottom:1px solid var(--line);background:var(--surface)}
+#v-list .table{border:0;border-radius:0;flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:var(--surface)}
+#v-list .thead th{border-bottom:0}
+#v-list col.c1{width:13%}
+#v-list col.c2{width:39%}
+#v-list col.c3{width:20%}
+#v-list col.c4{width:28%}
+@media (max-width:560px){
+  #v-list col.c1{width:11%}
+  #v-list col.c2{width:47%}
+  #v-list col.c3{width:15%}
+  #v-list col.c4{width:27%}
+}
+#v-list .listbar{gap:8px}
+#v-list .listbar .stf{min-width:0;flex:1}
+#list-count{font-weight:400;font-size:12px}
+#v-list #stf button{padding:3px 7px}
+#g-all{flex:none;padding:4px 9px;font-size:11.5px}
+@media (max-width:380px){
+  #v-list #stf button{padding:3px 5px;font-size:11px}
+  #g-all{padding:4px 7px;font-size:11px}
+}
+/* word table: one rhythm for every column */
+#v-list th,#v-list tr.w td{vertical-align:middle;padding:10px 12px;font-size:13px;line-height:1.4}
+#v-list thead th:nth-child(3),#v-list td.pcell{text-align:center}
+#v-list td.pcell .pmini{justify-content:center}
+#v-list tr.w td.en{font-size:var(--wfs,18px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#v-list tr.w td:first-child{padding-right:0}
+#v-list tr.w td.en,#v-list .thead th:nth-child(2){padding-left:10px}
+#v-list tr.w td.en::after{content:none}
+#v-list tr.w td.st{font-size:13px;padding-left:12px;padding-right:12px}
+#v-list tr.w td.num{color:var(--muted);font-size:12px;opacity:.8;padding-left:14px}
+@media (max-width:560px){
+  #v-list .thead th:first-child{padding-left:8px;font-size:10px}
+  #v-list tr.w td.num{font-size:10px;padding-left:8px}
+  #v-list tr.w td.en,#v-list .thead th:nth-child(2){padding-left:4px!important}
+}
+@media (max-width:560px){
+  #v-list th,#v-list tr.w td{padding:10px 8px}
+  #v-list tr.w td.st{font-size:12px;padding-left:8px;padding-right:8px}
+}
+/* settings */
+.field{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-block:12px;border-bottom:1px solid var(--line)}
+.field:last-child{border-bottom:0}
+.field label{font-weight:700}
+.field p{margin:0;color:var(--muted);font-size:13px}
+.danger{color:var(--again);border-color:var(--again)}
+.btn.danger:disabled{opacity:.4}
+.modal-bg{position:fixed;inset:0;z-index:50;background:rgba(10,15,22,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:22px;max-width:420px;width:100%;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.modal h3{margin:0;font-size:18px;color:var(--again)}
+.modal p{margin:0;font-size:14px}
+.modal label{font-size:13px;color:var(--muted)}
+.modal input{font:inherit;font-family:var(--f-mono);padding:8px 12px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);letter-spacing:.1em}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+@media (max-width:560px){
+  .card{padding:24px 18px 20px 44px}
+  .card::before{left:14px}
+  .today strong{font-size:24px}
+  .today div{padding:12px}
+  nav button{padding:6px 9px}
+}
+#againre[aria-pressed="false"]{opacity:.6}
+#dirbtn[data-je]{background:var(--accent);color:#fff;border-color:var(--accent)}
+.sessrow{flex-wrap:wrap}
+.jq{font-size:19px;font-weight:700;line-height:1.5;margin:14px 0 6px}
+.cloze{font-size:19px;line-height:1.7;margin:10px 0 4px}
+.exrow .cloze{flex:1;min-width:0}
+.cloze .blank.fill{color:var(--accent);font-weight:700;user-select:auto;min-width:0;padding:0 3px}
+.cloze .blank{display:inline-block;min-width:3.2em;border-bottom:2px solid var(--accent);margin:0 2px;text-align:center;color:transparent;user-select:none}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><g id="P"><circle cx="0" cy="12" r="12"/><path d="M-18 86c0-18 8-30 18-30s18 12 18 30"/></g><g id="R"><path d="M0 0h40m-10-8 10 8-10 8"/></g></defs></svg>
+
+<div class="wrap">
+  <header>
+    <div class="brand"><b>English Idioms</b><div class="bkrow"><select id="booksel" class="booksel" aria-label="Book"></select></div></div>
+    <div class="hrow">
+    <nav aria-label="Views">
+      <button data-view="home" aria-current="page">Home</button>
+      <button data-view="study">Study</button>
+      <button data-view="list">Words</button>
+      <button data-view="settings">Settings</button>
+    </nav>
+    </div>
+  </header>
+  <div class="sync" id="sync">Loading words…</div>
+
+  <!-- HOME -->
+  <section id="v-home">
+    <div class="today">
+      <div><small>Not completed</small><strong id="t-seen">–</strong></div>
+      <div><small>Completed</small><strong id="t-new" style="color:var(--good)">–</strong></div>
+    </div>
+    <div class="panel lvp">
+      <h2>Review by level</h2>
+      <div class="lvrow"><span class="lvdot l1"></span><b>Again</b><strong id="lv-n1">0</strong><button class="btn" data-lv="1" disabled>Review</button></div>
+      <div class="lvrow"><span class="lvdot l2"></span><b>To review</b><strong id="lv-n2">0</strong><button class="btn" data-lv="2" disabled>Review</button></div>
+      <div class="lvrow"><span class="lvdot l3"></span><b>Completed</b><strong id="lv-n3">0</strong><button class="btn" data-lv="3" disabled>Review</button></div>
+      <p class="hint">Grouped by your latest rating. Review opens Study with just that level.</p>
+    </div>
+  </section>
+
+  <!-- STUDY -->
+  <section id="v-study" hidden>
+    <div class="progress">
+      <div class="stf" id="sf" role="group" aria-label="Levels to study"><button data-sf="0" aria-pressed="false">New <span class="num"></span></button><button data-sf="1" class="l1" aria-pressed="false">Again <span class="num"></span></button><button data-sf="2" class="l2" aria-pressed="false">To review <span class="num"></span></button><button data-sf="3" class="l3" aria-pressed="false">Completed <span class="num"></span></button></div>
+      <div class="stf" id="spos" role="group" aria-label="Parts of speech"></div>
+      <div class="sessrow"><button class="btn sm" id="dirbtn" type="button" title="出題の向きを切り替え">EN → JA</button><button class="btn sm" id="accbtn" type="button" title="発音を US / UK で切り替え">US</button><button class="btn sm" id="reshuffle" type="button">⇄ Shuffle</button><button class="btn sm" id="againre" type="button" aria-pressed="true" title="Show cards rated Again again after 5 cards">↻ Retry Loop: ON</button></div>
+      <div class="sesshint"><span class="hint num" id="sess"></span><span class="keys">Space: show answer · 1–3 or ← ↓ →: rate · ⌫: undo</span><span class="swhint">Swipe the card: ← Again · ↓ To review · → Completed</span></div>
+    </div>
+    <div id="stage"></div>
+    <div class="undorow"><button class="btn" id="undo" hidden>↶ Undo last rating</button></div>
+  </section>
+
+  <!-- LIST -->
+  <section id="v-list" hidden>
+    <div class="tools">
+      <input id="search" type="search" placeholder="Search words or meanings" autocomplete="off">
+      <select id="pos" aria-label="Filter by part of speech">
+        <option value="all">All POS</option>
+        <option value="動詞">Verb</option><option value="名詞">Noun</option><option value="形容詞">Adjective</option><option value="副詞">Adverb</option><option value="前置詞">Preposition</option><option value="接続詞">Conjunction</option><option value="会話表現">Expression</option>
+      </select>
+    </div>
+    <div class="listbar"><div class="stf" id="stf" role="group" aria-label="Filter by status"><button data-st="0" aria-pressed="false">New</button><button data-st="1" class="l1" aria-pressed="false">Again</button><button data-st="2" class="l2" aria-pressed="false">To review</button><button data-st="3" class="l3" aria-pressed="false">Completed</button></div><button class="btn sm" id="g-all" type="button">Expand all</button></div>
+    <div class="tframe">
+      <div class="thead"><table><colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"></colgroup><thead><tr><th class="num">No.</th><th>Word <span class="hint" id="list-count"></span></th><th>POS</th><th>Status</th></tr></thead></table></div>
+      <div class="table"><table><colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"></colgroup><tbody id="rows"></tbody></table></div>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section id="v-settings" hidden>
+    <div class="panel">
+      <div class="field"><div><label for="s-round">Cards per set</label><p>Number of cards in one Study set.</p></div>
+        <select id="s-round"><option value="5">5</option><option value="10">10</option><option value="15">15</option><option value="20">20</option><option value="25">25</option></select></div>
+      <div class="field"><div><label for="s-order">Order</label><p>Order of the cards in Study.</p></div>
+        <select id="s-order"><option value="seq">By number</option><option value="rand">Random</option></select></div>
+      <div class="field"><div><label for="s-from">Start from No.</label><p>Used when order is “By number”.</p></div>
+        <input id="s-from" type="number" min="1" max="9999" value="1" style="width:110px"></div>
+      <div class="field"><div><label for="s-ex">Example on the front</label></div>
+        <select id="s-ex"><option value="1">Show</option><option value="0">Hide</option></select></div>
+      <div class="field"><div><label for="s-auto">Auto-play audio</label><p>Plays when you reveal the answer.</p></div>
+        <select id="s-auto"><option value="word">Word</option><option value="both">Word + example</option><option value="off">Off</option></select></div>
+      <div class="field"><div><label for="s-accent">Accent</label><p>American or British pronunciation. You can also switch on each card.</p></div>
+        <div class="row"><select id="s-accent"><option value="us">American (US)</option><option value="uk">British (UK)</option></select><button class="btn" id="s-test">Test</button></div></div>
+      <div class="field"><div><label for="s-rate">Speed</label></div>
+        <select id="s-rate"><option value="0.8">Slow</option><option value="1">Normal</option><option value="1.15">Fast</option></select></div>
+      <div class="field"><div><label for="s-lead">Lead-in silence</label><p>Make this longer if the start of the audio gets cut off.</p></div>
+        <select id="s-lead"><option value="0">None</option><option value="0.3">0.3 s</option><option value="0.6">0.6 s</option><option value="1">1.0 s</option><option value="1.5">1.5 s</option></select></div>
+      <p class="hint" id="aq" style="margin:4px 0 0"></p>
+      <div class="field"><div><label>Export progress</label><p>Download an Excel file of all words in this book with their level, review counts and next review date.</p><p id="exp-msg" role="status"></p></div>
+        <button class="btn" id="exp-btn">Export (.xlsx)</button></div>
+      <div class="field"><div><label>Reset progress</label><p>All words go back to New. This can’t be undone.</p></div>
+        <div class="row" id="reset-box"></div></div>
+    </div>
+  </section>
+</div>
+
+<script src="records.js"></script>
+<script>
+(()=>{
+"use strict";
+const MIN=60e3, DAY=864e5;
+const STEPS=[1*MIN,10*MIN];
+// the books in this app; img = has core-image pictures, audio = format of the recorded audio (books without it use the device voice)
+const BOOKS=[
+ {id:"idiom",name:"Core Idioms 1000",img:1,audio:"webm"},
+ {id:"jk",name:"Business Idioms 1000"},
+ {id:"didm",name:"Spoken Expressions 400"},
+ {id:"w2400i",name:"Advanced Idioms 300",img:1,audio:"webm"},
+ {id:"pass2i",name:"Upper-Intermediate Idioms 300",audio:"webm"},
+ {id:"toeici",name:"Workplace Phrases 96"},
+ {id:"d1i",name:"Everyday Idioms 36"}];
+const BOOK=(()=>{let id=BOOKS[0].id;try{id=localStorage.getItem("ev_book")||id;}catch(e){} return BOOKS.find(b=>b.id===id)||BOOKS[0];})();
+const BK=BOOK.id, LSK="ev_"+BK, BDIR="books/"+BK;
+const POS_EN={"前置詞":"preposition","動詞":"verb","名詞":"noun","形容詞":"adjective","副詞":"adverb","接続詞":"conjunction","会話表現":"expression"};
+const POS_CLS={"前置詞":"phr","動詞":"v","名詞":"n","形容詞":"adj","副詞":"adv","接続詞":"conj","会話表現":"phr"};
+const POS_ABBR={"前置詞":"prep","動詞":"v","名詞":"n","形容詞":"adj","副詞":"adv","接続詞":"conj","会話表現":"expr"};
+const posMini=(p,vt)=>p.split("・").map(x=>{let t=POS_ABBR[x]||x; if(x==="動詞") t=vt==="T"?"vt":vt==="I"?"vi":vt==="TI"?"vt/vi":"v"; return `<span class="tag pos pos-${POS_CLS[x]||"phr"}" title="${esc(POS_EN[x]||x)}">${t}</span>`;}).join("");
+const ipaP=w=>w[11]&&w[11][0]?`<p class="ipa"><span data-ipa="us" title="American">/${esc(w[11][0])}/</span><span data-ipa="uk" title="British">/${esc(w[11][1]||w[11][0])}/</span></p>`:"";
+const IMGV="2400"; let IMG=null; (BOOK.img?fetch(BDIR+".img.json?v="+IMGV):Promise.resolve({ok:false})).then(r=>r.ok?r.json():{}).then(j=>{IMG=j;document.querySelectorAll(".cimg").forEach(fillCore);}).catch(()=>{IMG={};});
+function coreP(w){ return `<div class="core cimg" data-no="${w[0]}" role="button" tabindex="0"><b>Core image<span class="cihint"></span></b><span class="ct">${esc(w[4])}</span><span class="cpic" hidden></span></div>`; }
+function fillCore(el){ const svg=IMG&&IMG[el.dataset.no]; const pic=el.querySelector(".cpic"), ct=el.querySelector(".ct"), hint=el.querySelector(".cihint");
+  if(!svg){ hint.textContent=""; pic.hidden=true; ct.hidden=false; el.classList.remove("has"); return; }
+  el.classList.add("has"); if(!pic.firstChild) pic.innerHTML=`<svg class="ci" viewBox="0 0 240 150" aria-hidden="true">${svg}</svg>`;
+  const on=el.dataset.pic==="1"; pic.hidden=!on; ct.hidden=on; hint.textContent=on?" · tap for text":" · tap for picture"; }
+// after the answer is fully shown (2 taps), each further tap on the card — or on the Core image block — switches text ⇄ picture
+document.addEventListener("click",e=>{
+  let el=e.target.closest(".cimg.has");
+  if(!el){ const card=e.target.closest("#stage .card"); if(!card||!opened||e.target.closest("button,a,input,select,textarea,.acc,.speak,#sheet")) return; el=card.querySelector(".cimg.has"); }
+  if(!el) return; el.dataset.pic=el.dataset.pic==="1"?"0":"1"; fillCore(el); });
+new MutationObserver(()=>{ if(IMG) document.querySelectorAll(".cimg:not([data-f])").forEach(el=>{el.dataset.f=1;fillCore(el);}); }).observe(document.body,{childList:true,subtree:true});
+const VT_LABEL={T:"vt",I:"vi",TI:"vt/vi"};
+const posTag=(p,vt)=>p.split("・").map(x=>`<span class="tag pos pos-${POS_CLS[x]||"phr"}">${esc(POS_EN[x]||x)}</span>`+(x==="動詞"&&VT_LABEL[vt]?`<span class="tag vt vt-${vt}">${VT_LABEL[vt]}</span>`:"")).join("");
+let W=[], byNo=new Map();          // entries: [no, phrase, pos, ja, core, example, exampleJa, definition, highlight spans, vt, etymology, ipa]
+let C={};                          // card states by no
+let S={order:"seq",from:1,showEx:true,auto:"word",rate:1};   // settings
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const dayStart=t=>{const d=new Date(t);d.setHours(0,0,0,0);return d.getTime()};
+const dayKey=t=>{const d=new Date(t);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+
+/* ---------- scheduling (SM-2 based) ---------- */
+function preview(c,g,now){
+  c=c?{...c}:{q:0,st:0,i:0,e:250,r:0,l:0};
+  if(c.q===2){
+    if(g===1){c.l++;c.e=Math.max(130,c.e-20);c.li=Math.max(1,Math.round(c.i*0.3));c.q=1;c.st=0;c.d=now+STEPS[0];}
+    else{
+      let i;
+      if(g===2){i=Math.max(c.i+1,c.i*1.2);c.e=Math.max(130,c.e-15);}
+      else if(g===3){i=Math.max(c.i+1,c.i*c.e/100);}
+      else {i=Math.max(c.i+2,c.i*c.e/100*1.3);c.e+=15;}
+      c.i=Math.min(3650,Math.round(i));c.d=dayStart(now)+c.i*DAY;
+    }
+  }else{
+    const grad=(c.li||1);
+    if(g===1){c.st=0;c.d=now+STEPS[0];c.q=1;}
+    else if(g===2){c.q=1;c.d=now+(c.st===0?6*MIN:STEPS[c.st]);}
+    else if(g===3){
+      if(c.st+1>=STEPS.length || c.li){c.q=2;c.i=grad;c.d=dayStart(now)+c.i*DAY;delete c.li;c.st=0;}
+      else {c.st++;c.q=1;c.d=now+STEPS[c.st];}
+    } else {c.q=2;c.i=c.li?Math.max(grad+1,2):4;delete c.li;c.st=0;c.d=dayStart(now)+c.i*DAY;}
+  }
+  c.r++;
+  return c;
+}
+
+let lastNo=null;
+
+/* ---------- persistence (this device only) ---------- */
+function setSync(t){$("#sync").textContent=t;}
+function lsSave(){try{localStorage.setItem(LSK,JSON.stringify({C,S}));return true;}catch(e){return false;}}
+function lsLoad(){try{const v=JSON.parse(localStorage.getItem(LSK)||"null")||(/[?&]me\b/.test(location.search)&&window.SEED&&window.SEED[BK])||null;if(v){C=v.C||{};Object.assign(S,v.S||{});}}catch(e){}}   // first run: records.js seed
+function save(){ setSync(lsSave()?"Saved on this device":"Couldn’t save on this device"); }
+
+/* ---------- audio ---------- */
+let VOICES=[];
+const VOICE_RANK=[/natural/i,/neural/i,/premium|enhanced/i,/google us english/i,/google uk english/i,/samantha|alex|ava|allison|aaron|nicky/i,/aria|jenny|guy|zira|david|mark/i,/daniel|karen|moira|serena|tessa/i];
+function scoreVoice(v){let s=0;VOICE_RANK.forEach((r,k)=>{if(r.test(v.name))s+=(VOICE_RANK.length-k)*10;});if(/en[-_]US/i.test(v.lang))s+=5;if(!v.localService)s+=2;return s;}
+function loadVoices(){try{VOICES=speechSynthesis.getVoices().filter(v=>/^en([-_]|$)/i.test(v.lang)).sort((a,b)=>scoreVoice(b)-scoreVoice(a));}catch(e){VOICES=[];}}
+function pickVoice(){if(!VOICES.length)loadVoices();if(S.accent==="uk"){const g=VOICES.find(v=>/en[-_]GB/i.test(v.lang));if(g)return g;}return VOICES[0]||null;}
+function utter(t,vo){
+  const u=new SpeechSynthesisUtterance(t.replace(/[~〜]/g," ").replace(/\s+/g," ").trim());
+  const v=vo||pickVoice(); if(v){u.voice=v;u.lang=v.lang;}else u.lang="en-US";
+  u.rate=(S.rate||1)*0.9; return u;
+}
+function deviceSpeak(texts,vo){try{
+  speechSynthesis.cancel();
+  setTimeout(()=>texts.forEach(t=>speechSynthesis.speak(utter(t,vo))),60);
+}catch(e){}}
+
+/* recorded audio, one folder per accent: <dir>/index.json maps No. -> [chunk, wordOff, wordLen, exOff, exLen] */
+const ADIR=BOOK.audio==="webm"?{us:BDIR+"/n",uk:BDIR+"/nuk"}:BOOK.audio==="mp3"?{us:BDIR+"/a",uk:BDIR+"/uk"}:{};
+const AEXT=BOOK.audio==="mp3"?["mp3","audio/mpeg"]:["webm","audio/webm"];
+const AV="ev9"; // bump when audio files change so old cached chunks aren't reused
+const AIDX={}, AIDXP={}, CHUNKS=new Map(), URLS=new Map();
+const player=new Audio(); player.preload="auto";
+let playToken=0;
+const accent=()=>{ const a=S.accent==="uk"?"uk":"us"; document.documentElement.dataset.ipa=a; return a; };
+function aqUI(){ const el=$("#aq"); if(!el) return; const a=accent(); el.textContent=AIDX[a]===undefined?"":("Audio: "+(AIDX[a]?"recorded voice":"device voice")); }
+function loadIndex(acc){ if(!ADIR[acc]){AIDX[acc]=null;return Promise.resolve();} if(!AIDXP[acc]) AIDXP[acc]=(async()=>{
+    const r=await fetch(ADIR[acc]+"/index.json?v="+AV); if(!r.ok) throw 0; AIDX[acc]=await r.json();
+  })().catch(()=>{AIDX[acc]=null;}).then(()=>{try{aqUI()}catch(e){}}); return AIDXP[acc]; }
+function loadChunk(acc,c){
+  const k=acc+c;
+  if(!CHUNKS.has(k)) CHUNKS.set(k,fetch(ADIR[acc]+"/c"+String(c).padStart(2,"0")+"."+AEXT[0]+"?v="+AV).then(r=>{if(!r.ok)throw 0;return r.arrayBuffer();}).catch(e=>{CHUNKS.delete(k);throw e;}));
+  return CHUNKS.get(k);
+}
+async function clipFrom(acc,no,kind){
+  await loadIndex(acc); const ix=AIDX[acc]; if(!ix||!ix[no]) return null;
+  const key=acc+no+kind; if(URLS.has(key)) return URLS.get(key);
+  const [c,wo,wl,eo,el]=ix[no]; const buf=await loadChunk(acc,c);
+  const [o,l]=kind==="w"?[wo,wl]:[eo,el];
+  const u=URL.createObjectURL(new Blob([buf.slice(o,o+l)],{type:AEXT[1]}));
+  URLS.set(key,u); return u;
+}
+// the chosen accent first; if that clip isn't ready, the other accent's recording
+async function clipUrl(no,kind){
+  const a=accent(), alt=a==="uk"?"us":"uk";
+  return (await clipFrom(a,no,kind).catch(()=>null)) || (a==="uk"?null:await clipFrom(alt,no,kind).catch(()=>null));
+}
+function prefetchAudio(no){ const a=accent(); loadIndex(a).then(()=>{ const ix=AIDX[a]; if(ix&&ix[no]) loadChunk(a,ix[no][0]).catch(()=>{}); }); }
+function playUrl(u,token){return new Promise(res=>{
+  if(token!==playToken) return res(false);
+  player.src=u; player.playbackRate=S.rate||1;
+  player.onended=()=>res(true); player.onerror=()=>res(false);
+  const p=player.play(); if(p&&p.catch) p.catch(()=>res(false));
+});}
+// Some devices (Bluetooth earphones, phone speakers waking up) swallow the first moments of sound.
+// Before a clip that starts from quiet, play a stretch of near-silence so the swallowed part is not speech.
+const leadSec=()=>[0,0.3,0.6,1,1.5].includes(+S.lead)?+S.lead:0.3;
+const SIL={}; let lastSound=0;
+function silUrl(sec){ if(SIL[sec]) return SIL[sec];
+  const sr=8000,n=Math.round(sr*sec),b=new ArrayBuffer(44+n*2),v=new DataView(b),w=(o,t)=>{for(let i=0;i<t.length;i++)v.setUint8(o+i,t.charCodeAt(i));};
+  w(0,"RIFF");v.setUint32(4,36+n*2,true);w(8,"WAVEfmt ");v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,sr,true);v.setUint32(28,sr*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,"data");v.setUint32(40,n*2,true);
+  for(let i=0;i<n;i++) v.setInt16(44+i*2,(i&1)?2:-2,true);
+  return SIL[sec]=URL.createObjectURL(new Blob([b],{type:"audio/wav"})); }
+async function speakClips(items){ // items: [{no,kind,text}]
+  const token=++playToken;
+  try{speechSynthesis.cancel();}catch(e){}
+  player.pause();
+  for(let k=0;k<items.length;k++){
+    const it=items[k]; let u=null;
+    try{u=await clipUrl(it.no,it.kind);}catch(e){u=null;}
+    if(token!==playToken) return;
+    if(!u){ deviceSpeak(items.slice(k).map(x=>x.text)); return; }
+    if(leadSec()>0 && Date.now()-lastSound>600){ await playUrl(silUrl(leadSec()),token); if(token!==playToken) return; }
+    const ok=await playUrl(u,token); lastSound=Date.now();
+    if(token!==playToken) return;
+    if(!ok){ deviceSpeak(items.slice(k).map(x=>x.text)); return; }
+    if(k<items.length-1) await new Promise(r=>setTimeout(r,250));
+  }
+}
+function stopAudio(){playToken++;player.pause();try{speechSynthesis.cancel();}catch(e){}}
+// say(no, kinds) plays a card's word / example
+function say(no,kinds){
+  const w=byNo.get(no); const items=kinds.map(k=>({no,kind:k,text:k==="w"?w[1]:w[5]}));
+  speakClips(items);
+}
+try{speechSynthesis.addEventListener("voiceschanged",loadVoices);loadVoices();}catch(e){}
+
+/* ---------- views ---------- */
+let view="home";
+function show(v){
+  if(v!=="study"&&view==="study"&&cur){ undoNo=cur; curFromAgainU=curFromAgain; }  // come back to the same card
+  view=v;
+  document.querySelectorAll("header [data-view]").forEach(b=>{ if(b.dataset.view===v) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
+  ["home","study","list","settings"].forEach(x=>$("#v-"+x).hidden=x!==v);
+  if(v!=="study") stopAudio();
+  if(v==="home") renderHome();
+  if(v==="study") renderCard();
+  if(v==="list"){ renderList(true); fitTable(); }
+  if(v==="settings") renderSettings();
+}
+document.querySelectorAll("header [data-view]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
+function refreshAll(){ if(view==="home")renderHome(); else if(view==="list")renderList(true); else if(view==="settings")renderSettings(); else if(view==="study")renderCard(); }
+
+function renderHome(){
+  { const done=W.filter(w=>level(C[w[0]])===3).length; $("#t-new").textContent=done; $("#t-seen").textContent=W.length-done; }
+  for(const k of [1,2,3]){ const n=levelList(k).length; $("#lv-n"+k).textContent=n; document.querySelector(`[data-lv="${k}"]`).disabled=!n; }
+}
+
+/* ---------- study card ---------- */
+let cur=null, opened=false, stageR=0;
+function highlight(ex,word,spans){
+  if(Array.isArray(spans)&&spans.length){ let out="",p=0; for(const [a,b] of spans){ if(a<p||b>ex.length) continue; out+=esc(ex.slice(p,a))+"<mark>"+esc(ex.slice(a,b))+"</mark>"; p=b; } return out+esc(ex.slice(p)); }
+  const head=word.replace(/[~〜].*$/,"").trim().split(/\s+/)[0]||word;
+  const stem=head.length>4?head.slice(0,-1):head;
+  const re=new RegExp("\\b("+stem.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"[a-z]*)","i");
+  const e=esc(ex); return re.test(ex)?e.replace(re,"<mark>$1</mark>"):e;
+}
+const SPK=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>`;
+function exBlock(w){return `<div class="exrow"><p class="ex">${highlight(w[5],w[1],w[8])}</p><button class="speak sm" data-say="ex" aria-label="Play example">${SPK}</button></div>`;}
+function roundSize(){ return [5,10,15,20,25].includes(+S.round)?+S.round:25; }
+/* Study: cards from the chosen levels. S.sf = levels ("0" New … "3" Completed) */
+const SF_ALL=["0","1","2","3"];
+function sfList(){ const f=(Array.isArray(S.sf)?S.sf:[]).filter(x=>SF_ALL.includes(String(x))).map(String); return f.length?f:["0","1","2"]; }
+const posParts=w=>w[2].split("・");
+const posSel=()=>Array.isArray(S.pos)?S.pos:(S.pos?[S.pos]:[]);
+const posOk=no=>{ const f=posSel(); if(!f.length) return true; const w=byNo.get(no); return !!w&&posParts(w).some(x=>f.includes(x)); };
+function inPool(no){ return posOk(no)&&sfList().includes(String(level(C[no]))); }
+const POS_SHORT={"名詞":"Noun","動詞":"Verb","形容詞":"Adjective","副詞":"Adverb","接続詞":"Conj.","前置詞":"Prep.","会話表現":"Expression"};
+function fillPosSel(){ const box=document.getElementById("spos"); if(!box||!W.length) return;
+  const cnt=new Map(); for(const w of W) for(const x of posParts(w)) cnt.set(x,(cnt.get(x)||0)+1);
+  let f=posSel().filter(x=>cnt.has(x)); if(f.length===cnt.size) f=[]; S.pos=f;
+  box.innerHTML=`<button data-pos="" aria-pressed="${!f.length}">All POS</button>`+[...cnt].sort((a,b)=>b[1]-a[1]).map(([x,n])=>`<button data-pos="${esc(x)}" aria-pressed="${f.includes(x)}">${esc(POS_SHORT[x]||x)}<span class="num">${n}</span></button>`).join("");
+  box.querySelectorAll("[data-pos]").forEach(b=>b.onclick=()=>{ const v=b.dataset.pos; let g=posSel();
+    g=!v?[]:(g.includes(v)?g.filter(x=>x!==v):[...g,v]);
+    S.pos=g; deck=[]; used.clear(); undoNo=null; save(); if(!opened) renderCard(); else renderCounts(); }); }
+let deck=[], used=new Set();
+const shuffled=a=>{ a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+let againQ=[], sess=0, recent=[], curFromAgain=false, curFromAgainU=false;
+function nextStudy(){
+  curFromAgain=false;
+  if(S.rs&&S.rs.on&&S.rs.w.length>=roundSize()){ if(againQ.length){ curFromAgain=true; return againQ.shift().no; } return null; }
+  // a word rated "Again" comes back after 5 other cards
+  const k=againQ.findIndex(a=>a.at<=sess && a.no!==lastNo);
+  if(k>=0){ curFromAgain=true; return againQ.splice(k,1)[0].no; }
+  const wait=new Set(againQ.map(a=>a.no));
+  const pool=W.filter(w=>w[0]!==lastNo && !wait.has(w[0]) && inPool(w[0])).map(w=>w[0]);
+  if(!pool.length){ if(againQ.length){ curFromAgain=true; return againQ.shift().no; } return (lastNo&&inPool(lastNo))?lastNo:null; }
+  if(S.order==="rand"){
+    // card-deck shuffle: every word in the chosen levels comes up once per round, in shuffled order
+    deck=deck.filter(n=>inPool(n)&&!wait.has(n));
+    const inDeck=new Set(deck);
+    for(const n of pool) if(!inDeck.has(n)&&!used.has(n)){ deck.splice(Math.floor(Math.random()*(deck.length+1)),0,n); }
+    if(!deck.length){ used.clear(); deck=shuffled(pool); }
+    return deck[0];
+  }
+  const p=S.sp||String(Math.max(1,S.from|0||1)-1).padStart(4,"0");
+  return pool.find(no=>no>p)||pool[0];
+}
+function renderCounts(){
+  const f=sfList(), cnt={"0":0,"1":0,"2":0,"3":0};
+  fillPosSel();
+  for(const w of W){ if(posOk(w[0])) cnt[level(C[w[0]])]++; }
+  document.querySelectorAll("#sf [data-sf]").forEach(b=>{ b.setAttribute("aria-pressed",String(f.includes(b.dataset.sf))); b.querySelector(".num").textContent=cnt[b.dataset.sf]; });
+  const n=W.filter(w=>inPool(w[0])).length;
+  $("#sess").textContent=(S.rs&&S.rs.on)?`${Math.min(S.rs.w.length,roundSize())}/${roundSize()}`+(S.rs.w.length>=roundSize()&&againQ.length?` · retry ${againQ.length}`:""):`${n} word${n===1?"":"s"}`;
+}
+document.querySelectorAll("#sf [data-sf]").forEach(b=>b.onclick=()=>{
+  const v=b.dataset.sf; let f=sfList();
+  f=f.includes(v)?f.filter(x=>x!==v):[...f,v];
+  if(!f.length) return;           // keep at least one level selected
+  S.sf=f; save(); if(!opened) renderCard(); else renderCounts();
+});
+function studyLevels(list){ S.sf=list; save(); show("study"); }
+const LV=["","Again","To review","Completed"];
+// the same label and colour as the level buttons above the card
+function lvChip(c){ const k=level(c); return `<span class="tag lvchip l${k}">${k?LV[k]:"New"}</span>`; }
+function level(c){ if(!c||!c.q) return 0; if(c.g) return Math.min(3,c.g); return c.q===1?1:3; }
+function levelList(k){return W.filter(w=>level(C[w[0]])===k).map(w=>w[0]);}
+/* undo: each rating saves what it changed, so a mistaken tap can be taken back */
+const H=[]; let undoNo=null;
+const clone=o=>o===undefined?undefined:JSON.parse(JSON.stringify(o));
+function pushH(e){ H.push(e); if(H.length>30) H.shift(); }
+function updateUndo(){ const b=$("#undo"); if(b) b.hidden=!H.length; }
+function undo(){
+  const h=H.pop(); if(!h) return;
+  if(h.c===undefined) delete C[h.no]; else C[h.no]=h.c;
+  { if(h.rs!==undefined) S.rs=h.rs; lastNo=h.lastNo; againQ=h.aq||[]; sess=h.sess||0; S.sp=h.sp; recent=h.recent||[]; if(h.deck){ deck=h.deck; used=new Set(h.used||[]); } undoNo=h.no; curFromAgainU=!!h.cfa; }
+  save();
+  if(view!=="study") show("study"); else renderCard();
+}
+/* sets: Start → one set of cards (plus their Retry Loop cards) → Next */
+
+function setPanel(){
+  cur=null; opened=false;
+  const r=S.rs, done=r&&r.n&&!r.on, nx=(r&&r.n||0)+1;
+  const pool=W.filter(w=>inPool(w[0])).length;
+  let body;
+  if(done){
+    const k=[0,0,0,0]; for(const no of r.w) k[level(C[no])]++;
+    body=`<p>${r.w.length} words done.</p>
+      <div class="setsum"><span class="tag lvchip l1">Again ${k[1]}</span><span class="tag lvchip l2">To review ${k[2]}</span><span class="tag lvchip l3">Completed ${k[3]}</span></div>
+      <div class="setbtns"><button class="btn primary" id="set-go" ${pool?"":"disabled"}>Next ${roundSize()} →</button></div>`;
+  } else {
+    body=`<div class="setbtns" style="margin:0"><button class="btn primary" id="set-go" ${pool?"":"disabled"}>▶ Start</button></div>`;
+  }
+  $("#stage").innerHTML=`<div class="panel done">${body}</div>`;
+  $("#set-go").onclick=startSet;
+  const b=$("#back"); if(b) b.onclick=()=>show("home");
+  $("#set-go").focus({preventScroll:true});
+}
+function startSet(){
+  S.rs={n:((S.rs&&S.rs.n)||0)+1,w:[],on:true}; againQ=[]; undoNo=null; save(); renderCard();
+}
+function renderCard(){
+  updateUndo();
+  renderCounts();
+  if(!S.rs||!S.rs.on) return setPanel();
+  if(!undoNo&&S.rs.w.length>=roundSize()&&!againQ.length){ S.rs={...S.rs,on:false}; save(); renderCounts(); return setPanel(); }
+  let no; if(undoNo){ no=undoNo; curFromAgain=curFromAgainU; } else no=nextStudy(); undoNo=null;
+  if(!no){cur=null; $("#stage").innerHTML=`<div class="panel done"><h3>No words here.</h3><p>There are no words in the levels you picked. Choose other levels above.</p><button class="btn" id="back">Back to Home</button></div>`;
+    $("#back").onclick=()=>show("home"); return;}
+  cur=no; opened=false; stageR=0;
+  const w=byNo.get(no), c=C[no];
+  if(S.dir==="je"){
+  const hl=highlight(w[5],w[1],w[8]), has=hl.includes("<mark>");
+  const cz=hl.replace(/<mark>(.*?)<\/mark>/g,(m,t)=>t.split(/\s+/).map(w=>'<span class="blank" data-w="'+w.replace(/<[^>]*>/g,"").replace(/"/g,"&quot;")+'">_</span>').join(" "));
+  $("#stage").innerHTML=`
+  <article class="card">
+    <div class="meta"><span class="num">No.${no}</span>${posTag(w[2],w[9])}${lvChip(c)}</div>
+    ${has?`<div class="exrow"><p class="cloze">${cz}</p><button class="speak sm" data-say="ex" id="czsp" aria-label="Play example" hidden>${SPK}</button></div>`:""}
+    <p class="jq">${esc(w[3])}</p>
+    <p class="exja">${esc(w[6])}</p>
+    <div class="answer" id="ans">
+      <div class="word"><h3>${esc(w[1])}</h3><button class="speak" data-say="word" aria-label="Play word">${SPK}</button>${ipaP(w)}
+        <div class="acc" role="group" aria-label="Accent"><button data-acc="us" aria-pressed="${accent()==="us"}">US</button><button data-acc="uk" aria-pressed="${accent()==="uk"}">UK</button></div></div>
+      ${has?"":exBlock(w)}
+      ${w[7]?`<p class="def"><b>English</b>${esc(w[7])}</p>`:""}
+      ${coreP(w)}
+      ${w[10]?`<p class="core ety"><b>Etymology</b>${esc(w[10])}</p>`:""}
+      <button class="sheet" id="sheet">Show answer<small>Tap or press Space</small></button>
+    </div>
+  </article>
+  <div class="grades" id="grades" hidden></div>
+`;
+  } else
+  $("#stage").innerHTML=`
+  <article class="card">
+    <div class="meta"><span class="num">No.${no}</span>${posTag(w[2],w[9])}${lvChip(c)}</div>
+    <div class="word"><h3>${esc(w[1])}</h3><button class="speak" data-say="word" aria-label="Play word">${SPK}</button>${ipaP(w)}
+      <div class="acc" role="group" aria-label="Accent"><button data-acc="us" aria-pressed="${accent()==="us"}">US</button><button data-acc="uk" aria-pressed="${accent()==="uk"}">UK</button></div></div>
+    ${S.showEx?exBlock(w):""}
+    <div class="answer" id="ans">
+      ${w[7]?`<p class="def"><b>English</b>${esc(w[7])}</p>`:""}
+      <p class="ja">${esc(w[3])}</p>
+      ${coreP(w)}
+      ${w[10]?`<p class="core ety"><b>Etymology</b>${esc(w[10])}</p>`:""}
+      ${S.showEx?"":exBlock(w)}
+      <p class="exja">${esc(w[6])}</p>
+      <button class="sheet" id="sheet">Show English<small>Tap or press Space</small></button>
+    </div>
+  </article>
+  <div class="grades" id="grades" hidden></div>
+`;
+  $("#stage").querySelectorAll("[data-say]").forEach(b=>b.onclick=()=>say(no,[b.dataset.say==="ex"?"e":"w"]));
+  $("#stage").querySelectorAll("[data-acc]").forEach(b=>b.onclick=()=>{
+    S.accent=b.dataset.acc; save();
+    $("#stage").querySelectorAll("[data-acc]").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.acc===S.accent))); accUI();
+    say(no,["w"]);
+  });
+  prefetchAudio(no);
+  $("#sheet").onclick=reveal;
+  const lab=LV.slice(1);
+  $("#grades").innerHTML=lab.map((l,k)=>`<button class="g${k+1}" data-g="${k+1}">${l}<kbd>${k+1}</kbd></button>`).join("");
+  $("#grades").hidden=false;
+  $("#grades").querySelectorAll("button").forEach(b=>b.onclick=()=>grade(+b.dataset.g));
+}
+function autoPlay(){ if(S.auto==="word") say(cur,["w"]); else if(S.auto==="both") say(cur,["w","e"]); }
+// 1st tap: English definition. 2nd tap: Japanese meaning and the rest.
+function reveal(){
+  if(!cur||opened) return;
+  const sh=$("#sheet"), d=$("#ans .def");
+  if(stageR===0 && d && S.dir!=="je"){
+    stageR=1;
+    sh.style.top=(d.offsetTop+d.offsetHeight+8)+"px";
+    sh.innerHTML="Show Japanese<small>Tap or press Space</small>";
+    autoPlay(); return;
+  }
+  opened=true;
+  $("#ans").classList.add("open");
+  document.querySelectorAll(".cloze .blank").forEach(b=>{ b.textContent=b.dataset.w||""; b.classList.add("fill"); }); { const cs=$("#czsp"); if(cs) cs.hidden=false; }
+  $("#grades button.g3").focus({preventScroll:true});
+  if(stageR===0) autoPlay();
+}
+function grade(g){
+  if(!cur) return;
+  const now=Date.now(), c=C[cur];
+  pushH({kind:"round",rs:clone(S.rs),no:cur,c:clone(c),lastNo,aq:clone(againQ),sess,sp:S.sp||null,recent:[...recent],cfa:curFromAgain,deck:[...deck],used:[...used]});
+  deck=deck.filter(n=>n!==cur); used.add(cur);
+  C[cur]=preview(c,g,now); C[cur].g=g; lastNo=cur;
+  if(!curFromAgain && S.order!=="rand") S.sp=cur;
+  recent.push(cur); if(recent.length>30) recent.shift();
+  sess++; againQ=againQ.filter(a=>a.no!==cur);
+  if(S.rs&&S.rs.on&&!S.rs.w.includes(cur)) S.rs={...S.rs,w:[...S.rs.w,cur]};
+  if(g===1 && S.ar!==false) againQ.push({no:cur,at:sess+5});
+  save();
+  renderCard();
+}
+document.addEventListener("keydown",e=>{
+  if(view!=="study"||e.target.closest("input,select,textarea")) return;
+  if(e.code==="Space"||e.key==="Enter"){ if(!opened){e.preventDefault();reveal();} }
+  else if(/^[1-3]$/.test(e.key)){e.preventDefault(); grade(+e.key);}
+  else if(SWIPE_KEY[e.key]&&cur){e.preventDefault(); rateBySwipe(SWIPE_KEY[e.key]);}
+  else if((e.key==="z"&&(e.metaKey||e.ctrlKey))||e.key==="Backspace"){ if(H.length){e.preventDefault(); undo();} }
+});
+/* swipe the card to rate: ← Again · ↓ To review · → Completed (arrow keys do the same) */
+const SWIPE_KEY={ArrowLeft:1,ArrowDown:2,ArrowRight:3};
+const SWIPE_RGB=["","179,38,30","161,98,10","31,107,74"];
+// tint the card toward the rating it is being swiped to (k = 0..1)
+function tintCard(card,g,k){ if(!card) return; if(!g||k<=0){ card.style.boxShadow=""; card.style.borderColor=""; return; }
+  const a=Math.min(1,k); card.style.boxShadow=`inset 0 0 0 2000px rgba(${SWIPE_RGB[g]},${(0.16*a).toFixed(3)})`; card.style.borderColor=`rgba(${SWIPE_RGB[g]},${(0.25+0.5*a).toFixed(2)})`; }
+function rateBySwipe(g){
+  if(!cur) return;
+  const card=document.querySelector("#stage .card");
+  const lab=document.createElement("div"); lab.className="swflash l"+g; lab.textContent=["","← Again","↓ To review","Completed →"][g];
+  document.body.appendChild(lab); setTimeout(()=>lab.remove(),650);
+  tintCard(card,g,1);
+  if(card){ card.style.transition="transform .18s ease, opacity .18s ease"; card.style.transform=g===1?"translateX(-40%) rotate(-4deg)":g===2?"translateY(30%)":"translateX(40%) rotate(4deg)"; card.style.opacity="0"; }
+  setTimeout(()=>grade(g),170);
+}
+(()=>{
+  // the card is "grabbed": left/right always rate; dragging it down rates To review whenever the card's top is on screen
+  let sx=0,sy=0,on=false,card=null,mode="",canDown=false;
+  const stage=document.getElementById("stage");
+  const reset=()=>{ tintCard(card,0,0); if(card){ card.style.transition="transform .15s ease"; card.style.transform=""; setTimeout(()=>{ if(card) card.style.transition=""; },160); } };
+  stage.addEventListener("touchstart",e=>{
+    card=e.target.closest(".card"); on=!!card&&e.touches.length===1&&!e.target.closest("input,select,textarea,.speak,.acc");
+    if(!on) return; const t=e.touches[0]; sx=t.clientX; sy=t.clientY; mode="";
+    canDown=card.getBoundingClientRect().top>=-4; card.style.transition="";
+  },{passive:true});
+  stage.addEventListener("touchmove",e=>{
+    if(!on) return; const t=e.touches[0], dx=t.clientX-sx, dy=t.clientY-sy;
+    if(!mode){ if(Math.abs(dx)<8&&Math.abs(dy)<8) return;
+      mode=Math.abs(dx)>Math.abs(dy)?"x":(dy>0&&canDown?"down":"scroll"); }
+    if(mode==="scroll") return;
+    if(e.cancelable) e.preventDefault();
+    if(mode==="x"){ const m=Math.max(-140,Math.min(140,dx)); card.style.transform=`translateX(${m}px) rotate(${m/60}deg)`; tintCard(card,m<0?1:3,Math.abs(m)/70); }
+    else { const m=Math.max(0,Math.min(160,dy)); card.style.transform=`translateY(${m}px)`; tintCard(card,2,m/80); }
+  },{passive:false});
+  stage.addEventListener("touchend",e=>{
+    if(!on) return; on=false; const t=e.changedTouches[0], dx=t.clientX-sx, dy=t.clientY-sy;
+    if(mode==="x"&&Math.abs(dx)>70) return rateBySwipe(dx<0?1:3);
+    if(mode==="down"&&dy>80) return rateBySwipe(2);
+    reset();
+  },{passive:true});
+  stage.addEventListener("touchcancel",()=>{ on=false; reset(); },{passive:true});
+})();
+// reshuffle: a fresh deck from all words in the chosen levels (switches to random order if needed)
+function accUI(){const b=$("#accbtn"); if(b) b.textContent=accent()==="uk"?"UK":"US";}
+$("#accbtn").onclick=()=>{ S.accent=accent()==="uk"?"us":"uk"; save(); accUI(); document.querySelectorAll("[data-acc]").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.acc===S.accent))); if(view==="study"&&cur&&typeof prefetchAudio==="function") prefetchAudio(cur); };
+function dirUI(){accUI();const b=$("#dirbtn"); if(!b) return; const je=S.dir==="je"; b.toggleAttribute("data-je",je); b.textContent=je?"JA → EN":"EN → JA";}
+$("#dirbtn").onclick=()=>{ S.dir=S.dir==="je"?"ej":"je"; dirUI(); save(); if(view==="study"&&cur){ undoNo=cur; curFromAgainU=curFromAgain; renderCard(); } };
+function arUI(){const b=$("#againre"); if(!b) return; const on=S.ar!==false; b.setAttribute("aria-pressed",on?"true":"false"); b.textContent="↻ Retry Loop: "+(on?"ON":"OFF");}
+$("#againre").onclick=()=>{ S.ar=(S.ar===false); if(S.ar===false) againQ=[]; arUI(); save(); };
+$("#reshuffle").onclick=()=>{
+  if(S.order!=="rand"){ S.order="rand"; save(); }
+  deck=[]; used.clear(); undoNo=null; lastNo=null;
+  const f=document.createElement("div"); f.className="swflash l0"; f.textContent="⇄ Shuffled"; document.body.appendChild(f); setTimeout(()=>f.remove(),650);
+  renderCard();
+};
+document.querySelectorAll("[data-lv]").forEach(b=>b.onclick=()=>studyLevels([String(b.dataset.lv)]));
+$("#undo").onclick=undo;
+
+/* ---------- list ---------- */
+
+const OPEN_G=new Set();
+$("#g-all").onclick=()=>{ const nG=Math.ceil(W.length/100); if(OPEN_G.size>=nG) OPEN_G.clear(); else for(let g=0;g<nG;g++) OPEN_G.add(g); renderList(false); };
+function toggleGroup(g){ if(OPEN_G.has(g)) OPEN_G.delete(g); else OPEN_G.add(g); renderList(false); const el=document.querySelector(`tr.grp[data-g="${g}"]`); if(el){ el.focus({preventScroll:true}); const box=document.querySelector("#v-list .table"); if(el.offsetTop<box.scrollTop) box.scrollTop=el.offsetTop; } }
+const OPEN=new Set();
+function accPill(){return `<div class="acc" role="group" aria-label="Accent"><button data-acc="us" aria-pressed="${accent()==="us"}">US</button><button data-acc="uk" aria-pressed="${accent()==="uk"}">UK</button></div>`;}
+function statusTd(c,no){const k=level(c);const col=k?["","var(--again)","var(--hard)","var(--good)"][k]:"var(--muted)";return `<td class="st" style="color:${col};font-weight:${k?700:400}">${lvDot(c)}${k?LV[k]:"New"}</td>`;}
+function lvDot(c){const k=level(c);return k?`<span class="lvdot l${k}" title="${LV[k]}"></span>`:`<span class="lvdot l0" title="New"></span>`;}
+function lvButtons(no){const k=level(C[no]);return `<div class="lvset" role="group" aria-label="Level">${[1,2,3].map(j=>`<button class="l${j}" data-setlv="${j}" aria-pressed="${k===j}">${LV[j]}</button>`).join("")}</div>`;}
+function setLevel(no,k){
+  const c=C[no];
+  if(c){ C[no]={...c,g:k}; }
+  else { C[no]=preview(undefined,k,Date.now()); C[no].g=k; }
+  save();
+  const det=document.querySelector(`tr.det[data-for="${no}"]`);
+  if(det) det.querySelectorAll("[data-setlv]").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.setlv===k)));
+  const tr=document.querySelector(`tr.w[data-no="${no}"]`);
+  if(tr){ tr.children[3].outerHTML=statusTd(C[no],no); }
+}
+function detailRow(w){const no=w[0];
+  return `<tr class="det" data-for="${no}"><td colspan="4"><div class="detail">
+    <div class="word"><h3>${esc(w[1])}</h3><button class="speak" data-say="w" data-no="${no}" aria-label="Play word">${SPK}</button>${ipaP(w)}${accPill()}${posTag(w[2],w[9])}</div>
+    ${lvButtons(no)}
+    <div class="exrow"><p class="ex">${highlight(w[5],w[1],w[8])}</p><button class="speak sm" data-say="e" data-no="${no}" aria-label="Play example">${SPK}</button></div>
+    ${w[7]?`<p class="def"><b>English</b>${esc(w[7])}</p>`:""}
+    <p class="ja">${esc(w[3])}</p>
+    ${coreP(w)}
+      ${w[10]?`<p class="core ety"><b>Etymology</b>${esc(w[10])}</p>`:""}
+    <p class="exja">${esc(w[6])}</p>
+  </div></td></tr>`;}
+function toggleRow(tr){
+  const no=tr.dataset.no, open=tr.getAttribute("aria-expanded")==="true";
+  if(open){ OPEN.delete(no); tr.setAttribute("aria-expanded","false"); const d=tr.nextElementSibling; if(d&&d.classList.contains("det")) d.remove(); }
+  else {
+    { document.querySelectorAll('#rows tr.w[aria-expanded="true"]').forEach(o=>{ o.setAttribute("aria-expanded","false"); const d=o.nextElementSibling; if(d&&d.classList.contains("det")) d.remove(); }); OPEN.clear(); }
+    OPEN.add(no); tr.setAttribute("aria-expanded","true"); tr.insertAdjacentHTML("afterend",detailRow(byNo.get(no))); say(no,["w"]);
+    const box=document.querySelector("#v-list .table"); const off=tr.offsetTop; if(off<box.scrollTop||off>box.scrollTop+box.clientHeight*0.6) box.scrollTo({top:off,behavior:"smooth"}); }
+}
+$("#rows").addEventListener("click",e=>{
+  const lb=e.target.closest("[data-setlv]"); if(lb){ const d=lb.closest("tr.det"); if(d) setLevel(d.dataset.for,+lb.dataset.setlv); return; }
+  const sb=e.target.closest("[data-say]"); if(sb){ say(sb.dataset.no,[sb.dataset.say]); return; }
+  const ab=e.target.closest("[data-acc]"); if(ab){
+    S.accent=ab.dataset.acc; save();
+    document.querySelectorAll("[data-acc]").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.acc===S.accent))); accUI();
+    const tr=ab.closest("tr.det"); if(tr) say(tr.dataset.for,["w"]); return; }
+  if(e.target.closest("tr.det")) return;
+  const gr=e.target.closest("tr.grp"); if(gr){ toggleGroup(+gr.dataset.g); return; }
+  const tr=e.target.closest("tr.w"); if(tr) toggleRow(tr);
+});
+$("#rows").addEventListener("keydown",e=>{ const gr=e.target.closest&&e.target.closest("tr.grp"); if(gr&&(e.key==="Enter"||e.key===" ")){e.preventDefault();toggleGroup(+gr.dataset.g);return;} const tr=e.target.closest&&e.target.closest("tr.w"); if(tr&&(e.key==="Enter"||e.key===" ")){e.preventDefault();toggleRow(tr);} });
+
+function renderList(reset){
+  { const set=new Set(Array.isArray(S.stf)?S.stf:[]); document.querySelectorAll("#stf [data-st]").forEach(b=>b.setAttribute("aria-pressed",String(set.has(+b.dataset.st)))); }
+  const q=$("#search").value.trim().toLowerCase(), p=$("#pos").value, stf=new Set(Array.isArray(S.stf)?S.stf:[]);
+  const res=W.filter(w=>{
+    const c=C[w[0]];
+    if(p!=="all" && !w[2].includes(p)) return false;
+    if(stf.size && !stf.has(level(c))) return false;
+    if(q && !(w[1].toLowerCase().includes(q)||w[3].includes(q)||(w[7]||"").toLowerCase().includes(q))) return false;
+    return true;});
+  $("#list-count").textContent="· "+res.length;
+  { const nG=Math.ceil(W.length/100); $("#g-all").textContent=OPEN_G.size>=nG?"Collapse all":"Expand all"; }
+  const rowHtml=w=>{const c=C[w[0]];
+    const open=OPEN.has(w[0]);
+    return `<tr class="w" data-no="${w[0]}" tabindex="0" aria-expanded="${open}"><td class="num">${w[0]}</td><td class="en">${esc(w[1])}</td><td class="pcell"><span class="pmini">${posMini(w[2],w[9])}</span></td>${statusTd(c,w[0])}</tr>`+(open?detailRow(w):"")};
+  // draw the first rows at once, then the rest in small batches so the screen appears quickly
+  // group into blocks of 100 (0001–0100 …); a block's words show only when it is opened.
+  // while searching, blocks with matches open automatically.
+  const groups=new Map();
+  for(const w of res){ const g=Math.floor((+w[0]-1)/100); if(!groups.has(g)) groups.set(g,[]); groups.get(g).push(w); }
+  const autoOpen=!!q;
+  const items=[];
+  const nG=Math.ceil(W.length/100);
+  for(let g=0;g<nG;g++){
+    const ws=groups.get(g)||[];
+    const open=(autoOpen&&ws.length>0)||OPEN_G.has(g), lo=g*100+1, hi=g*100+100;
+    const seen=W.slice(lo-1,hi).filter(w=>level(C[w[0]])===3).length;
+    items.push(`<tr class="grp" data-g="${g}" tabindex="0" aria-expanded="${open}"><td colspan="4"><span class="gchev">${open?"▾":"▸"}</span><b class="num">${String(lo).padStart(4,"0")}–${String(hi).padStart(4,"0")}</b><span class="hint">${q||stf.size||p!=="all"?ws.length+" match · ":""}${seen}/100 completed</span></td></tr>`);
+    if(open) items.push(...ws);
+  }
+  const html=e=>typeof e==="string"?e:rowHtml(e);
+  const first=300, step=400, token=++listToken;
+  $("#rows").innerHTML=items.slice(0,first).map(html).join("");
+  fitWords();
+  let i=first;
+  const more=()=>{ if(token!==listToken||i>=items.length) return; $("#rows").insertAdjacentHTML("beforeend",items.slice(i,i+step).map(html).join("")); fitWords(); i+=step; setTimeout(more,0); };
+  setTimeout(more,0);
+}
+let listToken=0;
+// size the list box to the rest of the screen
+function fitTable(){
+  const f=document.querySelector("#v-list .tframe"), t=document.querySelector("#v-list .table"); if(!f||view!=="list") return;
+  document.querySelector("#v-list .thead").style.paddingRight=(t.offsetWidth-t.clientWidth)+"px";
+}
+addEventListener("resize",()=>fitTable());
+function fitWords(){
+  // every word shares one size: if any word doesn't fit its column, shrink them all together (never cut, never wrap)
+  const tb=document.querySelector("#v-list .table"); if(!tb) return;
+  let fs=parseFloat(getComputedStyle(tb).getPropertyValue("--wfs"))||18, worst=1;
+  document.querySelectorAll("#rows td.en:not([data-fit])").forEach(td=>{
+    td.dataset.fit="1"; td.style.fontSize="";
+    if(td.scrollWidth<=td.clientWidth+1) return;
+    if(td.textContent.length>16){   // the handful of long phrases shrink on their own so the rest can stay big
+      let f=fs; while(td.scrollWidth>td.clientWidth+1&&f>11){ f-=0.5; td.style.fontSize=f+"px"; } return; }
+    worst=Math.min(worst,(td.clientWidth-2)/td.scrollWidth);
+  });
+  if(worst<1){ fs=Math.max(10,Math.floor(fs*worst*2)/2); tb.style.setProperty("--wfs",fs+"px"); document.querySelectorAll("#rows td.en").forEach(td=>td.removeAttribute("data-fit")); fitWords(); }
+}
+let fitTimer; window.addEventListener("resize",()=>{ clearTimeout(fitTimer); fitTimer=setTimeout(()=>{ const tb=document.querySelector("#v-list .table"); if(tb) tb.style.removeProperty("--wfs"); document.querySelectorAll("#rows td.en").forEach(td=>td.removeAttribute("data-fit")); fitWords(); },200); });
+let st0; $("#search").addEventListener("input",()=>{clearTimeout(st0);st0=setTimeout(()=>renderList(true),150);});
+$("#pos").onchange=()=>renderList(true);
+document.querySelectorAll("#stf [data-st]").forEach(b=>b.onclick=()=>{ const k=+b.dataset.st; const set=new Set(Array.isArray(S.stf)?S.stf:[]); set.has(k)?set.delete(k):set.add(k); S.stf=[...set].sort(); save(); renderList(false); });
+
+/* ---------- settings ---------- */
+function renderSettings(){
+  loadVoices();
+  $("#s-round").value=String(roundSize()); $("#s-order").value=S.order; $("#s-from").value=S.from; $("#s-ex").value=S.showEx?"1":"0";
+  $("#s-accent").value=accent(); $("#s-auto").value=S.auto||"word"; $("#s-rate").value=String(S.rate||1); $("#s-lead").value=String(leadSec()); loadIndex(accent()).then(aqUI);
+  $("#reset-box").innerHTML=`<button class="btn danger" id="reset">Reset…</button>`;
+  $("#reset").onclick=openResetDialog;
+}
+/* ---------- export ---------- */
+// minimal .xlsx writer (no library): SpreadsheetML files packed in an uncompressed zip
+const CRC_T=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
+function crc32(u){let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=CRC_T[(c^u[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
+function zipStore(files){ // files: [{name, data:Uint8Array}]
+  const enc=new TextEncoder(), parts=[], central=[]; let off=0;
+  const u16=v=>[v&255,(v>>>8)&255], u32=v=>[v&255,(v>>>8)&255,(v>>>16)&255,(v>>>24)&255];
+  for(const f of files){
+    const nm=enc.encode(f.name), crc=crc32(f.data), sz=f.data.length;
+    const lh=new Uint8Array([0x50,0x4b,3,4,...u16(20),...u16(0x0800),...u16(0),...u16(0),...u16(0x21),...u32(crc),...u32(sz),...u32(sz),...u16(nm.length),...u16(0)]);
+    parts.push(lh,nm,f.data);
+    central.push(new Uint8Array([0x50,0x4b,1,2,...u16(20),...u16(20),...u16(0x0800),...u16(0),...u16(0),...u16(0x21),...u32(crc),...u32(sz),...u32(sz),...u16(nm.length),...u16(0),...u16(0),...u16(0),...u16(0),...u32(0),...u32(off)]),nm);
+    off+=lh.length+nm.length+sz;
+  }
+  const cdSize=central.reduce((a,b)=>a+b.length,0);
+  const end=new Uint8Array([0x50,0x4b,5,6,...u16(0),...u16(0),...u16(files.length),...u16(files.length),...u32(cdSize),...u32(off),...u16(0)]);
+  return new Blob([...parts,...central,end],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+}
+function makeXlsx(sheetName,head,rows,widths){
+  const x=v=>String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,"");
+  const col=i=>{let s="";i++;while(i){const m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26);}return s;};
+  const cell=(v,r,c,st)=>{const ref=col(c)+r; if(v===""||v==null) return st?`<c r="${ref}" s="${st}"/>`:""; if(typeof v==="number") return `<c r="${ref}"${st?` s="${st}"`:""}><v>${v}</v></c>`; return `<c r="${ref}" t="inlineStr"${st?` s="${st}"`:""}><is><t xml:space="preserve">${x(v)}</t></is></c>`;};
+  const all=[head,...rows], last=col(head.length-1)+all.length;
+  const sheetRows=all.map((r,i)=>`<row r="${i+1}">${r.map((v,c)=>cell(v,i+1,c,i===0?1:0)).join("")}</row>`).join("");
+  const sheet=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>${widths.map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join("")}</cols><sheetData>${sheetRows}</sheetData><autoFilter ref="A1:${last}"/></worksheet>`;
+  const enc=new TextEncoder(), F=(name,str)=>({name,data:enc.encode(str)});
+  return zipStore([
+    F("[Content_Types].xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`),
+    F("_rels/.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`),
+    F("xl/workbook.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="${x(sheetName)}" sheetId="1" r:id="rId1"/></sheets><definedNames><definedName name="_xlnm._FilterDatabase" localSheetId="0" hidden="1">'${x(sheetName)}'!$A$1:$${last.replace(/\d+/,"")}$${all.length}</definedName></definedNames></workbook>`),
+    F("xl/_rels/workbook.xml.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`),
+    F("xl/worksheets/sheet1.xml",sheet),
+    F("xl/styles.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="10"/><name val="Arial"/></font><font><b/><sz val="10"/><color rgb="FFFFFFFF"/><name val="Arial"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF1F4E78"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`),
+  ]);
+}
+function fmtDate(t){ const d=new Date(t); return dayKey(t)+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"); }
+async function exportProgress(){
+  const btn=$("#exp-btn"), msg=t=>{$("#exp-msg").textContent=t;};
+  btn.disabled=true; btn.textContent="Preparing…"; msg("");
+  try{
+    const LVJ=["未学習","Again","To review","Completed"];
+    const head=["番号","見出し語","品詞","自動詞／他動詞","和訳","語源","理解度","学習回数","忘れた回数","次の復習日","復習間隔（日）"];
+    const VTJ={T:"他動詞",I:"自動詞",TI:"自動詞・他動詞"};
+    const rows=W.map(w=>{ const c=C[w[0]], k=level(c);
+      return [w[0],w[1],w[2],VTJ[w[9]]||"",w[3],w[10]||"",LVJ[k],c?(c.r||0):0,c?(c.l||0):0,c&&c.d?(c.q===2?dayKey(c.d):fmtDate(c.d)):"",c&&c.q===2?c.i:""]; });
+    const stamp=dayKey(Date.now());
+    const name=`${BK}-progress-${stamp}.xlsx`, url=URL.createObjectURL(makeXlsx("学習状況",head,rows,[8,22,10,14,30,36,12,9,10,16,13]));
+    const a=document.createElement("a"); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),10000);
+    msg("Saved "+name+".");
+  }catch(e){
+    msg("Couldn’t export. Please try again.");
+  }finally{ btn.disabled=false; btn.textContent="Export (.xlsx)"; }
+}
+$("#exp-btn").onclick=exportProgress;
+function openResetDialog(){
+  const seen=Object.keys(C).length;
+  const wrap=document.createElement("div"); wrap.className="modal-bg";
+  wrap.innerHTML=`<div class="modal" role="dialog" aria-modal="true" aria-labelledby="rs-t">
+    <h3 id="rs-t">Reset all progress?</h3>
+    <p>All ${seen} studied words, their levels and review dates will be erased, and every word goes back to New. <b>This can’t be undone.</b></p>
+    <label for="rs-in">Type <b>RESET</b> to confirm</label>
+    <input id="rs-in" autocomplete="off" autocapitalize="characters" spellcheck="false">
+    <div class="row" style="justify-content:flex-end"><button class="btn" id="rs-no">Cancel</button><button class="btn danger" id="rs-yes" disabled>Erase everything</button></div>
+  </div>`;
+  document.body.appendChild(wrap);
+  const inp=wrap.querySelector("#rs-in"), yes=wrap.querySelector("#rs-yes");
+  const close=()=>{ wrap.remove(); document.removeEventListener("keydown",esc2); };
+  const esc2=e=>{ if(e.key==="Escape") close(); };
+  document.addEventListener("keydown",esc2);
+  inp.oninput=()=>{ yes.disabled=inp.value.trim().toUpperCase()!=="RESET"; };
+  wrap.querySelector("#rs-no").onclick=close;
+  wrap.onclick=e=>{ if(e.target===wrap) close(); };
+  yes.onclick=()=>{ if(yes.disabled) return; C={}; S.sp=null; S.rs=null; againQ=[]; save(); close(); show("home"); };
+  setTimeout(()=>inp.focus(),30);
+}
+$("#s-round").onchange=e=>{ const n=Math.round(+e.target.value); S.round=[5,10,15,20,25].includes(n)?n:25; e.target.value=String(S.round); save(); };
+$("#s-order").onchange=e=>{S.order=e.target.value;deck=[];used.clear();save();};
+$("#s-from").onchange=e=>{S.from=Math.max(1,Math.min(W.length||9999,+e.target.value||1));e.target.value=S.from;S.sp=null;save();};
+$("#s-ex").onchange=e=>{S.showEx=e.target.value==="1";save();};
+$("#s-auto").onchange=e=>{S.auto=e.target.value;save();};
+$("#s-test").onclick=testVoice;
+$("#s-accent").onchange=e=>{S.accent=e.target.value;accUI();save();renderSettings();testVoice();};
+function testVoice(){ if(W.length) say("0007",["e"]); }
+$("#s-rate").onchange=e=>{S.rate=+e.target.value;save();};
+$("#s-lead").onchange=e=>{S.lead=+e.target.value;save();};
+
+/* ---------- boot ---------- */
+lsLoad(); if(![0.8,1,1.15].includes(+S.rate)) S.rate=1; try{dirUI();arUI();}catch(e){}
+
+/* ---------- book switcher: each book keeps its own progress; switching reloads the page ---------- */
+(()=>{ const sel=$("#booksel");
+ document.title="English Idioms"+(BK===BOOKS[0].id?"":" · "+BOOK.name);
+ sel.innerHTML=BOOKS.map(b=>`<option value="${b.id}"${b.id===BK?" selected":""}>${esc(b.name)}</option>`).join("");
+ const curView=()=>{const b=document.querySelector('nav[aria-label="Views"] button[aria-current="page"]');return b?b.dataset.view:"home";};
+ sel.onchange=()=>{ const id=sel.value; if(!id||id===BK) return; try{localStorage.setItem("ev_book",id);localStorage.setItem("ev_view",curView());}catch(e){} location.reload(); };
+ try{const v=localStorage.getItem("ev_view"); localStorage.removeItem("ev_view"); if(v&&v!=="home") setTimeout(()=>{const t=document.querySelector('nav[aria-label="Views"] button[data-view="'+v+'"]'); if(t) t.click();},0);}catch(e){}
+})();
+fetch(BDIR+".json?v=ev1").then(r=>r.json()).then(d=>{
+  W=d; W.forEach(w=>byNo.set(w[0],w));
+  setSync("Saved on this device");
+  refreshAll();
+}).catch(()=>setSync("Couldn’t load the word list. Please reload the page."));
+renderHome();
+})();
+</script>
+
+</body></html>
